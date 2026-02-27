@@ -1,0 +1,63 @@
+[
+  {
+    "Name": "Google Chrome",
+    "FileName": "ChromeSetup.exe",
+    "SilentArgs": "/silent /install",
+    "Description": "Trình duyệt web phổ biến nhất thế giới"
+  },
+  {
+    "Name": "Zalo Desktop",
+    "FileName": "ZaloSetup-26.1.20.exe",
+    "SilentArgs": "/S",
+    "Description": "Ứng dụng nhắn tin và gọi điện miễn phí"
+  },
+  {
+    "Name": "VLC Media Player",
+    "FileName": "vlc-3.0.23-win64.exe",
+    "SilentArgs": "/S",
+    "Description": "Trình phát nhạc và video đa định dạng"
+  },
+  {
+    "Name": "WinRAR x64",
+    "FileName": "winrar-x64-720.exe",
+    "SilentArgs": "/S",
+    "Description": "Công cụ nén và giải nén tệp tin mạnh mẽ"
+  },
+  {
+    "Name": "UltraViewer",
+    "FileName": "UltraViewer_setup_6.6.124_vi.exe",
+    "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
+    "Description": "Hỗ trợ điều khiển máy tính từ xa"
+  },
+  {
+    "Name": "Foxit PDF Reader",
+    "FileName": "FoxitPDFReader20253_L10N_Setup_Prom_x64.exe",
+    "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
+    "Description": "Đọc và tùy chỉnh file PDF nhẹ nhàng"
+  },
+  {
+    "Name": "BatteryMon",
+    "FileName": "BatteryMon.exe",
+    "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
+    "Description": "Kiểm tra độ chai và thông tin của Pin"
+  },
+  {
+    "Name": "Hard Disk Sentinel Pro",
+    "FileName": "hdsentinel_pro_setup.exe",
+    "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
+    "Description": "Kiểm tra sức khỏe và nhiệt độ ổ cứng"
+  },
+  {
+    "Name": "Unigine Heaven Benchmark",
+    "FileName": "Unigine_Heaven-4.0.exe",
+    "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
+    "Description": "Phần mềm Stress Test và kiểm tra hiệu năng GPU"
+  },
+  {
+    "Name": "Microsoft Office",
+    "FileName": "OfficeSetup.exe",
+    "SilentArgs": "",
+    "Description": "Bộ công cụ văn phòng (Word, Excel, PowerPoint)",
+    "IsAsync": true
+  }
+]
