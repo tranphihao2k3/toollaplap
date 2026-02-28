@@ -1,12 +1,11 @@
 ﻿<Application x:Class="LapLapAutoTool.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:converters="clr-namespace:LapLapAutoTool.Converters"
-             StartupUri="MainWindow.xaml">
+             xmlns:converters="clr-namespace:LapLapAutoTool.Converters">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/Styles.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         </ResourceDictionary>

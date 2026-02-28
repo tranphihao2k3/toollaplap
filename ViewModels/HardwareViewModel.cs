@@ -110,6 +110,7 @@ namespace LapLapAutoTool.ViewModels
             {
                 sb.AppendLine($"    {gpu.Name}");
                 sb.AppendLine($"      VRAM                      {gpu.Vram}");
+                sb.AppendLine($"      TDP toi da                {gpu.Tdp}");
                 sb.AppendLine("");
             }
 
@@ -129,7 +130,12 @@ namespace LapLapAutoTool.ViewModels
             sb.AppendLine("────────────────────────────────────────────────────────────────────────────────");
             sb.AppendLine($"    Dung luong thiet ke         {SysInfo.BatteryDesignCapacity}");
             sb.AppendLine($"    Dung luong hien tai         {SysInfo.BatteryFullChargeCapacity}");
-            sb.AppendLine($"    Suc khoe pin                {SysInfo.BatteryHealth}  (Da chai: {100 - double.Parse(SysInfo.BatteryHealth.Replace("%","")):0.0}%)");
+            string batteryHealthStr = SysInfo.BatteryHealth;
+            if (double.TryParse(batteryHealthStr?.Replace("%", ""), out double healthVal)) {
+                sb.AppendLine($"    Suc khoe pin                {batteryHealthStr}  (Da chai: {100 - healthVal:0.0}%)");
+            } else {
+                sb.AppendLine($"    Suc khoe pin                {batteryHealthStr ?? "N/A"}");
+            }
             sb.AppendLine($"    Pin hien tai                {SysInfo.BatteryCurrentPercent}");
             sb.AppendLine($"    So lan sac                  {SysInfo.BatteryCycles}");
             sb.AppendLine("");

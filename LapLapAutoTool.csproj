@@ -7,6 +7,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyName>tool v1</AssemblyName>
+    
+    <!-- Tối ưu dung lượng -->
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,9 +18,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Prevent resource files from being copied to output to avoid single-file conflicts -->
     <None Update="Resources\**">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
+    
+    <Resource Include="Resources\logo.png" />
+    <Resource Include="Resources\app_icon.png" />
+    <Resource Include="Resources\software_config.json" />
+    <Resource Include="Resources\student_config.json" />
   </ItemGroup>
 
 </Project>

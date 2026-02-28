@@ -29,6 +29,7 @@ namespace LapLapAutoTool.Models
         public string BatteryHealth { get; set; } = "N/A";
         public string BatteryCurrentPercent { get; set; } = "N/A";
         public string BatteryCycles { get; set; } = "N/A";
+        public string BatteryWearPercent { get; set; } = "N/A";
 
         // [ MAINBOARD / BIOS ]
         public string Mainboard { get; set; } = "N/A";

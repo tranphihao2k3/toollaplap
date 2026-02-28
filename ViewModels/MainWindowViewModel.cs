@@ -12,7 +12,6 @@ namespace LapLapAutoTool.ViewModels
         private readonly IInstallService _installService;
         private readonly ILicenseService _licenseService;
         private readonly ILogService _logService;
-        private string _licenseStatus = string.Empty;
 
         public object? CurrentView
         {
@@ -22,42 +21,103 @@ namespace LapLapAutoTool.ViewModels
 
         public string LicenseStatus
         {
-            get => _licenseStatus;
-            set { _licenseStatus = value; OnPropertyChanged(); }
+            get
+            {
+                var license = LicensingService.CurrentLicense;
+                if (license != null)
+                {
+                    if (license.Token == "ADMIN-PIN-292003") return "Đăng nhập Quyền Admin";
+                    return "Đã kích hoạt (Vĩnh viễn)";
+                }
+                return "Chưa kích hoạt bản quyền";
+            }
         }
 
-        public string MachineCode => _licenseService.GetMachineCode();
+        public bool IsLicensed => LicensingService.CurrentLicense != null;
+        public string VersionText => "v1.0.0";
+
+        public string MachineCode => LicensingService.CurrentLicense?.Hwid ?? (new LicensingService()).GetHWID();
 
         // ViewModels
         public HardwareViewModel HardwareVM { get; set; }
         public QuickSetupViewModel QuickSetupVM { get; set; }
         public StudentAppsViewModel StudentAppsVM { get; set; }
         public UtilitiesViewModel UtilitiesVM { get; set; }
+        public BackupViewModel BackupVM { get; set; }
+        public SettingsViewModel SettingsVM { get; set; }
+
+        public string CustomerGreeting
+        {
+            get
+            {
+                var license = LicensingService.CurrentLicense;
+                if (license != null && !string.IsNullOrEmpty(license.CustomerName))
+                {
+                    return $"Xin chào, {license.CustomerName}";
+                }
+                return "";
+            }
+        }
+
+        public Visibility GreetingVisibility => string.IsNullOrEmpty(CustomerGreeting) ? Visibility.Collapsed : Visibility.Visible;
 
         public MainWindowViewModel()
         {
             _logService = new LogService();
             _licenseService = new LicenseService();
-            _hardwareService = new HardwareService();
+            _hardwareService = new HardwareService(_logService);
             _installService = new InstallService(_logService);
+            var downloadService = new DownloadService(_logService);
 
             HardwareVM = new HardwareViewModel(_hardwareService);
-            QuickSetupVM = new QuickSetupViewModel(_installService);
-            StudentAppsVM = new StudentAppsViewModel(_installService);
+            QuickSetupVM = new QuickSetupViewModel(_installService, downloadService, _logService);
+            StudentAppsVM = new StudentAppsViewModel(downloadService);
             UtilitiesVM = new UtilitiesViewModel(_installService);
+            BackupVM = new BackupViewModel(_installService);
+            SettingsVM = new SettingsViewModel();
 
-            LicenseStatus = _licenseService.GetLicenseStatus();
+            // Notify UI about status
+            OnPropertyChanged(nameof(LicenseStatus));
+            OnPropertyChanged(nameof(IsLicensed));
+            OnPropertyChanged(nameof(CustomerGreeting));
+            OnPropertyChanged(nameof(GreetingVisibility));
+            OnPropertyChanged(nameof(MachineCode));
 
             // Default Tab
             CurrentView = HardwareVM;
             
-            _logService.LogInfo("Ứng dụng đã khởi động.");
+            _logService.LogInfo("Ứng dụng đã khởi động với phiên bản " + VersionText);
         }
 
         public RelayCommand ShowHardwareCommand => new RelayCommand(() => CurrentView = HardwareVM);
         public RelayCommand ShowQuickSetupCommand => new RelayCommand(() => CurrentView = QuickSetupVM);
         public RelayCommand ShowStudentAppsCommand => new RelayCommand(() => CurrentView = StudentAppsVM);
         public RelayCommand ShowUtilitiesCommand => new RelayCommand(() => CurrentView = UtilitiesVM);
+        public RelayCommand ShowBackupCommand => new RelayCommand(() => CurrentView = BackupVM);
+        public RelayCommand ShowSettingsCommand => new RelayCommand(() => CurrentView = SettingsVM);
+        public RelayCommand OpenLogCommand => new RelayCommand(() =>
+        {
+            try
+            {
+                string logPath = _logService.GetLogPath();
+                if (System.IO.File.Exists(logPath))
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = logPath,
+                        UseShellExecute = true
+                    });
+                }
+                else
+                {
+                    MessageBox.Show("Chưa có thông tin log nào được ghi lại.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể mở file log: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        });
 
         public RelayCommand ActivateLicenseCommand => new RelayCommand(() =>
         {
@@ -68,7 +128,8 @@ namespace LapLapAutoTool.ViewModels
             
             if (_licenseService.Activate(key))
             {
-                LicenseStatus = _licenseService.GetLicenseStatus();
+                OnPropertyChanged(nameof(LicenseStatus));
+                OnPropertyChanged(nameof(IsLicensed));
                 MessageBox.Show("Kích hoạt thành công! (Tự động cho bản demo)", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         });

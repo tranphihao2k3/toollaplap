@@ -1,63 +1,102 @@
 [
   {
+    "Name": "EVKey",
+    "FileName": "EVKey64.exe",
+    "SilentArgs": "COPY_TO_DESKTOP",
+    "Description": "Bộ gõ tiếng Việt EVKey (Copy ra Desktop)",
+    "Category": "general",
+    "DownloadUrl": "https://drive.google.com/file/d/1LRAtK0rwOZYNwxf1nfIFdDHzX5v7Ew15/view?usp=sharing",
+    "FileSize": ""
+  },
+  {
     "Name": "Google Chrome",
     "FileName": "ChromeSetup.exe",
     "SilentArgs": "/silent /install",
-    "Description": "Trình duyệt web phổ biến nhất thế giới"
+    "Description": "Trình duyệt web phổ biến nhất thế giới",
+    "Category": "general",
+    "DownloadUrl": "https://drive.google.com/file/d/1woQCwazOUEVcuH7lCzuQvnmNvBfHgUjP/view?usp=sharing",
+    "FileSize": ""
   },
   {
     "Name": "Zalo Desktop",
-    "FileName": "ZaloSetup-26.1.20.exe",
+    "FileName": "ZaloSetup.exe",
     "SilentArgs": "/S",
-    "Description": "Ứng dụng nhắn tin và gọi điện miễn phí"
+    "Description": "Ứng dụng nhắn tin và gọi điện miễn phí",
+    "Category": "general",
+    "DownloadUrl": "https://drive.google.com/file/d/1HtJrRgTnDPIJ3Wl4-POcVaDn_FNryxiq/view?usp=sharing",
+    "FileSize": ""
   },
   {
     "Name": "VLC Media Player",
-    "FileName": "vlc-3.0.23-win64.exe",
+    "FileName": "vlc-win64.exe",
     "SilentArgs": "/S",
-    "Description": "Trình phát nhạc và video đa định dạng"
+    "Description": "Trình phát nhạc và video đa định dạng",
+    "Category": "general",
+    "DownloadUrl": "https://drive.google.com/file/d/1ojWnuZn4WJf_xM6h7UMxEyiy8rSj184t/view?usp=sharing",
+    "FileSize": ""
   },
   {
     "Name": "WinRAR x64",
-    "FileName": "winrar-x64-720.exe",
+    "FileName": "winrar-x64.exe",
     "SilentArgs": "/S",
-    "Description": "Công cụ nén và giải nén tệp tin mạnh mẽ"
+    "Description": "Công cụ nén và giải nén tệp tin mạnh mẽ",
+    "Category": "general",
+    "DownloadUrl": "https://drive.google.com/file/d/1h3EV--e6eX_xpDaYLlq_uk8pm4Dmerd_/view?usp=sharing",
+    "FileSize": ""
   },
   {
     "Name": "UltraViewer",
-    "FileName": "UltraViewer_setup_6.6.124_vi.exe",
+    "FileName": "UltraViewer_setup.exe",
     "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
-    "Description": "Hỗ trợ điều khiển máy tính từ xa"
+    "Description": "Hỗ trợ điều khiển máy tính từ xa",
+    "Category": "general",
+    "DownloadUrl": "https://drive.google.com/file/d/1R8_1gNx1jFPGGvyxsd3w4-UHM-biM9pH/view?usp=sharing",
+    "FileSize": ""
   },
   {
     "Name": "Foxit PDF Reader",
-    "FileName": "FoxitPDFReader20253_L10N_Setup_Prom_x64.exe",
-    "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
-    "Description": "Đọc và tùy chỉnh file PDF nhẹ nhàng"
+    "FileName": "FoxitPDFReader_Setup.exe",
+    "SilentArgs": "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART",
+    "Description": "Đọc và tùy chỉnh file PDF nhẹ nhàng",
+    "Category": "general",
+    "DownloadUrl": "https://drive.google.com/file/d/1g9AnW4qMjpU9jyTnKQOzTnKGndjfBBiQ/view?usp=sharing",
+    "FileSize": ""
   },
   {
     "Name": "BatteryMon",
     "FileName": "BatteryMon.exe",
     "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
-    "Description": "Kiểm tra độ chai và thông tin của Pin"
+    "Description": "Kiểm tra độ chai và thông tin của Pin",
+    "Category": "general",
+    "DownloadUrl": "https://drive.google.com/file/d/1F1NOujTRcF8__Fw1HxsrOhgTlN48PZ7d/view?usp=sharing",
+    "FileSize": ""
   },
   {
     "Name": "Hard Disk Sentinel Pro",
     "FileName": "hdsentinel_pro_setup.exe",
     "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
-    "Description": "Kiểm tra sức khỏe và nhiệt độ ổ cứng"
+    "Description": "Kiểm tra sức khỏe và nhiệt độ ổ cứng",
+    "Category": "general",
+    "DownloadUrl": "https://drive.google.com/file/d/1Y61TGigkaENIO6ypVe4GT5mIBdNlGJVH/view?usp=sharing",
+    "FileSize": ""
   },
   {
     "Name": "Unigine Heaven Benchmark",
-    "FileName": "Unigine_Heaven-4.0.exe",
+    "FileName": "Unigine_Heaven.exe",
     "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
-    "Description": "Phần mềm Stress Test và kiểm tra hiệu năng GPU"
+    "Description": "Phần mềm Stress Test và kiểm tra hiệu năng GPU",
+    "Category": "general",
+    "DownloadUrl": "https://drive.google.com/file/d/1lKj_wHHxE6l9smR-sSN_uCaxDeJ7xHGF/view?usp=sharing",
+    "FileSize": ""
   },
   {
     "Name": "Microsoft Office",
     "FileName": "OfficeSetup.exe",
     "SilentArgs": "",
     "Description": "Bộ công cụ văn phòng (Word, Excel, PowerPoint)",
-    "IsAsync": true
+    "IsAsync": true,
+    "Category": "general",
+    "DownloadUrl": "https://drive.google.com/file/d/1pPgEyS4-v9fTIaiesrqCykrU9z7RWr_E/view?usp=sharing",
+    "FileSize": ""
   }
 ]

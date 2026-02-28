@@ -1,0 +1,36 @@
+<Window x:Class="LapLapAutoTool.Views.ActivationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Kích hoạt bản quyền LapLap" Height="520" Width="500"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+    <Border Background="#0F172A" CornerRadius="20" BorderBrush="#1E40AF" BorderThickness="1">
+        <Grid Margin="30,40,30,30">
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                <TextBlock Text="LAPLAP AUTO TOOL" FontSize="28" FontWeight="Bold" Foreground="#3B82F6" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                <TextBlock Text="YÊU CẦU KÍCH HOẠT BẢN QUYỀN" FontSize="14" Foreground="White" Opacity="0.6" HorizontalAlignment="Center" Margin="0,0,0,25"/>
+                
+                <Border Background="#1E293B" CornerRadius="12" Padding="20" Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="MÃ ĐỊNH DANH MÁY (HWID)" Foreground="#94A3B8" FontSize="10" FontWeight="Bold" Margin="0,0,0,10" HorizontalAlignment="Center" Opacity="0.8"/>
+                        <TextBox x:Name="HwidText" Text="XXXX-XXXX-XXXX" FontSize="20" FontWeight="Bold" Foreground="#3B82F6" Background="Transparent" BorderThickness="0" IsReadOnly="True" HorizontalContentAlignment="Center"/>
+                        <Button Content="Sao chép HWID" Click="CopyHwid_Click" Style="{StaticResource SecondaryButton}" Margin="0,15,0,0" Height="35" Width="140" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="NHẬP LICENSE KEY" Foreground="#94A3B8" FontSize="10" FontWeight="Bold" Margin="5,0,0,8" HorizontalAlignment="Left" Opacity="0.8"/>
+                <Border Background="#1E293B" CornerRadius="8" Padding="15,10" Margin="0,0,0,15">
+                    <TextBox x:Name="TokenInput" Background="Transparent" BorderThickness="0" Foreground="White" FontSize="16" CaretBrush="White" VerticalContentAlignment="Center"/>
+                </Border>
+
+                <TextBlock x:Name="StatusMessage" Text="Vui lòng nhập License Key được cấp." 
+                           TextWrapping="Wrap" TextAlignment="Center" Foreground="White" FontSize="12" Margin="0,0,0,30" Opacity="0.7" Height="40"/>
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="ActivateBtn" Content="Kích hoạt ngay" Click="Activate_Click" Style="{StaticResource ModernButton}" Width="200" Height="48" Margin="0,0,12,0"/>
+                    <Button Content="Thoát" Click="Exit_Click" Style="{StaticResource SecondaryButton}" Width="120" Height="48"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

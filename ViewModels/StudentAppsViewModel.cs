@@ -1,9 +1,11 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 using LapLapAutoTool.Models;
 using LapLapAutoTool.Services;
 
@@ -11,21 +13,10 @@ namespace LapLapAutoTool.ViewModels
 {
     public class StudentAppsViewModel : INotifyPropertyChanged
     {
-        private readonly IInstallService _installService;
-        private double _progress;
-        private string _statusText = "Sẵn sàng cài đặt phần mềm sinh viên";
-        private bool _isBusy;
-        private long _totalSizeMb;
-        private int _estimatedTimeMin;
+        private readonly IDownloadService _downloadService;
+        private string _statusText = "Chọn phiên bản và nhấn Tải về";
 
-        public ObservableCollection<SoftwareItem> ProfessionalApps { get; set; }
-        public ObservableCollection<SoftwareItem> AcademicApps { get; set; }
-
-        public double Progress
-        {
-            get => _progress;
-            set { _progress = value; OnPropertyChanged(); }
-        }
+        public ObservableCollection<StudentAppGroup> AppGroups { get; set; } = new();
 
         public string StatusText
         {
@@ -33,101 +24,143 @@ namespace LapLapAutoTool.ViewModels
             set { _statusText = value; OnPropertyChanged(); }
         }
 
-        public bool IsBusy
+        public StudentAppsViewModel(IDownloadService downloadService)
         {
-            get => _isBusy;
-            set { _isBusy = value; OnPropertyChanged(); }
+            _downloadService = downloadService;
+            LoadApps();
         }
 
-        public long TotalSizeMb
+        private void LoadApps()
         {
-            get => _totalSizeMb;
-            set { _totalSizeMb = value; OnPropertyChanged(); }
-        }
-
-        public int EstimatedTimeMin
-        {
-            get => _estimatedTimeMin;
-            set { _estimatedTimeMin = value; OnPropertyChanged(); }
-        }
-
-        public StudentAppsViewModel(IInstallService installService)
-        {
-            _installService = installService;
-            
-            ProfessionalApps = new ObservableCollection<SoftwareItem>
+            try
             {
-                new SoftwareItem { Name = "Adobe Photoshop 2024", Description = "Thiết kế đồ họa & chỉnh sửa ảnh", IsSelected=false },
-                new SoftwareItem { Name = "AutoCAD 2024", Description = "Thiết kế CAD 2D và 3D", IsSelected=false },
-                new SoftwareItem { Name = "Adobe Premiere Pro", Description = "Phần mềm chỉnh sửa video", IsSelected=false }
-            };
+                string json = null;
+                string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "student_config.json");
+                if (File.Exists(configPath))
+                {
+                    json = File.ReadAllText(configPath);
+                }
+                else
+                {
+                    var resourceUri = new Uri("pack://application:,,,/Resources/student_config.json");
+                    var info = Application.GetResourceStream(resourceUri);
+                    if (info != null)
+                    {
+                        using (var reader = new StreamReader(info.Stream))
+                        {
+                            json = reader.ReadToEnd();
+                        }
+                    }
+                }
 
-            AcademicApps = new ObservableCollection<SoftwareItem>
-            {
-                new SoftwareItem { Name = "IBM SPSS Statistics", Description = "Phần mềm phân tích thống kê", IsSelected=false },
-                new SoftwareItem { Name = "Visual Studio Code", Description = "Trình soạn thảo mã nguồn tối ưu", IsSelected=false },
-                new SoftwareItem { Name = "Stata 17", Description = "Phần mềm khoa học dữ liệu", IsSelected=false }
-            };
-
-            foreach (var item in ProfessionalApps) item.PropertyChanged += Item_PropertyChanged;
-            foreach (var item in AcademicApps) item.PropertyChanged += Item_PropertyChanged;
-
-            StartInstallCommand = new RelayCommand(async () => await RunInstallation());
-            UpdateEstimates();
-        }
-
-        private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(SoftwareItem.IsSelected))
-            {
-                UpdateEstimates();
+                if (!string.IsNullOrEmpty(json))
+                {
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var groups = JsonSerializer.Deserialize<System.Collections.Generic.List<StudentAppGroup>>(json, options);
+                    if (groups != null)
+                    {
+                        foreach (var g in groups)
+                            AppGroups.Add(g);
+                        return;
+                    }
+                }
             }
+            catch { }
+
+            // Fallback
+            AppGroups.Add(new StudentAppGroup { Group = "Adobe Photoshop", Icon = "🎨", Versions = new() {
+                new StudentAppVersion { Name = "Adobe Photoshop 2024", Year = "2024" },
+                new StudentAppVersion { Name = "Adobe Photoshop 2023", Year = "2023" }
+            }});
         }
 
-        private void UpdateEstimates()
+        public RelayCommand CreateDownloadCommand(StudentAppVersion item)
+            => new RelayCommand(async () => await DownloadApp(item));
+
+        private async Task DownloadApp(StudentAppVersion item)
         {
-            int selectedCount = ProfessionalApps.Count(x => x.IsSelected) + AcademicApps.Count(x => x.IsSelected);
-            TotalSizeMb = selectedCount * 512; // Giả định trung bình 512MB/app
-            EstimatedTimeMin = selectedCount * 5; // Giả định 5 phút/app
-        }
+            if (item.IsDownloading) return;
 
-        public RelayCommand StartInstallCommand { get; }
-
-        private async Task RunInstallation()
-        {
-            if (IsBusy) return;
-            IsBusy = true;
-            Progress = 0;
-
-            var allApps = ProfessionalApps.Concat(AcademicApps).Where(x => x.IsSelected).ToList();
-            if (!allApps.Any())
+            if (string.IsNullOrWhiteSpace(item.DownloadUrl))
             {
-                StatusText = "Chưa chọn ứng dụng nào!";
-                IsBusy = false;
+                MessageBox.Show(
+                    $"Chưa có link tải cho '{item.Name}'.",
+                    "Chưa có link", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            int count = 0;
-            foreach (var app in allApps)
+            // Dùng tên app làm tên file tạm — KHÔNG gán extension cứng
+            // DownloadService sẽ tự detect extension từ Content-Disposition hoặc Content-Type
+            string fileName = GetFileNameFromUrl(item.DownloadUrl);
+            if (string.IsNullOrEmpty(fileName))
+                fileName = item.Name.Replace(" ", "_");
+
+            item.DownloadStatus = DownloadStatus.Downloading;
+            item.DownloadProgress = 0;
+            item.DownloadStatusText = "Đang kết nối...";
+
+            var progress = new Progress<(double percent, string status)>(report =>
             {
-                StatusText = $"Đang cài đặt {app.Name}...";
-                app.Status = InstallStatus.Installing;
-                
-                await Task.Delay(2000); // Demo delay
-                
-                app.Status = InstallStatus.Completed;
-                count++;
-                Progress = (double)count / allApps.Count * 100;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    item.DownloadProgress = report.percent >= 0 ? report.percent : 0;
+                    item.DownloadStatusText = report.status;
+                });
+            });
+
+            string? filePath = await _downloadService.DownloadFileAsync(item.DownloadUrl, fileName, progress);
+
+            if (filePath == null)
+            {
+                item.DownloadStatus = DownloadStatus.Failed;
+                item.DownloadStatusText = "Tải thất bại!";
+                return;
             }
 
-            StatusText = "Cài đặt đã hoàn tất! ✅";
-            IsBusy = false;
+            string ext = Path.GetExtension(filePath).ToLower();
+            string? finalFolder;
+
+            if (ext == ".zip" || ext == ".rar" || ext == ".7z")
+            {
+                item.DownloadStatus = DownloadStatus.Extracting;
+                item.DownloadStatusText = "Đang giải nén...";
+
+                var extractProgress = new Progress<(double percent, string status)>(report =>
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        item.DownloadProgress = report.percent;
+                        item.DownloadStatusText = report.status;
+                    });
+                });
+
+                finalFolder = await _downloadService.ExtractArchiveAsync(filePath, extractProgress, item.Password);
+            }
+            else
+            {
+                finalFolder = Path.GetDirectoryName(filePath);
+            }
+
+            item.DownloadStatus = DownloadStatus.Done;
+            item.DownloadProgress = 100;
+            item.DownloadStatusText = "Hoàn tất! Mở thư mục...";
+
+            if (!string.IsNullOrEmpty(finalFolder))
+                _downloadService.OpenFolderInExplorer(finalFolder);
+        }
+
+        private static string GetFileNameFromUrl(string url)
+        {
+            try
+            {
+                if (url.Contains("drive.google.com")) return "";
+                return Path.GetFileName(new Uri(url).AbsolutePath);
+            }
+            catch { return ""; }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        protected virtual void OnPropertyChanged([CallerMemberName] string? p = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(p));
     }
 }

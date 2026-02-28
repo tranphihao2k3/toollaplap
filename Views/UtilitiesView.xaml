@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
+             d:DesignHeight="750" d:DesignWidth="900">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -12,56 +12,191 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,20">
-            <TextBlock Text="Công cụ hệ thống" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextBrush}"/>
-            <TextBlock Text="Tối ưu và bảo trì hệ thống với công cụ 1-click" Foreground="{StaticResource MutedTextBrush}" FontSize="14"/>
+        <StackPanel Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock Text="Công cụ hệ thống" FontSize="26" FontWeight="Bold" Foreground="{StaticResource TextBrush}"/>
+            <TextBlock Text="Tối ưu và bảo trì hệ thống với công cụ 1-click" Foreground="{StaticResource MutedTextBrush}" FontSize="15"/>
         </StackPanel>
 
         <!-- Content Area -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <UniformGrid Columns="2">
-                <!-- Optimization Card -->
-                <Border Style="{StaticResource ModernCard}" Margin="10">
-                    <StackPanel>
-                        <TextBlock Text="TỐI ƯU 1-CLICK" FontSize="11" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,15"/>
-                        
-                        <Button Content="Tắt Windows Update" 
-                                Command="{Binding DisableUpdateCommand}" 
-                                Style="{StaticResource SecondaryButton}" 
-                                Margin="0,0,0,10" HorizontalAlignment="Stretch"/>
-                                
-                        <Button Content="Tắt Windows Defender" 
-                                Command="{Binding DisableDefenderCommand}" 
-                                Style="{StaticResource SecondaryButton}" 
-                                Margin="0,0,0,10" HorizontalAlignment="Stretch"/>
-                                
-                        <Button Content="Tắt Fast Boot" 
-                                Command="{Binding DisableFastBootCommand}" 
-                                Style="{StaticResource SecondaryButton}" 
-                                Margin="0,0,0,10" HorizontalAlignment="Stretch"/>
-                                
-                        <Button Content="Dọn dẹp file rác/tạm" 
-                                Command="{Binding CleanTempCommand}" 
-                                Style="{StaticResource ModernButton}" 
-                                HorizontalAlignment="Stretch"/>
-                    </StackPanel>
-                </Border>
+            <StackPanel>
+                <!-- ═══════ HÀNG 1: 2 CỘT CHÍNH ═══════ -->
+                <UniformGrid Columns="2" Margin="0,0,0,12">
+                    <!-- ══ CỘT TRÁI: TỐI ƯU 1-CLICK ══ -->
+                    <Border Style="{StaticResource ModernCard}" Margin="0,0,8,0" VerticalAlignment="Top">
+                        <StackPanel>
+                            <TextBlock Text="⚡ TỐI ƯU 1-CLICK" FontSize="15" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,14"/>
+                            
+                            <Button Content="{Binding WindowsUpdateText}" 
+                                    Command="{Binding DisableUpdateCommand}" 
+                                    Margin="0,0,0,10" HorizontalAlignment="Stretch" FontSize="14" Padding="14,11">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource ModernButton}">
+                                        <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsWUEnabled}" Value="False">
+                                                <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
 
-                <!-- More utilities can be added here -->
-                <Border Style="{StaticResource ModernCard}" Margin="10" Opacity="0.6">
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Text="Đồng bộ &amp; Sao lưu đám mây" FontSize="18" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
-                        <TextBlock Text="Sắp có trên bản Pro" FontSize="12" Foreground="{StaticResource MutedTextBrush}" HorizontalAlignment="Center"/>
+                            <Button Content="{Binding DefenderText}" 
+                                    Command="{Binding DisableDefenderCommand}" 
+                                    Margin="0,0,0,10" HorizontalAlignment="Stretch" FontSize="14" Padding="14,11">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource ModernButton}">
+                                        <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsDefEnabled}" Value="False">
+                                                <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <Button Content="{Binding FastBootText}" 
+                                    Command="{Binding DisableFastBootCommand}" 
+                                    Margin="0,0,0,10" HorizontalAlignment="Stretch" FontSize="14" Padding="14,11">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource ModernButton}">
+                                        <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsFBEnabled}" Value="False">
+                                                <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <Button Content="🧹 Dọn dẹp file rác / tạm" 
+                                    Command="{Binding CleanTempCommand}" 
+                                    Style="{StaticResource SecondaryButton}" 
+                                    Margin="0,0,0,10" FontSize="14" Padding="14,11"
+                                    HorizontalAlignment="Stretch"/>
+
+                            <Button Content="🌏 Timezone &amp; Region UK" 
+                                    Command="{Binding SetupTimeAndRegionCommand}" 
+                                    Style="{StaticResource ModernButton}" 
+                                    Margin="0,0,0,10" FontSize="14" Padding="14,11"
+                                    HorizontalAlignment="Stretch"/>
+
+                            <Button Content="🖥️ Hiện Icons Desktop" 
+                                    Command="{Binding ShowDesktopIconsCommand}" 
+                                    Style="{StaticResource ModernButton}" FontSize="14" Padding="14,11"
+                                    HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ══ CỘT PHẢI: CÀI ĐẶT & BẢO TRÌ ══ -->
+                    <Border Style="{StaticResource ModernCard}" Margin="8,0,0,0" VerticalAlignment="Top">
+                        <StackPanel>
+                            <TextBlock Text="🛠️ CÀI ĐẶT &amp; BẢO TRÌ" FontSize="15" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,14"/>
+
+                            <UniformGrid Columns="2" Margin="0,0,0,10">
+                                <Button Content="🔑 Active Win"
+                                        Command="{Binding ActivateWindowsCommand}"
+                                        Style="{StaticResource ModernButton}"
+                                        Margin="0,0,4,0" HorizontalAlignment="Stretch" FontSize="14" Padding="14,11" ToolTip="Kích hoạt Windows thông qua KMS server"/>
+                                <Button Content="🔑 Active Office"
+                                        Command="{Binding ActivateOfficeCommand}"
+                                        Style="{StaticResource ModernButton}"
+                                        Margin="4,0,0,0" HorizontalAlignment="Stretch" FontSize="14" Padding="14,11" ToolTip="Kích hoạt ngầm với KMS38/Ohook (MAS)"/>
+                            </UniformGrid>
+
+                            <Button Content="🛡️ Tắt Telemetry &amp; Tracking"
+                                    Command="{Binding DisableTelemetryCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Margin="0,0,0,10" HorizontalAlignment="Stretch" FontSize="14" Padding="14,11"/>
+
+                            <Button Content="🌐 Flush DNS &amp; Reset Network"
+                                    Command="{Binding FlushDnsCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Margin="0,0,0,10" HorizontalAlignment="Stretch" FontSize="14" Padding="14,11"/>
+
+                            <Button Content="{Binding PowerPlanText}"
+                                    Command="{Binding TogglePowerPlanCommand}"
+                                    Margin="0,0,0,10" HorizontalAlignment="Stretch" FontSize="14" Padding="14,11">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource ModernButton}">
+                                        <Setter Property="Background" Value="#7C3AED"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsHighPerf}" Value="True">
+                                                <Setter Property="Background" Value="#D97706"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <Button Content="{Binding SleepText}"
+                                    Command="{Binding ToggleSleepCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Margin="0,0,0,10" HorizontalAlignment="Stretch" FontSize="14" Padding="14,11"/>
+
+                            <Button Content="🔓 Tắt BitLocker (Tất cả ổ đĩa)"
+                                    Command="{Binding DisableBitLockerCommand}"
+                                    Margin="0,0,0,10" HorizontalAlignment="Stretch" FontSize="14" Padding="14,11">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource ModernButton}">
+                                        <Setter Property="Background" Value="#DC2626"/>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <Button Content="🔧 SFC + DISM (Sửa lỗi hệ thống)"
+                                    Command="{Binding RunSfcDismCommand}"
+                                    Style="{StaticResource ModernButton}"
+                                    HorizontalAlignment="Stretch" FontSize="14" Padding="14,11"/>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+
+
+                <!-- ═══════ HÀNG 3: MỞ NHANH CÔNG CỤ ═══════ -->
+                <Border Style="{StaticResource ModernCard}" Margin="0">
+                    <StackPanel>
+                        <TextBlock Text="📂 MỞ NHANH CÔNG CỤ HỆ THỐNG" FontSize="15" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,12"/>
+                        <UniformGrid Columns="3">
+                            <Button Content="📋 Device Manager"
+                                    Command="{Binding OpenDeviceManagerCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Margin="0,0,6,8" HorizontalAlignment="Stretch" FontSize="13" Padding="10,10"/>
+                            <Button Content="💾 Disk Management"
+                                    Command="{Binding OpenDiskMgmtCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Margin="3,0,3,8" HorizontalAlignment="Stretch" FontSize="13" Padding="10,10"/>
+                            <Button Content="⚙️ System Config"
+                                    Command="{Binding OpenMsconfigCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Margin="6,0,0,8" HorizontalAlignment="Stretch" FontSize="13" Padding="10,10"/>
+                            <Button Content="📜 Event Viewer"
+                                    Command="{Binding OpenEventViewerCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Margin="0,0,6,0" HorizontalAlignment="Stretch" FontSize="13" Padding="10,10"/>
+                            <Button Content="📊 Task Manager"
+                                    Command="{Binding OpenTaskManagerCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Margin="3,0,3,0" HorizontalAlignment="Stretch" FontSize="13" Padding="10,10"/>
+                            <Button Content="🖥️ System Props"
+                                    Command="{Binding OpenSystemPropsCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Margin="6,0,0,0" HorizontalAlignment="Stretch" FontSize="13" Padding="10,10"/>
+                        </UniformGrid>
                     </StackPanel>
                 </Border>
-            </UniformGrid>
+            </StackPanel>
         </ScrollViewer>
 
         <!-- Loading Overlay -->
-        <Grid Grid.RowSpan="2" Background="#88000000" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <ProgressBar IsIndeterminate="True" Width="200" Height="4"/>
-                <TextBlock Text="Đang áp dụng cài đặt..." Foreground="White" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+        <Grid Grid.RowSpan="2" Background="#DD000000" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="420">
+                <TextBlock Text="{Binding StatusText}" Foreground="White" Margin="0,0,0,15" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                <ProgressBar IsIndeterminate="True" Height="5" 
+                             Background="#1E293B" Foreground="{StaticResource AccentBrush}"/>
             </StackPanel>
         </Grid>
     </Grid>

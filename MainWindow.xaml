@@ -6,16 +6,21 @@
         xmlns:viewmodels="clr-namespace:LapLapAutoTool.ViewModels"
         xmlns:views="clr-namespace:LapLapAutoTool.Views"
         mc:Ignorable="d"
-        Title="Bộ Công Cụ Kỹ Thuật Viên LapLap" 
+        Title="tool v1" 
         Height="700" Width="1000"
+        Icon="/Resources/app_icon.png"
         WindowStartupLocation="CenterScreen"
-        Background="{StaticResource BackgroundBrush}">
+        Background="{StaticResource BackgroundBrush}"
+        TextOptions.TextFormattingMode="Display"
+        RenderOptions.ClearTypeHint="Enabled">
 
     <Window.DataContext>
         <viewmodels:MainWindowViewModel/>
     </Window.DataContext>
 
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        
         <!-- DataTemplates to link ViewModels to Views -->
         <DataTemplate DataType="{x:Type viewmodels:HardwareViewModel}">
             <views:HardwareView/>
@@ -29,76 +34,124 @@
         <DataTemplate DataType="{x:Type viewmodels:UtilitiesViewModel}">
             <views:UtilitiesView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:BackupViewModel}">
+            <views:BackupView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:SettingsViewModel}">
+            <views:SettingsView/>
+        </DataTemplate>
     </Window.Resources>
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="220"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-        <!-- Sidebar -->
-        <Border Grid.Column="0" Background="{StaticResource SurfaceBrush}" Padding="15,40,15,20">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Row="0" Margin="0,0,0,50">
-                    <TextBlock Text="LAPLAP" FontSize="26" FontWeight="Black" Foreground="{StaticResource PrimaryBrush}" HorizontalAlignment="Center"/>
-                    <TextBlock Text="AUTO TOOL" FontSize="11" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}" HorizontalAlignment="Center" Margin="0,-5,0,0"/>
-                </StackPanel>
-
-                <StackPanel Grid.Row="1">
-                    <RadioButton Style="{StaticResource SidebarButton}" Content="Thông tin phần cứng" Command="{Binding ShowHardwareCommand}" IsChecked="True"/>
-                    <RadioButton Style="{StaticResource SidebarButton}" Content="Cài đặt nhanh" Command="{Binding ShowQuickSetupCommand}"/>
-                    <RadioButton Style="{StaticResource SidebarButton}" Content="Phần mềm sinh viên" Command="{Binding ShowStudentAppsCommand}"/>
-                    <RadioButton Style="{StaticResource SidebarButton}" Content="Công cụ hệ thống" Command="{Binding ShowUtilitiesCommand}"/>
-                </StackPanel>
-
-                <StackPanel Grid.Row="2">
-                    <Separator Background="#334155" Margin="0,10"/>
-                    
-                    <Button Content="{Binding MachineCode}" 
-                            Command="{Binding CopyHWIDCommand}" 
-                            Style="{StaticResource SidebarHWIDButton}" 
-                            ToolTip="Mã máy HWID - Click để Copy"/>
-
-                    <TextBlock Text="Chế độ Quản trị viên" Foreground="#10B981" FontSize="10" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10,0,0"/>
-                </StackPanel>
-            </Grid>
-        </Border>
-
-        <!-- Main Content Area -->
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            
-            <ContentControl Content="{Binding CurrentView}" Grid.Row="0"/>
-            
-            <!-- Bottom Status Bar -->
-            <Border Grid.Row="1" Background="{StaticResource SurfaceBrush}" BorderBrush="#334155" BorderThickness="0,1,0,0" Padding="15,8">
+            <!-- Sidebar -->
+            <Border Grid.Column="0" Background="{StaticResource SurfaceBrush}" Padding="15,40,15,20">
                 <Grid>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Trạng thái hệ thống: " Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
-                        <TextBlock Text="Sẵn sàng" Foreground="White" FontSize="11" FontWeight="SemiBold"/>
-                        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="10,0" Background="#334155"/>
-                        <TextBlock Text="Bảo vệ: Bình thường" Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Margin="0,0,0,40">
+                        <TextBlock Text="LapLapCanTho" FontSize="20" FontWeight="Black" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Center"/>
+                        <TextBlock Text="X LapTopThanhVo" FontSize="12" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+
+                        <!-- Customer Greeting -->
+                        <Border Background="#10B981" CornerRadius="4" Padding="10,5" Margin="0,15,0,0" HorizontalAlignment="Center" Visibility="{Binding GreetingVisibility}">
+                            <TextBlock Text="{Binding CustomerGreeting}" FontWeight="Bold" Foreground="#0F172A" FontSize="11" TextAlignment="Center" TextWrapping="Wrap"/>
+                        </Border>
                     </StackPanel>
-                    
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Content="{Binding LicenseStatus}" 
-                                Command="{Binding ActivateLicenseCommand}"
-                                Foreground="{StaticResource AccentBrush}" 
-                                FontSize="11" FontWeight="Bold" Background="Transparent" BorderThickness="0" Cursor="Hand" Margin="0,0,15,0"/>
-                        <TextBlock Text="v1.0.0" Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
+
+                    <StackPanel Grid.Row="1">
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Thông tin phần cứng" Command="{Binding ShowHardwareCommand}" IsChecked="True"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Cài đặt nhanh" Command="{Binding ShowQuickSetupCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Phần mềm sinh viên" Command="{Binding ShowStudentAppsCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Công cụ hệ thống" Command="{Binding ShowUtilitiesCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Sao lưu dữ liệu" Command="{Binding ShowBackupCommand}"/>
+                        
+                        <Separator Background="#334155" Margin="0,15"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Cài đặt &amp; Bản quyền" Command="{Binding ShowSettingsCommand}"/>
                     </StackPanel>
                 </Grid>
             </Border>
+
+            <!-- Main Content Area -->
+            <ContentControl Grid.Column="1" Content="{Binding CurrentView}"/>
         </Grid>
+
+        <!-- Unified Bottom Status Bar -->
+        <Border Grid.Row="1" Background="{StaticResource SurfaceBrush}" BorderBrush="#334155" BorderThickness="0,1,0,0" Padding="15,10">
+            <Grid>
+                <!-- Left Details (Admin, HWID, System Status) -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock Text="Chế độ Quản trị viên" Foreground="#10B981" FontSize="11" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                    
+                    <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="0,0,15,0" Background="#334155"/>
+                    <TextBlock Text="HWID:" Foreground="{StaticResource MutedTextBrush}" FontSize="11" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <Button Content="{Binding MachineCode}" 
+                            Command="{Binding CopyHWIDCommand}" 
+                            Style="{StaticResource SidebarHWIDButton}" 
+                            ToolTip="Mã máy HWID - Click để Copy"
+                            FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBrush}"
+                            VerticalAlignment="Center" Padding="0"/>
+
+                    <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="15,0" Background="#334155"/>
+                    <TextBlock Text="Trạng thái hệ thống: " Foreground="{StaticResource MutedTextBrush}" FontSize="11" VerticalAlignment="Center"/>
+                    <TextBlock Text="Sẵn sàng" Foreground="White" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="10,0" Background="#334155"/>
+                    <TextBlock Text="Bảo vệ: Bình thường" Foreground="{StaticResource MutedTextBrush}" FontSize="11" VerticalAlignment="Center"/>
+                </StackPanel>
+                
+                <!-- Right Details (Log, License, Version) -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Content="Truy cập log lỗi" 
+                            Command="{Binding OpenLogCommand}"
+                            Foreground="{StaticResource MutedTextBrush}" 
+                            FontSize="11" Background="Transparent" BorderThickness="0" Cursor="Hand" Margin="0,0,15,0">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <TextBlock Text="{TemplateBinding Content}" TextDecorations="Underline"/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    
+                    <StackPanel Orientation="Horizontal" Margin="0,0,15,0">
+                        <Button Content="{Binding LicenseStatus}" 
+                                Command="{Binding ActivateLicenseCommand}"
+                                Foreground="{StaticResource PrimaryBrush}" 
+                                FontSize="11" FontWeight="Bold" Background="Transparent" BorderThickness="0" Cursor="Hand" VerticalAlignment="Center"/>
+                        
+                        <Path Data="M9,16.17L4.83,12L3.41,13.41L9,19L21,7L19.59,5.59L9,16.17Z" 
+                              Fill="{StaticResource PrimaryBrush}" 
+                              Width="14" Height="14" Stretch="Uniform" 
+                              Margin="5,0,0,0" VerticalAlignment="Center"
+                              Visibility="{Binding IsLicensed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    </StackPanel>
+
+                    <TextBlock Text="{Binding VersionText}" Foreground="{StaticResource MutedTextBrush}" FontSize="11" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

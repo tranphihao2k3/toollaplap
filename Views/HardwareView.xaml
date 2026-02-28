@@ -32,7 +32,7 @@
                 <!-- Computer Identity Section -->
                 <Border Style="{StaticResource ModernCard}" Margin="0,0,0,10" Padding="15">
                     <StackPanel>
-                        <TextBlock Text="ĐỊNH DANH HỆ THỐNG" FontSize="10" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,8"/>
+                        <TextBlock Text="ĐỊNH DANH HỆ THỐNG" FontSize="13" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,10"/>
                         <TextBlock Text="{Binding SysInfo.ModelName}" FontSize="16" Foreground="White" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,0,8"/>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -45,7 +45,7 @@
                             </StackPanel>
                             <StackPanel Grid.Column="1">
                                 <Button Background="Transparent" BorderThickness="0" Command="{Binding CopySerialCommand}" Padding="0" HorizontalContentAlignment="Left">
-                                    <TextBlock Text="{Binding SysInfo.SerialNumber}" FontSize="12" Foreground="{StaticResource PrimaryBrush}" FontWeight="Bold" Cursor="Hand" TextDecorations="Underline"/>
+                                    <TextBlock Text="{Binding SysInfo.SerialNumber}" FontSize="12" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" Cursor="Hand" TextDecorations="Underline"/>
                                 </Button>
                                 <TextBlock Text="{Binding SysInfo.ComputerName}" FontSize="12" Foreground="White" Margin="0,2"/>
                             </StackPanel>
@@ -56,7 +56,7 @@
                 <!-- CPU Section -->
                 <Border Style="{StaticResource ModernCard}" Margin="0,0,0,10" Padding="15">
                     <StackPanel>
-                        <TextBlock Text="VI XỬ LÝ [ CPU ]" FontSize="10" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,8"/>
+                        <TextBlock Text="VI XỬ LÝ [ CPU ]" FontSize="13" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,10"/>
                         <TextBlock Text="{Binding SysInfo.CPU}" FontSize="14" Foreground="White" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,0,8"/>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -64,14 +64,14 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="Nhân / Luồng:" FontSize="12" Foreground="{StaticResource MutedTextBrush}" Margin="0,2"/>
-                                <TextBlock Text="Xung nhịp tối đa:" FontSize="12" Foreground="{StaticResource MutedTextBrush}" Margin="0,2"/>
-                                <TextBlock Text="Kiến trúc CPU:" FontSize="12" Foreground="{StaticResource MutedTextBrush}" Margin="0,2"/>
+                                <TextBlock Text="Nhân / Luồng:" FontSize="12" Foreground="White" Margin="0,2"/>
+                                <TextBlock Text="Xung nhịp tối đa:" FontSize="12" Foreground="White" Margin="0,2"/>
+                                <TextBlock Text="Kiến trúc CPU:" FontSize="12" Foreground="White" Margin="0,2"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1">
-                                <TextBlock Text="{Binding SysInfo.CPUCoresThreads}" FontSize="12" Foreground="White" Margin="0,2"/>
-                                <TextBlock Text="{Binding SysInfo.CPUMaxSpeed}" FontSize="12" Foreground="White" Margin="0,2"/>
-                                <TextBlock Text="{Binding SysInfo.CPUArchitecture}" FontSize="12" Foreground="White" Margin="0,2"/>
+                                <TextBlock Text="{Binding SysInfo.CPUCoresThreads}" FontSize="12" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" Margin="0,2"/>
+                                <TextBlock Text="{Binding SysInfo.CPUMaxSpeed}" FontSize="12" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" Margin="0,2"/>
+                                <TextBlock Text="{Binding SysInfo.CPUArchitecture}" FontSize="12" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" Margin="0,2"/>
                             </StackPanel>
                         </Grid>
                     </StackPanel>
@@ -80,8 +80,11 @@
                 <!-- RAM Section -->
                 <Border Style="{StaticResource ModernCard}" Margin="0,0,0,10" Padding="15">
                     <StackPanel>
-                        <TextBlock Text="BỘ NHỚ [ RAM ]" FontSize="10" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,8"/>
-                        <TextBlock Text="{Binding SysInfo.TotalRam, StringFormat='Tổng dung lượng: {0}'}" FontSize="16" Foreground="{StaticResource PrimaryBrush}" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <TextBlock Text="BỘ NHỚ [ RAM ]" FontSize="13" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,10"/>
+                        <TextBlock FontSize="16" FontWeight="Bold" Margin="0,0,0,10">
+                            <Run Text="Tổng dung lượng: " Foreground="White"/>
+                            <Run Text="{Binding SysInfo.TotalRam}" Foreground="{StaticResource AccentBrush}"/>
+                        </TextBlock>
                         
                         <ItemsControl ItemsSource="{Binding SysInfo.RamSticks}" Margin="5,0,0,8">
                             <ItemsControl.ItemTemplate>
@@ -91,13 +94,13 @@
                                             <ColumnDefinition Width="120"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding Slot}" FontSize="11" Foreground="{StaticResource MutedTextBrush}"/>
-                                        <TextBlock Grid.Column="1" FontSize="12" Foreground="White">
-                                            <Run Text="{Binding Capacity}" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding Slot}" FontSize="11" Foreground="White" Opacity="0.8"/>
+                                        <TextBlock Grid.Column="1" FontSize="12">
+                                            <Run Text="{Binding Capacity}" Foreground="{StaticResource AccentBrush}" FontWeight="Bold"/>
                                             <Run Text=" | " Foreground="{StaticResource MutedTextBrush}"/>
-                                            <Run Text="{Binding Speed}"/>
+                                            <Run Text="{Binding Speed}" Foreground="{StaticResource AccentBrush}"/>
                                             <Run Text=" | " Foreground="{StaticResource MutedTextBrush}"/>
-                                            <Run Text="{Binding Manufacturer}"/>
+                                            <Run Text="{Binding Manufacturer}" Foreground="White"/>
                                         </TextBlock>
                                     </Grid>
                                 </DataTemplate>
@@ -105,9 +108,9 @@
                         </ItemsControl>
 
                         <Separator Background="#2D3748" Margin="0,5"/>
-                        <TextBlock FontSize="12" Foreground="{StaticResource MutedTextBrush}">
-                            <Run Text="Nâng cấp tối đa: "/>
-                            <Run Text="{Binding SysInfo.MaxRamCapacity}" Foreground="White" FontWeight="Bold"/>
+                        <TextBlock FontSize="12">
+                            <Run Text="Nâng cấp tối đa: " Foreground="White"/>
+                            <Run Text="{Binding SysInfo.MaxRamCapacity}" Foreground="{StaticResource AccentBrush}" FontWeight="Bold"/>
                             <Run Text=" "/>
                             <Run Text="{Binding SysInfo.RamSlotsSummary}" Foreground="{StaticResource AccentBrush}"/>
                         </TextBlock>
@@ -117,15 +120,19 @@
                 <!-- GPU Section -->
                 <Border Style="{StaticResource ModernCard}" Margin="0,0,0,10" Padding="15">
                     <StackPanel>
-                        <TextBlock Text="ĐỒ HỌA [ GPU ]" FontSize="10" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,8"/>
+                        <TextBlock Text="ĐỒ HỌA [ GPU ]" FontSize="13" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,10"/>
                         <ItemsControl ItemsSource="{Binding SysInfo.Gpus}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="0,0,0,10">
                                         <TextBlock Text="{Binding Name}" FontSize="13" Foreground="White" FontWeight="Bold" TextWrapping="Wrap"/>
                                         <StackPanel Orientation="Horizontal" Margin="15,2,0,0">
-                                            <TextBlock Text="Dung lượng VRAM: " FontSize="12" Foreground="{StaticResource MutedTextBrush}"/>
-                                            <TextBlock Text="{Binding Vram}" FontSize="12" Foreground="White" FontWeight="Bold"/>
+                                            <TextBlock Text="Dung lượng VRAM: " FontSize="12" Foreground="White"/>
+                                            <TextBlock Text="{Binding Vram}" FontSize="12" Foreground="{StaticResource AccentBrush}" FontWeight="Bold"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="15,2,0,0">
+                                            <TextBlock Text="TDP tối đa: " FontSize="12" Foreground="White"/>
+                                            <TextBlock Text="{Binding Tdp}" FontSize="12" Foreground="{StaticResource AccentBrush}" FontWeight="Bold"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>
@@ -137,7 +144,7 @@
                 <!-- Storage Section -->
                 <Border Style="{StaticResource ModernCard}" Margin="0,0,0,10" Padding="15">
                     <StackPanel>
-                        <TextBlock Text="LƯU TRỮ [ DISK ]" FontSize="10" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,8"/>
+                        <TextBlock Text="LƯU TRỮ [ DISK ]" FontSize="13" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,10"/>
                         <ItemsControl ItemsSource="{Binding SysInfo.Storages}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -149,16 +156,16 @@
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
                                             <StackPanel Grid.Column="0">
-                                                <TextBlock Text="Loại ổ cứng:" FontSize="12" Foreground="{StaticResource MutedTextBrush}" Margin="0,1"/>
-                                                <TextBlock Text="Dung lượng:" FontSize="12" Foreground="{StaticResource MutedTextBrush}" Margin="0,1"/>
-                                                <TextBlock Text="Tình trạng dùng:" FontSize="12" Foreground="{StaticResource MutedTextBrush}" Margin="0,1"/>
-                                                <TextBlock Text="Số Serial:" FontSize="12" Foreground="{StaticResource MutedTextBrush}" Margin="0,1"/>
+                                                <TextBlock Text="Loại ổ cứng:" FontSize="12" Foreground="White" Margin="0,1"/>
+                                                <TextBlock Text="Dung lượng:" FontSize="12" Foreground="White" Margin="0,1"/>
+                                                <TextBlock Text="Tình trạng dùng:" FontSize="12" Foreground="White" Margin="0,1"/>
+                                                <TextBlock Text="Số Serial:" FontSize="12" Foreground="White" Margin="0,1"/>
                                             </StackPanel>
                                             <StackPanel Grid.Column="1">
-                                                <TextBlock Text="{Binding Type}" FontSize="12" Foreground="White" Margin="0,1"/>
-                                                <TextBlock Text="{Binding Capacity}" FontSize="12" Foreground="White" Margin="0,1"/>
-                                                <TextBlock Text="{Binding UsagePercent}" FontSize="12" Foreground="{StaticResource PrimaryBrush}" FontWeight="Bold" Margin="0,1"/>
-                                                <TextBlock Text="{Binding Serial}" FontSize="12" Foreground="White" Margin="0,1"/>
+                                                <TextBlock Text="{Binding Type}" FontSize="12" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" Margin="0,1"/>
+                                                <TextBlock Text="{Binding Capacity}" FontSize="12" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" Margin="0,1"/>
+                                                <TextBlock Text="{Binding UsagePercent}" FontSize="12" Foreground="{StaticResource SuccessBrush}" FontWeight="Bold" Margin="0,1"/>
+                                                <TextBlock Text="{Binding Serial}" FontSize="12" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" Margin="0,1"/>
                                             </StackPanel>
                                         </Grid>
                                     </StackPanel>
@@ -168,55 +175,57 @@
                     </StackPanel>
                 </Border>
 
-                <!-- Battery Section -->
                 <Border Style="{StaticResource ModernCard}" Margin="0,0,0,10" Padding="15">
                     <StackPanel>
-                        <TextBlock Text="NĂNG LƯỢNG [ PIN ]" FontSize="10" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,8"/>
-                        <TextBlock Text="{Binding SysInfo.BatteryHealth, StringFormat='Sức khoẻ Pin: {0}'}" FontSize="16" Foreground="{StaticResource PrimaryBrush}" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <TextBlock Text="NĂNG LƯỢNG [ PIN ]" FontSize="13" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,10"/>
+                        <TextBlock FontSize="16" FontWeight="Bold" Margin="0,0,0,10">
+                            <Run Text="Sức khoẻ Pin: " Foreground="White"/>
+                            <Run Text="{Binding SysInfo.BatteryHealth}" Foreground="{StaticResource AccentBrush}"/>
+                        </TextBlock>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="150"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="Dung lượng thiết kế:" FontSize="12" Foreground="{StaticResource MutedTextBrush}" Margin="0,2"/>
-                                <TextBlock Text="Dung lượng hiện tại:" FontSize="12" Foreground="{StaticResource MutedTextBrush}" Margin="0,2"/>
-                                <TextBlock Text="Pin hiện tại:" FontSize="12" Foreground="{StaticResource MutedTextBrush}" Margin="0,2"/>
-                                <TextBlock Text="Số lần sạc (Cycles):" FontSize="12" Foreground="{StaticResource MutedTextBrush}" Margin="0,2"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="{Binding SysInfo.BatteryDesignCapacity}" FontSize="12" Foreground="White" Margin="0,2"/>
-                                <TextBlock Text="{Binding SysInfo.BatteryFullChargeCapacity}" FontSize="12" Foreground="White" Margin="0,2"/>
-                                <TextBlock Text="{Binding SysInfo.BatteryCurrentPercent}" FontSize="12" Foreground="White" Margin="0,2"/>
-                                <TextBlock Text="{Binding SysInfo.BatteryCycles}" FontSize="12" Foreground="White" Margin="0,2"/>
-                            </StackPanel>
+                             <StackPanel Grid.Column="0">
+                                 <TextBlock Text="Dung lượng thiết kế:" FontSize="12" Foreground="White" Margin="0,2"/>
+                                 <TextBlock Text="Dung lượng thực tế:" FontSize="12" Foreground="White" Margin="0,2"/>
+                                 <TextBlock Text="Pin hiện tại:" FontSize="12" Foreground="White" Margin="0,2"/>
+                                 <TextBlock Text="% Đã chai:" FontSize="12" Foreground="White" Margin="0,2"/>
+                             </StackPanel>
+                             <StackPanel Grid.Column="1">
+                                 <TextBlock Text="{Binding SysInfo.BatteryDesignCapacity}" FontSize="12" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" Margin="0,2"/>
+                                 <TextBlock Text="{Binding SysInfo.BatteryFullChargeCapacity}" FontSize="12" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" Margin="0,2"/>
+                                 <TextBlock Text="{Binding SysInfo.BatteryCurrentPercent}" FontSize="12" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" Margin="0,2"/>
+                                 <TextBlock Text="{Binding SysInfo.BatteryWearPercent}" FontSize="12" Foreground="#EF4444" FontWeight="Bold" Margin="0,2"/>
+                             </StackPanel>
                         </Grid>
                     </StackPanel>
                 </Border>
 
-                <!-- WiFi & System Section -->
+                <!-- WiFi History Section -->
                 <Border Style="{StaticResource ModernCard}" Margin="0,0,0,10" Padding="15">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                            <TextBlock Text="LỊCH SỬ WIFI" FontSize="10" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,8"/>
-                            <ItemsControl ItemsSource="{Binding SysInfo.WiFiProfiles}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding StringFormat='• {0}'}" FontSize="12" Foreground="White" Margin="0,1" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1">
-                            <TextBlock Text="HỆ THỐNG" FontSize="10" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,8"/>
-                            <TextBlock Text="{Binding SysInfo.WindowsStatus}" FontSize="13" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" Margin="0,0,0,5"/>
-                            <TextBlock Text="{Binding SysInfo.BiosVersion, StringFormat='BIOS: {0}'}" FontSize="11" Foreground="{StaticResource MutedTextBrush}"/>
-                        </StackPanel>
-                    </Grid>
+                    <StackPanel>
+                        <TextBlock Text="LỊCH SỬ WIFI" FontSize="13" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,12"/>
+                        <ItemsControl ItemsSource="{Binding SysInfo.WiFiProfiles}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#1E293B" CornerRadius="6" Margin="0,0,8,8" Padding="12,6">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Path Data="M12,21C12,21 11.45,21 11,21C6.03,21 2,16.97 2,12C2,7.03 6.03,3 11,3C11.45,3 12,3 12,3M12,7C12,7 11.67,7 11,7C8.24,7 6,9.24 6,12C6,14.76 8.24,17 11,17C11.67,17 12,17 12,17M12,11C12,11 11.83,11 11.5,11C10.95,11 10.5,11.45 10.5,12C10.5,12.55 10.95,13 11.5,13C11.83,13 12,13 12,13" 
+                                                  Fill="{StaticResource AccentBrush}" Width="12" Height="12" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                            <TextBlock Text="{Binding}" FontSize="14" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
                 </Border>
 
             </StackPanel>
