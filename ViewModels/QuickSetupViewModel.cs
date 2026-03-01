@@ -22,6 +22,10 @@ namespace LapLapAutoTool.ViewModels
         private bool _isBusy;
 
         public ObservableCollection<SoftwareItem> SoftwareList { get; set; }
+        public ObservableCollection<SoftwareItem> UtilityList { get; set; }
+        public ObservableCollection<SoftwareItem> GameList { get; set; }
+        
+        public System.Collections.Generic.IEnumerable<SoftwareItem> AllItems => SoftwareList.Concat(UtilityList).Concat(GameList);
 
         public double Progress
         {
@@ -47,6 +51,8 @@ namespace LapLapAutoTool.ViewModels
             _downloadService = downloadService;
             _logService = logService;
             SoftwareList = new ObservableCollection<SoftwareItem>();
+            UtilityList = new ObservableCollection<SoftwareItem>();
+            GameList = new ObservableCollection<SoftwareItem>();
             LoadSoftwareList();
 
             StartInstallCommand = new RelayCommand(async () => await RunInstallationSequence());
@@ -57,7 +63,7 @@ namespace LapLapAutoTool.ViewModels
 
         private void RefreshSoftwareStatus()
         {
-            foreach (var item in SoftwareList)
+            foreach (var item in AllItems)
             {
                 item.IsAlreadyInstalled = _installService.IsSoftwareInstalled(item.Name);
                 if (item.IsAlreadyInstalled)
@@ -101,7 +107,18 @@ namespace LapLapAutoTool.ViewModels
                         foreach (var item in items)
                         {
                             item.IsAlreadyInstalled = _installService.IsSoftwareInstalled(item.Name);
-                            SoftwareList.Add(item);
+                            if (item.Category == "game")
+                            {
+                                GameList.Add(item);
+                            }
+                            else if (item.Category == "utility")
+                            {
+                                UtilityList.Add(item);
+                            }
+                            else
+                            {
+                                SoftwareList.Add(item);
+                            }
                         }
                         return;
                     }
@@ -130,8 +147,8 @@ namespace LapLapAutoTool.ViewModels
         public RelayCommand SelectNoneCommand { get; }
         public RelayCommand RefreshCommand { get; }
 
-        private void SelectAll() { foreach (var item in SoftwareList) item.IsSelected = true; }
-        private void SelectNone() { foreach (var item in SoftwareList) item.IsSelected = false; }
+        private void SelectAll() { foreach (var item in AllItems) item.IsSelected = true; }
+        private void SelectNone() { foreach (var item in AllItems) item.IsSelected = false; }
 
         private async Task RunInstallationSequence()
         {
@@ -139,8 +156,8 @@ namespace LapLapAutoTool.ViewModels
             IsBusy = true;
             Progress = 0;
 
-            var selectedItems = SoftwareList.Where(s => s.IsSelected && !s.IsAlreadyInstalled).ToList();
-            var alreadyDone = SoftwareList.Where(s => s.IsSelected && s.IsAlreadyInstalled).ToList();
+            var selectedItems = AllItems.Where(s => s.IsSelected && !s.IsAlreadyInstalled).ToList();
+            var alreadyDone = AllItems.Where(s => s.IsSelected && s.IsAlreadyInstalled).ToList();
 
             foreach (var item in alreadyDone)
                 item.Status = InstallStatus.Completed;
@@ -177,7 +194,7 @@ namespace LapLapAutoTool.ViewModels
                             item.DownloadProgress = 0;
                             
                             // Cập nhật text trạng thái nếu chưa có gì đang cài
-                            if (installedCount == SoftwareList.Count(s => s.IsSelected && s.Status == InstallStatus.Completed))
+                            if (installedCount == AllItems.Count(s => s.IsSelected && s.Status == InstallStatus.Completed))
                                 StatusText = $"Đang tải {item.Name}...";
 
                             var dlProgress = new Progress<(double percent, string status)>(report =>

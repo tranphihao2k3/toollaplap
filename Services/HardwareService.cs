@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using LapLapAutoTool.Models;
 using System.Linq;
 using System.Diagnostics;
+using System.Text.Json;
+using System.IO;
 
 namespace LapLapAutoTool.Services
 {
@@ -216,7 +218,7 @@ namespace LapLapAutoTool.Services
         {
             try
             {
-                using var diskSearcher = new ManagementObjectSearcher("SELECT Model, Size, InterfaceType, SerialNumber FROM Win32_DiskDrive");
+                using var diskSearcher = new ManagementObjectSearcher("SELECT Model, Size, InterfaceType, SerialNumber, DeviceID FROM Win32_DiskDrive");
                 using var driveSearcher = new ManagementObjectSearcher("SELECT Size, FreeSpace FROM Win32_LogicalDisk WHERE DriveType=3");
                 using var diskCollection = diskSearcher.Get();
                 using var driveCollection = driveSearcher.Get();
@@ -230,27 +232,119 @@ namespace LapLapAutoTool.Services
                 double totalSize = totalUsed + totalFree;
                 double usagePercent = totalSize > 0 ? (totalUsed / totalSize) * 100 : 0;
 
+                string smartctlPath = FindSmartctlPath();
+
                 foreach (var disk in diskCollection)
                 {
                     double sizeBytes = Convert.ToDouble(disk["Size"] ?? 0);
                     string interfaceType = disk["InterfaceType"]?.ToString() ?? "N/A";
-                    string type = interfaceType.Contains("SCSI") || interfaceType.Contains("NVMe") ? "NVMe (PCIe M.2) [SSD]" : "SATA [SSD/HDD]";
+                    string deviceId = disk["DeviceID"]?.ToString() ?? "";
+                    string type = interfaceType.Contains("SCSI") || interfaceType.Contains("NVMe") || deviceId.Contains("NVMe") ? "NVMe (PCIe M.2) [SSD]" : "SATA [SSD/HDD]";
 
-                    info.Storages.Add(new StorageInfo
+                    var storage = new StorageInfo
                     {
                         Model = disk["Model"]?.ToString() ?? "Unknown",
                         Type = type,
-                        Capacity = $"{Math.Round(sizeBytes / (1024.0 * 1024.0 * 1024.0), 1)} GB",
-                        UsagePercent = $"{Math.Round(usagePercent, 1)}%",
-                        UsedSpace = $"{Math.Round(totalUsed / (1024.0 * 1024.0 * 1024.0), 1)} GB",
-                        FreeSpace = $"{Math.Round(totalFree / (1024.0 * 1024.0 * 1024.0), 1)} GB",
-                        Serial = disk["SerialNumber"]?.ToString()?.Trim() ?? "N/A"
-                    });
+                        Capacity = $"{Math.Round(sizeBytes / (1024.0 * 1024.0 * 1024.0), 1)} GB"
+                    };
+
+                    // Try SMART info if NVMe
+                    if (!string.IsNullOrEmpty(smartctlPath) && (type.Contains("NVMe") || disk["Model"]?.ToString()?.Contains("NVMe", StringComparison.OrdinalIgnoreCase) == true))
+                    {
+                        UpdateNvmeSmartInfo(storage, smartctlPath, deviceId);
+                    }
+
+                    info.Storages.Add(storage);
                 }
             }
             catch (Exception ex)
             {
                 _logService.LogError("Lỗi khi quét thông tin ổ cứng", ex);
+            }
+        }
+
+        private string FindSmartctlPath()
+        {
+            // 1. Check local directory
+            string localPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "smartctl.exe");
+            if (File.Exists(localPath)) return localPath;
+
+            // 2. Default path
+            string defaultPath = @"C:\Program Files\smartmontools\bin\smartctl.exe";
+            if (File.Exists(defaultPath)) return defaultPath;
+
+            // 3. Search in PATH
+            try
+            {
+                using var proc = Process.Start(new ProcessStartInfo
+                {
+                    FileName = "where.exe",
+                    Arguments = "smartctl",
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                });
+                string output = proc.StandardOutput.ReadToEnd();
+                proc.WaitForExit();
+                if (proc.ExitCode == 0)
+                {
+                    return output.Split('\n', StringSplitOptions.RemoveEmptyEntries)[0].Trim();
+                }
+            }
+            catch { }
+
+            return null;
+        }
+
+        private void UpdateNvmeSmartInfo(StorageInfo storage, string smartctlPath, string deviceId)
+        {
+            try
+            {
+                // We need to map DeviceID (e.g. \\.\PHYSICALDRIVE0) to smartctl format (/dev/pd0)
+                string smartDevice = deviceId.Replace(@"\\.\PHYSICALDRIVE", "/dev/pd");
+                
+                var psi = new ProcessStartInfo
+                {
+                    FileName = smartctlPath,
+                    Arguments = $"-a {smartDevice} -j",
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                using var process = Process.Start(psi);
+                string output = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+
+                if (string.IsNullOrEmpty(output)) return;
+
+                using var doc = JsonDocument.Parse(output);
+                var root = doc.RootElement;
+
+                if (root.TryGetProperty("nvme_smart_health_information_log", out var nvme))
+                {
+                    storage.HasSmartInfo = true;
+                    if (nvme.TryGetProperty("percentage_used", out var wear))
+                        storage.HealthRemaining = 100 - wear.GetInt32();
+                    if (nvme.TryGetProperty("available_spare", out var spare))
+                        storage.AvailableSpare = spare.GetInt32();
+                    if (nvme.TryGetProperty("temperature", out var temp))
+                        storage.Temperature = temp.GetInt32();
+                }
+
+                // Also grab Power on hours for NVMe
+                if (root.TryGetProperty("power_on_time", out var pot))
+                {
+                    if (pot.TryGetProperty("hours", out var hours))
+                    {
+                        storage.PowerOnDays = hours.GetInt32() / 24;
+                        storage.HasSmartInfo = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logService.LogWarning($"Lỗi khi đọc SMART NVMe cho {deviceId}: {ex.Message}");
             }
         }
 

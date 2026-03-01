@@ -55,7 +55,7 @@ namespace LapLapAutoTool.ViewModels
 
                 if (!string.IsNullOrEmpty(json))
                 {
-                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, AllowTrailingCommas = true };
                     var groups = JsonSerializer.Deserialize<System.Collections.Generic.List<StudentAppGroup>>(json, options);
                     if (groups != null)
                     {

@@ -1,0 +1,175 @@
+<UserControl x:Class="LapLapAutoTool.Views.UninstallView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d">
+    <Grid Margin="18,14,18,14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,14">
+            <StackPanel>
+                <TextBlock Text="Xoá phần mềm" FontSize="22" FontWeight="Black" Foreground="White"/>
+                <TextBlock Text="Danh sách phần mềm đã cài — tìm kiếm và gỡ nhanh"
+                           Foreground="{StaticResource MutedTextBrush}" FontSize="13"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <TextBlock Text="{Binding AppCountText}" Foreground="{StaticResource MutedTextBrush}"
+                           FontSize="12" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                <Button Content="🔄 Tải lại" Command="{Binding LoadAppsCommand}"
+                        Style="{StaticResource SecondaryButton}" Padding="12,7"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Search + toolbar -->
+        <Grid Grid.Row="1" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Search box -->
+            <Border Grid.Column="0" Background="{StaticResource SurfaceBrush}" CornerRadius="8"
+                    BorderBrush="#334155" BorderThickness="1" Margin="0,0,8,0">
+                <Grid>
+                    <TextBlock Text="🔍  Tìm kiếm phần mềm..." Foreground="#475569"
+                               FontSize="13" Margin="12,0,0,0" VerticalAlignment="Center"
+                               IsHitTestVisible="False"
+                               Visibility="{Binding SearchText, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter=Inverse}"/>
+                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                             Background="Transparent" BorderThickness="0"
+                             Foreground="White" CaretBrush="White"
+                             FontSize="13" Padding="12,9" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Border>
+
+            <Button Grid.Column="1" Content="Chọn tất cả" Command="{Binding SelectAllCommand}"
+                    Style="{StaticResource SecondaryButton}" Padding="12,8" Margin="0,0,6,0"/>
+            <Button Grid.Column="2" Content="Bỏ chọn" Command="{Binding ClearSelectionCommand}"
+                    Style="{StaticResource SecondaryButton}" Padding="12,8" Margin="0,0,6,0"/>
+            <Button Grid.Column="3" Padding="16,8">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource ModernButton}">
+                        <Setter Property="Background" Value="#EF4444"/>
+                    </Style>
+                </Button.Style>
+                <Button.Command>
+                    <Binding Path="UninstallSelectedCommand"/>
+                </Button.Command>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="🗑  Gỡ cài (" FontSize="13"/>
+                    <TextBlock Text="{Binding SelectedCount}" FontSize="13" FontWeight="Bold"/>
+                    <TextBlock Text=")" FontSize="13"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!-- App list -->
+        <Border Grid.Row="2" Style="{StaticResource ModernCard}" Padding="0">
+            <Grid>
+                <!-- Column headers -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Background="#0F172A" Padding="16,8" CornerRadius="12,12,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="90"/>
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="#" Foreground="#475569" FontSize="11" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="2" Text="TÊN PHẦN MỀM" Foreground="#475569" FontSize="11" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="3" Text="NHÀ PHÁT TRIỂN" Foreground="#475569" FontSize="11" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="4" Text="PHIÊN BẢN" Foreground="#475569" FontSize="11" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="5" Text="CÀI NGÀY" Foreground="#475569" FontSize="11" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="6" Text="DUNG LƯỢNG" Foreground="#475569" FontSize="11" FontWeight="Bold" HorizontalAlignment="Right"/>
+                    </Grid>
+                </Border>
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding FilteredApps}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="16,8">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#1E293B"/>
+                                                </Trigger>
+                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter Property="Background" Value="#162032"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="30"/>
+                                            <ColumnDefinition Width="32"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="180"/>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="90"/>
+                                            <ColumnDefinition Width="80"/>
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}"
+                                                  VerticalAlignment="Center"/>
+                                        <Image Grid.Column="1" Source="{Binding IconSource}"
+                                               Width="20" Height="20" VerticalAlignment="Center"
+                                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding Name}"
+                                                   Foreground="White" FontSize="12" FontWeight="SemiBold"
+                                                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding Publisher}"
+                                                   Foreground="{StaticResource MutedTextBrush}" FontSize="11"
+                                                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="4" Text="{Binding Version}"
+                                                   Foreground="{StaticResource MutedTextBrush}" FontSize="11"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="5" Text="{Binding InstallDate}"
+                                                   Foreground="{StaticResource MutedTextBrush}" FontSize="11"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="6" Text="{Binding EstimatedSize}"
+                                                   Foreground="{StaticResource AccentBrush}" FontSize="11"
+                                                   VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <!-- Loading overlay -->
+                <Grid Grid.RowSpan="2" Background="#AA0F172A"
+                      Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <ProgressBar IsIndeterminate="True" Width="180" Height="4"
+                                     Foreground="{StaticResource AccentBrush}" Background="#1E293B"/>
+                        <TextBlock Text="Đang đọc danh sách phần mềm…"
+                                   Foreground="White" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Footer hint -->
+        <TextBlock Grid.Row="3" Foreground="#334155" FontSize="11" Margin="0,8,0,0"
+                   Text="💡 Tick chọn phần mềm → Nhấn Gỡ cài đặt. Quá trình gỡ sẽ chạy trình gỡ của từng phần mềm."/>
+    </Grid>
+</UserControl>

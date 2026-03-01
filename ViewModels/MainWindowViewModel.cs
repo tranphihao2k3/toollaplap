@@ -45,6 +45,9 @@ namespace LapLapAutoTool.ViewModels
         public UtilitiesViewModel UtilitiesVM { get; set; }
         public BackupViewModel BackupVM { get; set; }
         public SettingsViewModel SettingsVM { get; set; }
+        public LaptopTestViewModel LaptopTestVM { get; set; }
+        public UninstallViewModel UninstallVM { get; set; }
+        public AssessmentViewModel AssessmentVM { get; set; }
 
         public string CustomerGreeting
         {
@@ -75,6 +78,9 @@ namespace LapLapAutoTool.ViewModels
             UtilitiesVM = new UtilitiesViewModel(_installService);
             BackupVM = new BackupViewModel(_installService);
             SettingsVM = new SettingsViewModel();
+            LaptopTestVM = new LaptopTestViewModel();
+            UninstallVM = new UninstallViewModel();
+            AssessmentVM = new AssessmentViewModel();
 
             // Notify UI about status
             OnPropertyChanged(nameof(LicenseStatus));
@@ -95,6 +101,13 @@ namespace LapLapAutoTool.ViewModels
         public RelayCommand ShowUtilitiesCommand => new RelayCommand(() => CurrentView = UtilitiesVM);
         public RelayCommand ShowBackupCommand => new RelayCommand(() => CurrentView = BackupVM);
         public RelayCommand ShowSettingsCommand => new RelayCommand(() => CurrentView = SettingsVM);
+        public RelayCommand ShowLaptopTestCommand  => new RelayCommand(() => CurrentView = LaptopTestVM);
+        public RelayCommand ShowUninstallCommand   => new RelayCommand(() => CurrentView = UninstallVM);
+        public RelayCommand ShowAssessmentCommand  => new RelayCommand(() =>
+        {
+            AssessmentVM.LoadFromSysInfo(HardwareVM.SysInfo);
+            CurrentView = AssessmentVM;
+        });
         public RelayCommand OpenLogCommand => new RelayCommand(() =>
         {
             try

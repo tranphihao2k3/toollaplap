@@ -1,0 +1,115 @@
+<Window x:Class="LapLapAutoTool.Views.MicTestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Test Microphone" Width="560" Height="460"
+        WindowStartupLocation="CenterScreen"
+        Background="#0F172A" ResizeMode="NoResize"
+        Closed="Window_Closed">
+    <Grid Margin="22,18,22,18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Grid.Row="0" Text="🎤 Test Microphone"
+                   FontSize="22" FontWeight="Black" Foreground="White" Margin="0,0,0,4"/>
+        <TextBlock Grid.Row="1" Text="Chọn thiết bị, ghi âm và phát lại để kiểm tra"
+                   FontSize="12" Foreground="#94A3B8" Margin="0,0,0,16"/>
+
+        <!-- Device selection -->
+        <Grid Grid.Row="2" Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Thiết bị:" Foreground="#94A3B8" FontSize="12"
+                       VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <ComboBox Grid.Column="1" x:Name="DeviceCombo"
+                      SelectionChanged="DeviceCombo_Changed"
+                      Background="#1E293B" Foreground="Black"
+                      BorderBrush="#334155" FontSize="12" Padding="10,7" Margin="0,0,0,0">
+                <ComboBox.ItemContainerStyle>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Foreground" Value="Black"/>
+                    </Style>
+                </ComboBox.ItemContainerStyle>
+            </ComboBox>
+        </Grid>
+
+        <!-- Volume bar -->
+        <Grid Grid.Row="3" Margin="0,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- VU meter -->
+            <Grid Grid.Row="0" Margin="0,0,0,10">
+                <Border Background="#1E293B" CornerRadius="4" Height="20">
+                    <Border x:Name="VolumeBar" Background="#2563EB" CornerRadius="4"
+                            HorizontalAlignment="Left" Width="0" MinWidth="0"/>
+                </Border>
+                <TextBlock x:Name="VolumeText" Text="0 dB" Foreground="White"
+                           FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+
+            <!-- Recording timer -->
+            <TextBlock Grid.Row="1" x:Name="RecordTimer" Text="00:00"
+                       Foreground="#64748B" FontSize="13" FontWeight="Bold"
+                       HorizontalAlignment="Center" Margin="0,0,0,8"/>
+
+            <!-- Waveform canvas -->
+            <Border Grid.Row="2" Background="#0A0F1E" CornerRadius="8">
+                <Canvas x:Name="WaveCanvas" ClipToBounds="True">
+                    <Polyline x:Name="WaveLine" Stroke="#2563EB" StrokeThickness="1.8"
+                              StrokeLineJoin="Round"/>
+                </Canvas>
+            </Border>
+        </Grid>
+
+        <!-- Recorded playback status -->
+        <Border Grid.Row="4" Background="#1E293B" CornerRadius="6" Padding="12,7" Margin="0,12,0,0"
+                Visibility="Collapsed" x:Name="PlaybackPanel">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="RecordedInfo" Text="Đã ghi: 0s" Foreground="#94A3B8" FontSize="12" VerticalAlignment="Center"/>
+                <Button x:Name="BtnPlay" Content="▶ Phát lại" Click="PlayRecording"
+                        Margin="12,0,0,0" Padding="12,5" Style="{StaticResource AccentButton}" FontSize="12"/>
+                <Button Content="🗑" Click="DeleteRecording"
+                        Margin="8,0,0,0" Padding="10,5" Style="{StaticResource SecondaryButton}" FontSize="12"
+                        ToolTip="Xoá bản ghi"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Controls -->
+        <Grid Grid.Row="5" Margin="0,14,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="#1E293B" CornerRadius="6" Padding="10,6">
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse x:Name="StatusDot" Width="8" Height="8" Fill="#334155"
+                             VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock x:Name="StatusLabel" Text="Chọn thiết bị để bắt đầu"
+                               Foreground="#94A3B8" FontSize="12" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <Button Grid.Column="1" x:Name="BtnRecord"
+                    Content="⏺  Ghi Âm" Click="ToggleRecord"
+                    Padding="16,8" Style="{StaticResource ModernButton}" FontSize="13"
+                    Margin="8,0,0,0"/>
+            <Button Grid.Column="2" Content="Đóng" Click="Close_Click"
+                    Padding="14,8" Style="{StaticResource SecondaryButton}" FontSize="13"
+                    Margin="8,0,0,0"/>
+        </Grid>
+    </Grid>
+</Window>

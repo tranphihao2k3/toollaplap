@@ -6,6 +6,7 @@ namespace LapLapAutoTool.Services
     public interface ILogService
     {
         void LogInfo(string message);
+        void LogWarning(string message);
         void LogError(string message, Exception? ex = null);
         string GetLogPath();
     }
@@ -27,6 +28,11 @@ namespace LapLapAutoTool.Services
         public void LogInfo(string message)
         {
             WriteToFile($"[INFO] [{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}");
+        }
+
+        public void LogWarning(string message)
+        {
+            WriteToFile($"[WARNING] [{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}");
         }
 
         public void LogError(string message, Exception? ex = null)

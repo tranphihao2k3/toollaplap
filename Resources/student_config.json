@@ -3,7 +3,7 @@
     "Group": "Adobe Photoshop",
     "Icon": "Ps",
     "Versions": [
-      { "Name": "Adobe Photoshop 2025", "Year": "2025", "DownloadUrl": "", "FileSize": "", "Password": "linkneverdie.com" },
+    
       { "Name": "Adobe Photoshop 2024", "Year": "2024", "DownloadUrl": "https://drive.usercontent.google.com/download?id=10wurA1yJoWlksHuYn6ikzznLKWGmSp80&authuser=0", "FileSize": "", "Password": "linkneverdie.com" },
       { "Name": "Adobe Photoshop 2023", "Year": "2023", "DownloadUrl": "https://drive.usercontent.google.com/download?id=16O4hligcbMb3rPo4fd1xEAInw6nHtSIF&authuser=0", "FileSize": "", "Password": "linkneverdie.com" }
     ]
@@ -12,36 +12,36 @@
     "Group": "Adobe Illustrator",
     "Icon": "Ai",
     "Versions": [
-      { "Name": "Adobe Illustrator 2025", "Year": "2025", "DownloadUrl": "", "FileSize": "", "Password": "linkneverdie.com" },
+   
       { "Name": "Adobe Illustrator 2024", "Year": "2024", "DownloadUrl": "https://drive.usercontent.google.com/download?id=12hA4HCwNui7TAyrAaEDMceuImc8ehige&authuser=0", "FileSize": "", "Password": "linkneverdie.com" },
-      { "Name": "Adobe Illustrator 2023", "Year": "2023", "DownloadUrl": "", "FileSize": "", "Password": "linkneverdie.com" }
+      
     ]
   },
   {
     "Group": "Adobe Premiere Pro",
     "Icon": "Pr",
     "Versions": [
-      { "Name": "Adobe Premiere Pro 2025", "Year": "2025", "DownloadUrl": "", "FileSize": "", "Password": "linkneverdie.com" },
+
       { "Name": "Adobe Premiere Pro 2024", "Year": "2024", "DownloadUrl": "https://drive.usercontent.google.com/download?id=1_4YUvixnJ3IZU_VvlREZ5-PpJllQyMfY&authuser=0", "FileSize": "", "Password": "linkneverdie.com" },
-      { "Name": "Adobe Premiere Pro 2023", "Year": "2023", "DownloadUrl": "", "FileSize": "", "Password": "linkneverdie.com" }
+  
     ]
   },
   {
     "Group": "Adobe After Effects",
     "Icon": "Ae",
     "Versions": [
-      { "Name": "Adobe After Effects 2025", "Year": "2025", "DownloadUrl": "", "FileSize": "", "Password": "linkneverdie.com" },
+ 
       { "Name": "Adobe After Effects 2024", "Year": "2024", "DownloadUrl": "https://drive.usercontent.google.com/download?id=1_aUqoCzM0tjuW9f_H04yG_-5zgTu6jl1&authuser=0", "FileSize": "", "Password": "linkneverdie.com" },
-      { "Name": "Adobe After Effects 2023", "Year": "2023", "DownloadUrl": "", "FileSize": "", "Password": "linkneverdie.com" }
+ 
     ]
   },
   {
     "Group": "Adobe InDesign",
     "Icon": "Id",
     "Versions": [
-      { "Name": "Adobe InDesign 2025", "Year": "2025", "DownloadUrl": "", "FileSize": "", "Password": "linkneverdie.com" },
+
       { "Name": "Adobe InDesign 2024", "Year": "2024", "DownloadUrl": "https://drive.usercontent.google.com/download?id=1DUf_VFtB0WYXDX_zJEpfie3O2LEMbsut&authuser=0", "FileSize": "", "Password": "linkneverdie.com" },
-      { "Name": "Adobe InDesign 2023", "Year": "2023", "DownloadUrl": "", "FileSize": "", "Password": "linkneverdie.com" }
+      
     ]
   },
   {

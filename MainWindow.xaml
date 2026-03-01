@@ -5,9 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodels="clr-namespace:LapLapAutoTool.ViewModels"
         xmlns:views="clr-namespace:LapLapAutoTool.Views"
+        xmlns:converters="clr-namespace:LapLapAutoTool.Converters"
         mc:Ignorable="d"
         Title="tool v1" 
-        Height="700" Width="1000"
+        Height="780" Width="1100"
+        MinHeight="700" MinWidth="900"
         Icon="/Resources/app_icon.png"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource BackgroundBrush}"
@@ -20,6 +22,7 @@
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         
         <!-- DataTemplates to link ViewModels to Views -->
         <DataTemplate DataType="{x:Type viewmodels:HardwareViewModel}">
@@ -39,6 +42,15 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewmodels:SettingsViewModel}">
             <views:SettingsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:LaptopTestViewModel}">
+            <views:LaptopTestView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:UninstallViewModel}">
+            <views:UninstallView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:AssessmentViewModel}">
+            <views:AssessmentView/>
         </DataTemplate>
     </Window.Resources>
 
@@ -78,6 +90,9 @@
                         <RadioButton Style="{StaticResource SidebarButton}" Content="Phần mềm sinh viên" Command="{Binding ShowStudentAppsCommand}"/>
                         <RadioButton Style="{StaticResource SidebarButton}" Content="Công cụ hệ thống" Command="{Binding ShowUtilitiesCommand}"/>
                         <RadioButton Style="{StaticResource SidebarButton}" Content="Sao lưu dữ liệu" Command="{Binding ShowBackupCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Test chức năng" Command="{Binding ShowLaptopTestCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Xoá phần mềm" Command="{Binding ShowUninstallCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="📋 Phiếu thẩm định" Command="{Binding ShowAssessmentCommand}"/>
                         
                         <Separator Background="#334155" Margin="0,15"/>
                         <RadioButton Style="{StaticResource SidebarButton}" Content="Cài đặt &amp; Bản quyền" Command="{Binding ShowSettingsCommand}"/>

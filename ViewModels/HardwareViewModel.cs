@@ -121,8 +121,13 @@ namespace LapLapAutoTool.ViewModels
                 sb.AppendLine($"    Model                       {storage.Model}");
                 sb.AppendLine($"    Loai                        {storage.Type}");
                 sb.AppendLine($"    Dung luong goc              {storage.Capacity}");
-                sb.AppendLine($"    Su dung                     {storage.UsagePercent}  (Da dung: {storage.UsedSpace}  /  Con lai: {storage.FreeSpace})");
-                sb.AppendLine($"    Serial Number               {storage.Serial}");
+                if (storage.HasSmartInfo)
+                {
+                    sb.AppendLine($"    Suc khoe (Remaining)        {storage.HealthRemaining}%");
+                    sb.AppendLine($"    Nhiet do (Temperature)      {storage.Temperature} °C");
+                    sb.AppendLine($"    Du phong (Spare)            {storage.AvailableSpare}%");
+                    sb.AppendLine($"    Thoi gian hoat dong         {storage.PowerOnDays} ngay");
+                }
                 sb.AppendLine("");
             }
 

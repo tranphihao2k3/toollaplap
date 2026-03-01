@@ -96,7 +96,42 @@
     "Description": "Bộ công cụ văn phòng (Word, Excel, PowerPoint)",
     "IsAsync": true,
     "Category": "general",
-    "DownloadUrl": "https://drive.google.com/file/d/1pPgEyS4-v9fTIaiesrqCykrU9z7RWr_E/view?usp=sharing",
-    "FileSize": ""
+    "DownloadUrl": "https://drive.google.com/file/d/1pPgEyS4-v9fTIaiesrqCykrU9z7RWr_E/view?usp=sharing"
+  },
+  {
+    "Name": "HWiNFO64 (Tiện ích mẫu)",
+    "FileName": "hwi64_installer.exe",
+    "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
+    "Description": "Tiện ích theo dõi phần cứng chi tiết",
+    "Category": "utility",
+    "DownloadUrl": "",
+    "FileSize": "10 MB"
+  },
+  {
+    "Name": "Rufus (Tiện ích mẫu)",
+    "FileName": "rufus.exe",
+    "SilentArgs": "COPY_TO_DESKTOP",
+    "Description": "Tiện ích tạo USB Boot cài Win",
+    "Category": "utility",
+    "DownloadUrl": "",
+    "FileSize": "1.4 MB"
+  },
+  {
+    "Name": "Steam (Game mẫu)",
+    "FileName": "SteamSetup.exe",
+    "SilentArgs": "/S",
+    "Description": "Cửa hàng phát hành game số",
+    "Category": "game",
+    "DownloadUrl": "",
+    "FileSize": "2.5 MB"
+  },
+  {
+    "Name": "Liên Minh Huyền Thoại (Game mẫu)",
+    "FileName": "LoL_Installer.exe",
+    "SilentArgs": "",
+    "Description": "Game chiến thuật MOBA",
+    "Category": "game",
+    "DownloadUrl": "",
+    "FileSize": "15 GB"
   }
 ]

@@ -4,47 +4,55 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:models="clr-namespace:LapLapAutoTool.Models"
-             mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="800">
-    <Grid Margin="20">
+             mc:Ignorable="d">
+    <Grid Margin="18,14,18,14">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <Grid Grid.Row="0" Margin="0,0,0,20">
+        <Grid Grid.Row="0" Margin="0,0,0,14">
             <StackPanel>
-                <TextBlock Text="Phần mềm Sinh viên" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextBrush}"/>
-                <TextBlock Text="Chọn phiên bản cần tải — tự động giải nén và mở thư mục" Foreground="{StaticResource MutedTextBrush}" FontSize="14"/>
+                <TextBlock Text="Phần mềm Sinh viên" FontSize="22" FontWeight="Black" Foreground="White"/>
+                <TextBlock Text="Chọn phiên bản cần tải — tự động giải nén và mở thư mục"
+                           Foreground="{StaticResource MutedTextBrush}" FontSize="13"/>
             </StackPanel>
         </Grid>
 
-        <!-- Danh sách nhóm phần mềm -->
+        <!-- 2-column group grid -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding AppGroups}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="2"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <!-- Card mỗi nhóm phần mềm -->
-                        <Border Style="{StaticResource ModernCard}" Margin="0,0,0,12" Padding="0">
+                        <!-- Card per group, ~half width -->
+                        <Border Style="{StaticResource ModernCard}" VerticalAlignment="Top"
+                                Margin="0,0,12,12" Padding="0">
                             <StackPanel>
-
-                                <!-- Header nhóm -->
-                                <Border Background="#0F172A" CornerRadius="12,12,0,0" Padding="16,12">
+                                <!-- Group header -->
+                                <Border Background="#0F172A" CornerRadius="12,12,0,0" Padding="14,10">
                                     <StackPanel Orientation="Horizontal">
-                                        <Border Background="{StaticResource PrimaryBrush}" CornerRadius="6" Width="32" Height="24" Margin="0,0,10,0" VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding Icon}" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                        <Border Background="{StaticResource PrimaryBrush}" CornerRadius="5"
+                                                Width="28" Height="20" Margin="0,0,10,0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Icon}" FontSize="10" FontWeight="Bold"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"
                                                        Foreground="White" FontFamily="Segoe UI"/>
                                         </Border>
-                                        <TextBlock Text="{Binding Group}" FontSize="15" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding Group}" FontSize="14" FontWeight="Bold"
+                                                   Foreground="White" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Border>
 
-                                <!-- Danh sách phiên bản -->
-                                <ItemsControl ItemsSource="{Binding Versions}" Margin="0,4,0,8">
+                                <!-- Version list (compact rows) -->
+                                <ItemsControl ItemsSource="{Binding Versions}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Padding="16,8,16,8">
+                                            <Border Padding="14,7,14,7">
                                                 <Border.Style>
                                                     <Style TargetType="Border">
                                                         <Setter Property="Background" Value="Transparent"/>
@@ -63,8 +71,8 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
 
-                                                    <!-- Badge năm -->
-                                                    <Border Grid.Column="0" CornerRadius="6" Padding="10,3" Margin="0,0,12,0" VerticalAlignment="Center">
+                                                    <!-- Year badge -->
+                                                    <Border Grid.Column="0" CornerRadius="5" Padding="8,2" Margin="0,0,10,0" VerticalAlignment="Center">
                                                         <Border.Style>
                                                             <Style TargetType="Border">
                                                                 <Setter Property="Background" Value="#1E293B"/>
@@ -75,7 +83,7 @@
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </Border.Style>
-                                                        <TextBlock Text="{Binding Year}" FontSize="12" FontWeight="Bold" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Year}" FontSize="11" FontWeight="Bold" VerticalAlignment="Center">
                                                             <TextBlock.Style>
                                                                 <Style TargetType="TextBlock">
                                                                     <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
@@ -89,38 +97,32 @@
                                                         </TextBlock>
                                                     </Border>
 
-                                                    <!-- Tên + progress -->
+                                                    <!-- Name + progress -->
                                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                        <TextBlock Text="{Binding Name}" FontSize="13" Foreground="White"/>
-
-                                                        <!-- Progress bar (chỉ hiện khi đang tải) -->
-                                                        <StackPanel Margin="0,6,0,0" Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                            <Grid Margin="0,0,0,4">
-                                                                <TextBlock Text="{Binding DownloadStatusText}" FontSize="10" Foreground="{StaticResource MutedTextBrush}" HorizontalAlignment="Left"/>
-                                                                <TextBlock Text="{Binding DownloadProgress, StringFormat='{}{0:0}%'}" FontSize="10" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Right"/>
-                                                            </Grid>
-                                                            <ProgressBar Value="{Binding DownloadProgress}" Maximum="100" Height="3"
-                                                                         Background="#334155" Foreground="{StaticResource AccentBrush}" BorderThickness="0"/>
+                                                        <TextBlock Text="{Binding Name}" FontSize="12" Foreground="White" TextTrimming="CharacterEllipsis"/>
+                                                        <StackPanel Margin="0,4,0,0"
+                                                                    Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                            <ProgressBar Value="{Binding DownloadProgress}" Maximum="100"
+                                                                         Height="3" Background="#334155"
+                                                                         Foreground="{StaticResource AccentBrush}" BorderThickness="0"/>
+                                                            <TextBlock Text="{Binding DownloadProgress, StringFormat='{}{0:0}%'}"
+                                                                       FontSize="9" Foreground="{StaticResource MutedTextBrush}"/>
                                                         </StackPanel>
-
-                                                        <!-- Text hoàn tất -->
-                                                        <TextBlock Text="{Binding DownloadStatusText}" FontSize="10" Foreground="#10B981" Margin="0,4,0,0"
+                                                        <TextBlock Text="{Binding DownloadStatusText}" FontSize="10" Foreground="#10B981"
                                                                    Visibility="{Binding DownloadStatus, Converter={StaticResource DownloadDoneVisibilityConverter}}"/>
                                                     </StackPanel>
 
-                                                    <!-- File size badge -->
-                                                    <Border Grid.Column="2" CornerRadius="4" Padding="8,3" Margin="10,0" VerticalAlignment="Center"
+                                                    <!-- Size badge -->
+                                                    <Border Grid.Column="2" CornerRadius="4" Padding="6,2" Margin="6,0" VerticalAlignment="Center"
                                                             Background="#0F172A"
                                                             Visibility="{Binding FileSize, Converter={StaticResource StringToVisibilityConverter}}">
-                                                        <TextBlock Text="{Binding FileSize}" FontSize="11" Foreground="{StaticResource MutedTextBrush}"/>
+                                                        <TextBlock Text="{Binding FileSize}" FontSize="10" Foreground="{StaticResource MutedTextBrush}"/>
                                                     </Border>
 
-                                                    <!-- Nút tải / trạng thái -->
+                                                    <!-- Action buttons -->
                                                     <StackPanel Grid.Column="3" VerticalAlignment="Center">
-
-                                                        <!-- Nút Tải về -->
-                                                        <Button Padding="16,6" Tag="{Binding}" Click="DownloadButton_Click"
-                                                                FontSize="12" FontWeight="SemiBold">
+                                                        <Button Padding="12,5" Tag="{Binding}" Click="DownloadButton_Click"
+                                                                FontSize="11" FontWeight="SemiBold">
                                                             <Button.Visibility>
                                                                 <MultiBinding Converter="{StaticResource DownloadIdleVisibilityConverter}">
                                                                     <Binding Path="DownloadStatus"/>
@@ -138,59 +140,37 @@
                                                                     </Style.Triggers>
                                                                 </Style>
                                                             </Button.Style>
-                                                            <StackPanel Orientation="Horizontal">
-                                                                <TextBlock Text="⬇  " FontSize="12"/>
-                                                                <TextBlock FontSize="12">
-                                                                    <TextBlock.Style>
-                                                                        <Style TargetType="TextBlock">
-                                                                            <Setter Property="Text" Value="Tải về"/>
-                                                                            <Style.Triggers>
-                                                                                <DataTrigger Binding="{Binding DownloadUrl}" Value="">
-                                                                                    <Setter Property="Text" Value="Chưa có"/>
-                                                                                </DataTrigger>
-                                                                            </Style.Triggers>
-                                                                        </Style>
-                                                                    </TextBlock.Style>
-                                                                </TextBlock>
-                                                            </StackPanel>
-                                                        </Button>
-
-                                                        <!-- Đang tải -->
-                                                        <Border Background="#1E3A5F" CornerRadius="8" Padding="12,6"
-                                                                Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                            <TextBlock FontSize="12" Foreground="{StaticResource AccentBrush}">
+                                                            <TextBlock FontSize="11">
                                                                 <TextBlock.Style>
                                                                     <Style TargetType="TextBlock">
-                                                                        <Setter Property="Text" Value="⏳  Đang tải"/>
+                                                                        <Setter Property="Text" Value="⬇ Tải"/>
                                                                         <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding DownloadStatus}" Value="{x:Static models:DownloadStatus.Extracting}">
-                                                                                <Setter Property="Text" Value="📦  Giải nén"/>
+                                                                            <DataTrigger Binding="{Binding DownloadUrl}" Value="">
+                                                                                <Setter Property="Text" Value="—"/>
                                                                             </DataTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
                                                                 </TextBlock.Style>
                                                             </TextBlock>
+                                                        </Button>
+                                                        <Border Background="#1E3A5F" CornerRadius="6" Padding="10,5"
+                                                                Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                            <TextBlock Text="⏳" FontSize="12" Foreground="{StaticResource AccentBrush}"/>
                                                         </Border>
-
-                                                        <!-- Hoàn tất -->
-                                                        <Border Background="#064E3B" CornerRadius="8" Padding="12,6"
+                                                        <Border Background="#064E3B" CornerRadius="6" Padding="10,5"
                                                                 Visibility="{Binding DownloadStatus, Converter={StaticResource DownloadDoneVisibilityConverter}}">
-                                                            <TextBlock Text="✅  Đã tải" FontSize="12" Foreground="#10B981" FontWeight="Bold"/>
+                                                            <TextBlock Text="✅" FontSize="12" Foreground="#10B981"/>
                                                         </Border>
-
-                                                        <!-- Lỗi -->
-                                                        <Border Background="#450A0A" CornerRadius="8" Padding="12,6"
+                                                        <Border Background="#450A0A" CornerRadius="6" Padding="10,5"
                                                                 Visibility="{Binding DownloadStatus, Converter={StaticResource DownloadFailedVisibilityConverter}}">
-                                                            <TextBlock Text="❌  Lỗi" FontSize="12" Foreground="#EF4444" FontWeight="Bold"/>
+                                                            <TextBlock Text="❌" FontSize="12" Foreground="#EF4444"/>
                                                         </Border>
-
                                                     </StackPanel>
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-
                             </StackPanel>
                         </Border>
                     </DataTemplate>

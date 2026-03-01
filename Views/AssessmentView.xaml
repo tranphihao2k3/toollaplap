@@ -1,0 +1,336 @@
+<UserControl x:Class="LapLapAutoTool.Views.AssessmentView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <!-- Shared input field style -->
+        <Style x:Key="FieldBox" TargetType="TextBox">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#0F172A"/>
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="CaretBrush" Value="White"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="18,14,18,14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ===================== HEADER ===================== -->
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <StackPanel>
+                <TextBlock Text="📋 Phiếu Thẩm Định Laptop" FontSize="22" FontWeight="Black" Foreground="White"/>
+                <TextBlock Text="Ghi nhận cấu hình · Kiểm tra chức năng · Xuất phiếu thẩm định giá"
+                           Foreground="{StaticResource MutedTextBrush}" FontSize="12" Margin="0,3,0,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Content="📋 Sao chép" Command="{Binding CopyReportCommand}"
+                        Style="{StaticResource SecondaryButton}" Padding="14,8" Margin="0,0,8,0"/>
+                <Button Content="💾 Xuất TXT" Command="{Binding ExportTextCommand}"
+                        Style="{StaticResource SecondaryButton}" Padding="14,8" Margin="0,0,8,0"/>
+                <Button Content="📱 Tạo QR" Command="{Binding GenerateQrCommand}"
+                        Style="{StaticResource ModernButton}" Padding="16,8"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- ===================== BODY ===================== -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto" Margin="0,0,-14,0">
+            <Grid Margin="0,0,14,0" MinWidth="760">
+                <Grid.ColumnDefinitions>
+                    <!-- Specs + Appearance -->
+                    <ColumnDefinition Width="1.4*" MinWidth="210"/>
+                    <!-- Check items -->
+                    <ColumnDefinition Width="1.6*" MinWidth="230"/>
+                    <!-- QR + Export -->
+                    <ColumnDefinition Width="1.1*" MinWidth="180"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- ========== COL 0: SPECS + APPEARANCE ========== -->
+                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+
+                    <!-- Hardware Specs Card -->
+                    <Border Style="{StaticResource ModernCard}" Padding="0" Margin="0,0,0,10">
+                        <StackPanel>
+                            <Border Background="#1E40AF" CornerRadius="12,12,0,0" Padding="14,10">
+                                <TextBlock Text="⚙ THÔNG SỐ PHẦN CỨNG" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                            </Border>
+                            <StackPanel Margin="14,12,14,14">
+
+                                <!-- Model -->
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Model" FontSize="11" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding ModelName}" Style="{StaticResource FieldBox}"/>
+                                </Grid>
+
+                                <!-- Serial -->
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Serial" FontSize="11" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding SerialNumber}" Style="{StaticResource FieldBox}"
+                                             Foreground="{StaticResource AccentBrush}" FontWeight="Bold"/>
+                                </Grid>
+
+                                <!-- CPU -->
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="CPU" FontSize="11" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding CpuName}" Style="{StaticResource FieldBox}" TextWrapping="Wrap"/>
+                                </Grid>
+
+                                <!-- RAM + Bus row -->
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="8"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="RAM" FontSize="11" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding RamSize}" Style="{StaticResource FieldBox}" Width="55"/>
+                                    <!-- spacer -->
+                                    <TextBox Grid.Column="3" Text="{Binding RamBus}" Style="{StaticResource FieldBox}"
+                                             Foreground="{StaticResource MutedTextBrush}" ToolTip="Bus tốc độ RAM"/>
+                                </Grid>
+
+                                <!-- VGA -->
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="VGA" FontSize="11" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding GpuName}" Style="{StaticResource FieldBox}" TextWrapping="Wrap"/>
+                                </Grid>
+
+                                <!-- SSD/HDD -->
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="SSD/HDD" FontSize="11" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding SsdSize}" Style="{StaticResource FieldBox}"/>
+                                </Grid>
+
+                                <!-- Battery -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Pin" FontSize="11" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding BatteryHealth}" Style="{StaticResource FieldBox}"
+                                             Foreground="#10B981" FontWeight="Bold"/>
+                                </Grid>
+
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Appearance Card -->
+                    <Border Style="{StaticResource ModernCard}" Padding="0">
+                        <StackPanel>
+                            <Border Background="#6D28D9" CornerRadius="12,12,0,0" Padding="14,10">
+                                <TextBlock Text="🔍 NGOẠI HÌNH" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                            </Border>
+                            <StackPanel Margin="14,12,14,14">
+                                <TextBlock Text="Xếp loại:" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,6"/>
+                                <ComboBox FontSize="13" FontWeight="Bold"
+                                          SelectedValue="{Binding AppearanceGrade}"
+                                          Background="#1E293B" Foreground="White" BorderBrush="#334155"
+                                          SelectedValuePath="Content" HorizontalAlignment="Stretch" Padding="8,6">
+                                    <ComboBox.Items>
+                                        <ComboBoxItem Content="S — Như mới" Foreground="Black"/>
+                                        <ComboBoxItem Content="A — Rất đẹp" Foreground="Black"/>
+                                        <ComboBoxItem Content="B — Đẹp" Foreground="Black"/>
+                                        <ComboBoxItem Content="C — Trung bình" Foreground="Black"/>
+                                        <ComboBoxItem Content="D — Xấu" Foreground="Black"/>
+                                    </ComboBox.Items>
+                                </ComboBox>
+                                <TextBlock Text="Ghi chú ngoại hình:" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}" Margin="0,10,0,5"/>
+                                <TextBox Text="{Binding AppearanceNote}" Style="{StaticResource FieldBox}"
+                                         MinHeight="70" TextWrapping="Wrap" AcceptsReturn="True"
+                                         VerticalScrollBarVisibility="Auto"
+                                         ToolTip="VD: Trầy nắp lưng góc phải, bàn phím thiếu phím..."/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- ========== COL 1: FUNCTION CHECK ========== -->
+                <Border Grid.Column="1" Style="{StaticResource ModernCard}" Padding="0" Margin="0,0,10,0">
+                    <StackPanel>
+                        <Border Background="#065F46" CornerRadius="12,12,0,0" Padding="14,10">
+                            <TextBlock Text="✅ KIỂM TRA CHỨC NĂNG" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                        </Border>
+                        <StackPanel Margin="12,10,12,12">
+                            <ItemsControl ItemsSource="{Binding CheckItems}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="0,2" CornerRadius="8" Padding="10,7" Cursor="Hand">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background" Value="#0F172A"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsOk}" Value="False">
+                                                            <Setter Property="Background" Value="#2D0000"/>
+                                                        </DataTrigger>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="#1E293B"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <Border.InputBindings>
+                                                <MouseBinding MouseAction="LeftClick" Command="{Binding ToggleCommand}"/>
+                                            </Border.InputBindings>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Status pill -->
+                                                <Border Grid.Column="0" CornerRadius="6" Padding="8,3" Margin="0,0,10,0" VerticalAlignment="Center">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="Background" Value="#10B981"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsOk}" Value="False">
+                                                                    <Setter Property="Background" Value="#EF4444"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                    <TextBlock FontSize="10" FontWeight="Black" Foreground="White" VerticalAlignment="Center">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Text" Value=" OK "/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsOk}" Value="False">
+                                                                        <Setter Property="Text" Value="LỖI"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </Border>
+
+                                                <!-- Item name -->
+                                                <TextBlock Grid.Column="1" Text="{Binding Name}"
+                                                           FontSize="13" VerticalAlignment="Center">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="White"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsOk}" Value="False">
+                                                                    <Setter Property="Foreground" Value="#FCA5A5"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+
+                                                <!-- Mini note -->
+                                                <TextBox Grid.Column="2" Text="{Binding Note, UpdateSourceTrigger=PropertyChanged}"
+                                                         FontSize="13" Width="90" VerticalAlignment="Center"
+                                                         Foreground="White"
+                                                         Background="#1E293B" BorderBrush="#334155" BorderThickness="1"
+                                                         Padding="6,4" ToolTip="Ghi chú lỗi..."/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- General note -->
+                            <Border Background="#1E2A1F" CornerRadius="8" Margin="0,12,0,0" Padding="10,10">
+                                <StackPanel>
+                                    <TextBlock Text="📝 Ghi chú tổng" FontSize="11" FontWeight="Bold"
+                                               Foreground="#6EE7B7" Margin="0,0,0,6"/>
+                                    <TextBox Text="{Binding GeneralNote}" Style="{StaticResource FieldBox}"
+                                             Background="#0F172A" BorderBrush="#1E3A2F"
+                                             MinHeight="60" TextWrapping="Wrap" AcceptsReturn="True"
+                                             VerticalScrollBarVisibility="Auto"
+                                             ToolTip="VD: Màn hình ám vàng 1/4 góc phải, bàn phím thiếu phím F6..."/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- ========== COL 2: QR + EXPORT ========== -->
+                <StackPanel Grid.Column="2">
+
+                    <!-- QR Code Card -->
+                    <Border Style="{StaticResource ModernCard}" Padding="0" Margin="0,0,0,10">
+                        <StackPanel>
+                            <Border Background="#92400E" CornerRadius="12,12,0,0" Padding="14,10">
+                                <TextBlock Text="📱 QR CODE" FontSize="11" FontWeight="Bold"
+                                           Foreground="White" HorizontalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Margin="14,14,14,14" HorizontalAlignment="Center">
+                                <!-- QR image -->
+                                <Border Background="White" Padding="8" CornerRadius="8"
+                                        Visibility="{Binding QrImage, Converter={StaticResource NullToVisibilityConverter}, FallbackValue=Collapsed}">
+                                    <Image Source="{Binding QrImage}" Width="150" Height="150"/>
+                                </Border>
+                                <!-- QR placeholder -->
+                                <Border Background="#0F172A" CornerRadius="8" Width="160" Height="160"
+                                        Visibility="{Binding QrImage, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=Inverse, FallbackValue=Visible}">
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <TextBlock Text="▦" FontSize="48" Foreground="#334155" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Nhấn Tạo QR" Foreground="#475569" FontSize="11"
+                                                   HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                                    </StackPanel>
+                                </Border>
+                                <Button Content="📱 Tạo QR Code" Command="{Binding GenerateQrCommand}"
+                                        Style="{StaticResource ModernButton}" Padding="14,10" Margin="0,12,0,0"
+                                        FontSize="12" HorizontalAlignment="Stretch"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Export Card -->
+                    <Border Style="{StaticResource ModernCard}" Padding="0">
+                        <StackPanel>
+                            <Border Background="#1E3A5F" CornerRadius="12,12,0,0" Padding="14,10">
+                                <TextBlock Text="📤 XUẤT PHIẾU" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                            </Border>
+                            <StackPanel Margin="14,12,14,14">
+                                <Button Content="💾 Xuất ra Desktop" Command="{Binding ExportTextCommand}"
+                                        Style="{StaticResource ModernButton}" Padding="10,11" Margin="0,0,0,8"
+                                        FontSize="12" HorizontalAlignment="Stretch"/>
+                                <Button Content="📋 Sao chép toàn bộ" Command="{Binding CopyReportCommand}"
+                                        Style="{StaticResource SecondaryButton}" Padding="10,11"
+                                        FontSize="12" HorizontalAlignment="Stretch"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

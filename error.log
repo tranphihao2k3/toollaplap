@@ -1,0 +1,7 @@
+C:\Users\HAO\.gemini\antigravity\scratch\LapLapAutoTool\Views\UtilitiesView.xaml(84,42): error MC3024: 'System.Windows.Controls.Button.Style' property has already been set and can be set only once. Line 84 Position 42. [C:\Users\HAO\.gemini\antigravity\scratch\LapLapAutoTool\LapLapAutoTool.csproj]
+
+Build FAILED.
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.96

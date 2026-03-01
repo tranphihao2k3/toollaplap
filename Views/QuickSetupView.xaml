@@ -5,155 +5,253 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
-    <Grid Margin="20">
+    <UserControl.Resources>
+        <!-- Pill tab style - no flicker -->
+        <Style x:Key="PillTabItem" TargetType="TabItem">
+            <Setter Property="Padding" Value="18,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#64748B"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,4,0"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="TabBorder" CornerRadius="8" Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}" Cursor="Hand">
+                            <ContentPresenter ContentSource="Header"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Hover only when NOT selected -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsSelected" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="TabBorder" Property="Background" Value="#1E293B"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </MultiTrigger>
+                            <!-- Selected always wins -->
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="TabBorder" Property="Background" Value="{StaticResource AccentBrush}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="18,14,18,14">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>   <!-- Header -->
+            <RowDefinition Height="*"/>      <!-- TabControl fills all space -->
+            <RowDefinition Height="Auto"/>   <!-- Footer sticky -->
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <Grid Grid.Row="0" Margin="0,0,0,20">
-            <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="Cài đặt nhanh" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextBrush}"/>
-                <TextBlock Text="Các phần mềm thiết yếu cho máy mới" Foreground="{StaticResource MutedTextBrush}" FontSize="14"/>
+        <!-- ===== HEADER ===== -->
+        <Grid Grid.Row="0" Margin="0,0,0,14">
+            <StackPanel>
+                <TextBlock Text="Cài đặt nhanh" FontSize="22" FontWeight="Black" Foreground="{StaticResource TextBrush}"/>
+                <TextBlock Text="Các phần mềm thiết yếu — chọn tab theo nhu cầu"
+                           Foreground="{StaticResource MutedTextBrush}" FontSize="13" Margin="0,3,0,0"/>
             </StackPanel>
-            
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                <Button Content="Quét lại 🔄" Command="{Binding RefreshCommand}" Style="{StaticResource GhostButton}" Margin="0,0,10,0" Padding="12,5"/>
-                <Button Content="Tất cả" Command="{Binding SelectAllCommand}" Style="{StaticResource GhostButton}" Margin="0,0,10,0" Padding="12,5"/>
-                <Button Content="Bỏ chọn" Command="{Binding SelectNoneCommand}" Style="{StaticResource GhostButton}" Padding="12,5"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Content="🔄 Quét lại" Command="{Binding RefreshCommand}"
+                        Style="{StaticResource GhostButton}" Margin="0,0,8,0" Padding="12,6"/>
+                <Button Content="Tất cả" Command="{Binding SelectAllCommand}"
+                        Style="{StaticResource GhostButton}" Margin="0,0,8,0" Padding="12,6"/>
+                <Button Content="Bỏ chọn" Command="{Binding SelectNoneCommand}"
+                        Style="{StaticResource GhostButton}" Padding="12,6"/>
             </StackPanel>
         </Grid>
 
-        <!-- Software List -->
-        <Border Grid.Row="1" Style="{StaticResource ModernCard}" Padding="0">
-            <ListView ItemsSource="{Binding SoftwareList}" 
-                      Background="Transparent" BorderThickness="0"
-                      ScrollViewer.VerticalScrollBarVisibility="Auto">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Border BorderBrush="#334155" BorderThickness="0,0,0,1" Padding="15,10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                
-                                <CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Center" Margin="0,0,15,0">
-                                    <CheckBox.Style>
-                                        <Style TargetType="CheckBox">
-                                            <Setter Property="RenderTransform">
-                                                <Setter.Value>
-                                                    <ScaleTransform ScaleX="1.2" ScaleY="1.2"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </CheckBox.Style>
-                                </CheckBox>
-                                
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="SemiBold">
+        <!-- ===== TAB CONTROL (fills * row) ===== -->
+        <TabControl Grid.Row="1" SelectedIndex="0"
+                    Background="Transparent" BorderThickness="0">
+            <TabControl.Resources>
+                <DataTemplate x:Key="SoftwareItemTemplate">
+                    <Border Style="{StaticResource ModernCard}" Margin="0,0,12,12" Padding="15,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Center" Margin="0,0,14,0">
+                                <CheckBox.Style>
+                                    <Style TargetType="CheckBox">
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <ScaleTransform ScaleX="1.2" ScaleY="1.2"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </CheckBox.Style>
+                            </CheckBox>
+                            <StackPanel Grid.Column="1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold"
+                                               TextWrapping="Wrap" Margin="0,0,8,0">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="Foreground" Value="White"/>
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsAlreadyInstalled}" Value="True">
-                                                        <Setter Property="Foreground" Value="#10B981"/>
-                                                    </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsAlreadyInstalled}" Value="True">
+                                            <Setter Property="Foreground" Value="#10B981"/>
+                                        </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
-                                    <TextBlock Text="{Binding Description}" FontSize="12" Foreground="{StaticResource MutedTextBrush}"/>
-
-                                    <!-- Progress bar tải (chỉ hiện khi đang tải) -->
-                                    <StackPanel Margin="0,6,0,0" Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <Grid Margin="0,0,0,3">
-                                            <TextBlock Text="{Binding DownloadStatusText}" FontSize="10" Foreground="{StaticResource MutedTextBrush}" HorizontalAlignment="Left"/>
-                                            <TextBlock Text="{Binding DownloadProgress, StringFormat='{}{0:0}%'}" FontSize="10" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Right"/>
-                                        </Grid>
-                                        <ProgressBar Value="{Binding DownloadProgress}" Maximum="100" Height="3"
-                                                     Background="#334155" Foreground="{StaticResource AccentBrush}" BorderThickness="0"/>
-                                    </StackPanel>
-
-                                    <!-- Text hoàn tất cài -->
-                                    <TextBlock Text="{Binding DownloadStatusText}" FontSize="10" Foreground="#10B981" Margin="0,4,0,0"
-                                               Visibility="{Binding DownloadStatus, Converter={StaticResource DownloadDoneVisibilityConverter}}"/>
-                                </StackPanel>
-                                
-                                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Status}" FontSize="12" FontWeight="Bold" Margin="0,0,10,0">
+                                    <TextBlock Grid.Column="1" FontSize="11" FontWeight="Bold" VerticalAlignment="Top">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Status}" Value="Pending">
-                                                        <Setter Property="Text" Value="Chờ... ⏳"/>
-                                                        <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Status}" Value="Installing">
-                                                        <Setter Property="Text" Value="Đang cài... ⚙️"/>
-                                                        <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Status}" Value="Completed">
-                                                        <Setter Property="Text" Value="Thành công ✅"/>
-                                                        <Setter Property="Foreground" Value="#10B981"/>
-                                                    </DataTrigger>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding Status}" Value="Completed"/>
-                                                            <Condition Binding="{Binding IsAlreadyInstalled}" Value="True"/>
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Text" Value="Đã có sẵn ✅"/>
-                                                    </MultiDataTrigger>
-                                                    <DataTrigger Binding="{Binding Status}" Value="Failed">
-                                                        <Setter Property="Text" Value="Lỗi ❌"/>
-                                                        <Setter Property="Foreground" Value="#EF4444"/>
-                                                    </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Pending">
+                                            <Setter Property="Text" Value="Chờ... ⏳"/>
+                                            <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Installing">
+                                            <Setter Property="Text" Value="Đang cài ⚙️"/>
+                                            <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Completed">
+                                            <Setter Property="Text" Value="Hoàn tất ✅"/>
+                                            <Setter Property="Foreground" Value="#10B981"/>
+                                        </DataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Status}" Value="Completed"/>
+                                                <Condition Binding="{Binding IsAlreadyInstalled}" Value="True"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Text" Value="Đã có sẵn ✅"/>
+                                        </MultiDataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Failed">
+                                            <Setter Property="Text" Value="Lỗi ❌"/>
+                                            <Setter Property="Foreground" Value="#EF4444"/>
+                                        </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
+                                </Grid>
+                                <TextBlock Text="{Binding Description}" FontSize="12"
+                                           Foreground="{StaticResource MutedTextBrush}"
+                                           TextWrapping="Wrap" Margin="0,3,0,0"/>
+                                <!-- Download progress -->
+                                <StackPanel Margin="0,8,0,0"
+                                            Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <Grid Margin="0,0,0,3">
+                                        <TextBlock Text="{Binding DownloadStatusText}" FontSize="10"
+                                                   Foreground="{StaticResource MutedTextBrush}"
+                                                   HorizontalAlignment="Left" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding DownloadProgress, StringFormat='{}{0:0}%'}"
+                                                   FontSize="10" Foreground="{StaticResource AccentBrush}"
+                                                   HorizontalAlignment="Right"/>
+                                    </Grid>
+                                    <ProgressBar Value="{Binding DownloadProgress}" Maximum="100" Height="4"
+                                                 Background="#334155" Foreground="{StaticResource AccentBrush}"
+                                                 BorderThickness="0"/>
                                 </StackPanel>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="ListViewItem">
-                                    <Border Background="{TemplateBinding Background}">
-                                        <ContentPresenter />
+                                <TextBlock Text="{Binding DownloadStatusText}" FontSize="10"
+                                           Foreground="#10B981" Margin="0,6,0,0"
+                                           Visibility="{Binding DownloadStatus, Converter={StaticResource DownloadDoneVisibilityConverter}}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </TabControl.Resources>
+            <TabControl.Style>
+                <Style TargetType="TabControl">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabControl">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <!-- Tab strip in a pill container -->
+                                    <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}"
+                                            CornerRadius="10" Padding="6" Margin="0,0,0,12">
+                                        <TabPanel IsItemsHost="True" Background="Transparent"/>
                                     </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
-        </Border>
+                                    <!-- Content fills remaining space -->
+                                    <ContentPresenter Grid.Row="1" ContentSource="SelectedContent"/>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Style>
 
-        <!-- Footer Progress & Action -->
-        <Border Grid.Row="2" Background="{StaticResource SurfaceBrush}" CornerRadius="12" Padding="20" Margin="0,20,0,0">
+            <!-- ===== TAB 1: CÀI WIN ===== -->
+            <TabItem Header="🖥️  Cài Win" Style="{StaticResource PillTabItem}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,-14,0">
+                    <ItemsControl ItemsSource="{Binding SoftwareList}" Margin="0,0,14,0" ItemTemplate="{StaticResource SoftwareItemTemplate}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="2" VerticalAlignment="Top"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
+            </TabItem>
+            <!-- ===== TAB 2: TIỆN ÍCH ===== -->
+            <TabItem Header="🔧  Tiện ích" Style="{StaticResource PillTabItem}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,-14,0">
+                    <ItemsControl ItemsSource="{Binding UtilityList}" Margin="0,0,14,0" ItemTemplate="{StaticResource SoftwareItemTemplate}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="2" VerticalAlignment="Top"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
+            </TabItem>
+            <!-- ===== TAB 3: GAME ===== -->
+            <TabItem Header="🎮  Game" Style="{StaticResource PillTabItem}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,-14,0">
+                    <ItemsControl ItemsSource="{Binding GameList}" Margin="0,0,14,0" ItemTemplate="{StaticResource SoftwareItemTemplate}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="2" VerticalAlignment="Top"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+
+        <!-- ===== FOOTER — STICKY ===== -->
+        <Border Grid.Row="2" Background="{StaticResource SurfaceBrush}"
+                CornerRadius="12" Padding="20" Margin="0,12,0,0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                
                 <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,20,0">
                     <TextBlock Text="{Binding StatusText}" Foreground="White" FontSize="14" Margin="0,0,0,10"/>
-                    <ProgressBar Value="{Binding Progress}" Maximum="100" Height="8" Foreground="{StaticResource PrimaryBrush}" Background="#334155" BorderThickness="0"/>
+                    <ProgressBar Value="{Binding Progress}" Maximum="100" Height="8"
+                                 Foreground="{StaticResource PrimaryBrush}"
+                                 Background="#334155" BorderThickness="0"/>
                 </StackPanel>
-                
-                <Button Grid.Column="1" Content="Bắt đầu cài đặt" 
-                        Command="{Binding StartInstallCommand}" 
+                <Button Grid.Column="1" Content="Bắt đầu cài đặt"
+                        Command="{Binding StartInstallCommand}"
                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                        Style="{StaticResource ModernButton}" 
+                        Style="{StaticResource ModernButton}"
                         Padding="40,15"/>
             </Grid>
         </Border>

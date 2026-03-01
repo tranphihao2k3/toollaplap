@@ -65,9 +65,12 @@ namespace LapLapAutoTool.Models
         public string Model { get; set; } = "N/A";
         public string Type { get; set; } = "N/A";
         public string Capacity { get; set; } = "N/A";
-        public string UsagePercent { get; set; } = "N/A";
-        public string UsedSpace { get; set; } = "N/A";
-        public string FreeSpace { get; set; } = "N/A";
-        public string Serial { get; set; } = "N/A";
+
+        // SMART NVMe info
+        public bool HasSmartInfo { get; set; } = false;
+        public int HealthRemaining { get; set; }
+        public int AvailableSpare { get; set; }
+        public int Temperature { get; set; }
+        public int PowerOnDays { get; set; }
     }
 }
