@@ -32,9 +32,7 @@
         <DataTemplate DataType="{x:Type viewmodels:QuickSetupViewModel}">
             <views:QuickSetupView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewmodels:StudentAppsViewModel}">
-            <views:StudentAppsView/>
-        </DataTemplate>
+
         <DataTemplate DataType="{x:Type viewmodels:UtilitiesViewModel}">
             <views:UtilitiesView/>
         </DataTemplate>
@@ -52,6 +50,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewmodels:AssessmentViewModel}">
             <views:AssessmentView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:DriverViewModel}">
+            <views:DriverView/>
         </DataTemplate>
     </Window.Resources>
 
@@ -128,7 +129,7 @@
                         <RadioButton Style="{StaticResource SidebarButton}" Content="Quét Phần Cứng" Command="{Binding ShowHardwareCommand}" IsChecked="True"/>
                         <RadioButton Style="{StaticResource SidebarButton}" Content="Phiếu Thẩm Định" Command="{Binding ShowAssessmentCommand}"/>
                         <RadioButton Style="{StaticResource SidebarButton}" Content="Cài Đặt Tự Động" Command="{Binding ShowQuickSetupCommand}"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Ứng Dụng Học Tập" Command="{Binding ShowStudentAppsCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Cài Driver" Command="{Binding ShowDriverCommand}"/>
                         <RadioButton Style="{StaticResource SidebarButton}" Content="Công Cụ Hệ Thống" Command="{Binding ShowUtilitiesCommand}"/>
                         <RadioButton Style="{StaticResource SidebarButton}" Content="Sao Lưu Dữ Liệu" Command="{Binding ShowBackupCommand}"/>
                         <RadioButton Style="{StaticResource SidebarButton}" Content="Test Chức Năng" Command="{Binding ShowLaptopTestCommand}"/>

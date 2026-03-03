@@ -1,0 +1,63 @@
+[
+  {
+    "Model": "IdeaPad Gaming 3 15ARH7",
+    "ModelMatch": ["IdeaPad Gaming 3", "82SB"],
+    "Drivers": [
+      {
+        "Name": "Intel WiFi Driver",
+        "Category": "WiFi",
+        "FileName": "WiFi_IdeaPad3.zip",
+        "DownloadUrl": "https://drive.google.com/file/d/REPLACE_FILE_ID/view",
+        "Description": "Intel AX201 WiFi 6"
+      },
+      {
+        "Name": "Realtek Audio Driver",
+        "Category": "Audio",
+        "FileName": "Audio_IdeaPad3.zip",
+        "DownloadUrl": "https://drive.google.com/file/d/REPLACE_FILE_ID/view",
+        "Description": "Realtek HD Audio"
+      },
+      {
+        "Name": "NVIDIA GPU Driver",
+        "Category": "GPU",
+        "FileName": "GPU_IdeaPad3.zip",
+        "DownloadUrl": "https://drive.google.com/file/d/REPLACE_FILE_ID/view",
+        "Description": "NVIDIA GeForce RTX 3050"
+      },
+      {
+        "Name": "Realtek LAN Driver",
+        "Category": "LAN",
+        "FileName": "LAN_IdeaPad3.zip",
+        "DownloadUrl": "https://drive.google.com/file/d/REPLACE_FILE_ID/view",
+        "Description": "Realtek Gigabit Ethernet"
+      },
+      {
+        "Name": "Intel Bluetooth Driver",
+        "Category": "Bluetooth",
+        "FileName": "BT_IdeaPad3.zip",
+        "DownloadUrl": "https://drive.google.com/file/d/REPLACE_FILE_ID/view",
+        "Description": "Intel AX201 Bluetooth 5.2"
+      }
+    ]
+  },
+  {
+    "Model": "HP Pavilion 15-eg2xxx",
+    "ModelMatch": ["Pavilion 15-eg", "HP Pavilion 15"],
+    "Drivers": [
+      {
+        "Name": "Intel WiFi Driver",
+        "Category": "WiFi",
+        "FileName": "WiFi_HPPavilion15.zip",
+        "DownloadUrl": "https://drive.google.com/file/d/REPLACE_FILE_ID/view",
+        "Description": "Intel AX201 WiFi 6"
+      },
+      {
+        "Name": "Realtek Audio Driver",
+        "Category": "Audio",
+        "FileName": "Audio_HPPavilion15.zip",
+        "DownloadUrl": "https://drive.google.com/file/d/REPLACE_FILE_ID/view",
+        "Description": "Realtek HD Audio"
+      }
+    ]
+  }
+]

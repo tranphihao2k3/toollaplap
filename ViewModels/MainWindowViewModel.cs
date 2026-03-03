@@ -41,13 +41,14 @@ namespace LapLapAutoTool.ViewModels
         // ViewModels
         public HardwareViewModel HardwareVM { get; set; }
         public QuickSetupViewModel QuickSetupVM { get; set; }
-        public StudentAppsViewModel StudentAppsVM { get; set; }
+
         public UtilitiesViewModel UtilitiesVM { get; set; }
         public BackupViewModel BackupVM { get; set; }
         public SettingsViewModel SettingsVM { get; set; }
         public LaptopTestViewModel LaptopTestVM { get; set; }
         public UninstallViewModel UninstallVM { get; set; }
         public AssessmentViewModel AssessmentVM { get; set; }
+        public DriverViewModel DriverVM { get; set; }
 
         public string CustomerGreeting
         {
@@ -74,13 +75,14 @@ namespace LapLapAutoTool.ViewModels
 
             HardwareVM = new HardwareViewModel(_hardwareService);
             QuickSetupVM = new QuickSetupViewModel(_installService, downloadService, _logService);
-            StudentAppsVM = new StudentAppsViewModel(downloadService);
+
             UtilitiesVM = new UtilitiesViewModel(_installService);
             BackupVM = new BackupViewModel(_installService);
             SettingsVM = new SettingsViewModel();
             LaptopTestVM = new LaptopTestViewModel();
             UninstallVM = new UninstallViewModel();
             AssessmentVM = new AssessmentViewModel();
+            DriverVM = new DriverViewModel(_installService, downloadService, _logService, HardwareVM);
 
             // Notify UI about status
             OnPropertyChanged(nameof(LicenseStatus));
@@ -97,12 +99,13 @@ namespace LapLapAutoTool.ViewModels
 
         public RelayCommand ShowHardwareCommand => new RelayCommand(() => CurrentView = HardwareVM);
         public RelayCommand ShowQuickSetupCommand => new RelayCommand(() => CurrentView = QuickSetupVM);
-        public RelayCommand ShowStudentAppsCommand => new RelayCommand(() => CurrentView = StudentAppsVM);
+
         public RelayCommand ShowUtilitiesCommand => new RelayCommand(() => CurrentView = UtilitiesVM);
         public RelayCommand ShowBackupCommand => new RelayCommand(() => CurrentView = BackupVM);
         public RelayCommand ShowSettingsCommand => new RelayCommand(() => CurrentView = SettingsVM);
         public RelayCommand ShowLaptopTestCommand  => new RelayCommand(() => CurrentView = LaptopTestVM);
         public RelayCommand ShowUninstallCommand   => new RelayCommand(() => CurrentView = UninstallVM);
+        public RelayCommand ShowDriverCommand      => new RelayCommand(() => CurrentView = DriverVM);
         public RelayCommand ShowAssessmentCommand  => new RelayCommand(() =>
         {
             AssessmentVM.LoadFromSysInfo(HardwareVM.SysInfo);

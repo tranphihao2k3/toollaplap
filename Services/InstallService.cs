@@ -41,6 +41,7 @@ namespace LapLapAutoTool.Services
         Task<string> RunSfcAndDismAsync(IProgress<string> progress);
         void OpenSystemTool(string tool);
         bool DisableBitLocker();
+        Task<bool> InstallDriverWithDismAsync(string driverFolderPath, IProgress<string>? progress = null);
     }
 
     public class InstallService : IInstallService
@@ -847,6 +848,64 @@ namespace LapLapAutoTool.Services
                 _logService.LogError("Disable BitLocker failed", ex);
                 return false;
             }
+        }
+
+        public async Task<bool> InstallDriverWithDismAsync(string driverFolderPath, IProgress<string>? progress = null)
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    _logService.LogInfo($"Installing driver from: {driverFolderPath}");
+                    progress?.Report($"DISM /Add-Driver: {driverFolderPath}");
+
+                    var psi = new ProcessStartInfo
+                    {
+                        FileName = "DISM.exe",
+                        Arguments = $"/Online /Add-Driver /Driver:\"{driverFolderPath}\" /Recurse /ForceUnsigned",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true,
+                        Verb = "runas"
+                    };
+
+                    using var process = Process.Start(psi);
+                    if (process == null)
+                    {
+                        _logService.LogError("Failed to start DISM process");
+                        return false;
+                    }
+
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+                    process.WaitForExit();
+
+                    _logService.LogInfo($"DISM output: {output}");
+                    if (!string.IsNullOrWhiteSpace(error))
+                        _logService.LogError($"DISM error: {error}");
+
+                    bool success = process.ExitCode == 0;
+                    if (success)
+                    {
+                        _logService.LogInfo($"Driver installed successfully from: {driverFolderPath}");
+                        progress?.Report("Driver da cai thanh cong!");
+                    }
+                    else
+                    {
+                        _logService.LogError($"DISM failed with exit code {process.ExitCode}");
+                        progress?.Report($"DISM that bai (exit code: {process.ExitCode})");
+                    }
+
+                    return success;
+                }
+                catch (Exception ex)
+                {
+                    _logService.LogError($"InstallDriverWithDism failed: {driverFolderPath}", ex);
+                    progress?.Report($"Loi: {ex.Message}");
+                    return false;
+                }
+            });
         }
 
         private bool RunCommand(string command)

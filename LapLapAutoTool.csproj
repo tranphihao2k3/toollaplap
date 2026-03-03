@@ -29,6 +29,7 @@
     <Resource Include="Resources\app_icon.png" />
     <Resource Include="Resources\software_config.json" />
     <Resource Include="Resources\student_config.json" />
+    <Resource Include="Resources\driver_config.json" />
     
     <EmbeddedResource Include="smartctl.exe" />
   </ItemGroup>

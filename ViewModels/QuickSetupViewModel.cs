@@ -1,12 +1,14 @@
 using System;
 using System.IO;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Threading.Channels;
 using System.Windows;
+using System.Windows.Data;
 using LapLapAutoTool.Models;
 using LapLapAutoTool.Services;
 
@@ -20,12 +22,118 @@ namespace LapLapAutoTool.ViewModels
         private double _progress;
         private string _statusText = "Sẵn sàng để bắt đầu";
         private bool _isBusy;
+        private bool _suppressCheckAllUpdate;
 
         public ObservableCollection<SoftwareItem> SoftwareList { get; set; }
         public ObservableCollection<SoftwareItem> UtilityList { get; set; }
         public ObservableCollection<SoftwareItem> GameList { get; set; }
-        
-        public System.Collections.Generic.IEnumerable<SoftwareItem> AllItems => SoftwareList.Concat(UtilityList).Concat(GameList);
+        public ObservableCollection<SoftwareItem> StudentList { get; set; }
+
+        public ICollectionView SoftwareView { get; private set; }
+        public ICollectionView UtilityView { get; private set; }
+        public ICollectionView GameView { get; private set; }
+        public ICollectionView StudentView { get; private set; }
+
+        private string _searchText = "";
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value;
+                OnPropertyChanged();
+                SoftwareView?.Refresh();
+                UtilityView?.Refresh();
+                GameView?.Refresh();
+                StudentView?.Refresh();
+            }
+        }
+
+        private bool SearchFilter(object obj)
+        {
+            if (string.IsNullOrWhiteSpace(_searchText)) return true;
+            if (obj is SoftwareItem item)
+            {
+                var search = _searchText.Trim();
+                return item.Name.Contains(search, StringComparison.OrdinalIgnoreCase)
+                    || item.Description.Contains(search, StringComparison.OrdinalIgnoreCase);
+            }
+            return true;
+        }
+
+        public System.Collections.Generic.IEnumerable<SoftwareItem> AllItems => SoftwareList.Concat(UtilityList).Concat(GameList).Concat(StudentList);
+
+        private bool _isAllSoftwareSelected;
+        public bool IsAllSoftwareSelected
+        {
+            get => _isAllSoftwareSelected;
+            set
+            {
+                if (_isAllSoftwareSelected == value) return;
+                _isAllSoftwareSelected = value;
+                OnPropertyChanged();
+                if (!_suppressCheckAllUpdate)
+                {
+                    _suppressCheckAllUpdate = true;
+                    foreach (var item in SoftwareList) item.IsSelected = value;
+                    _suppressCheckAllUpdate = false;
+                }
+            }
+        }
+
+        private bool _isAllUtilitySelected;
+        public bool IsAllUtilitySelected
+        {
+            get => _isAllUtilitySelected;
+            set
+            {
+                if (_isAllUtilitySelected == value) return;
+                _isAllUtilitySelected = value;
+                OnPropertyChanged();
+                if (!_suppressCheckAllUpdate)
+                {
+                    _suppressCheckAllUpdate = true;
+                    foreach (var item in UtilityList) item.IsSelected = value;
+                    _suppressCheckAllUpdate = false;
+                }
+            }
+        }
+
+        private bool _isAllGameSelected;
+        public bool IsAllGameSelected
+        {
+            get => _isAllGameSelected;
+            set
+            {
+                if (_isAllGameSelected == value) return;
+                _isAllGameSelected = value;
+                OnPropertyChanged();
+                if (!_suppressCheckAllUpdate)
+                {
+                    _suppressCheckAllUpdate = true;
+                    foreach (var item in GameList) item.IsSelected = value;
+                    _suppressCheckAllUpdate = false;
+                }
+            }
+        }
+
+        private bool _isAllStudentSelected;
+        public bool IsAllStudentSelected
+        {
+            get => _isAllStudentSelected;
+            set
+            {
+                if (_isAllStudentSelected == value) return;
+                _isAllStudentSelected = value;
+                OnPropertyChanged();
+                if (!_suppressCheckAllUpdate)
+                {
+                    _suppressCheckAllUpdate = true;
+                    foreach (var item in StudentList) item.IsSelected = value;
+                    _suppressCheckAllUpdate = false;
+                }
+            }
+        }
 
         public double Progress
         {
@@ -53,12 +161,75 @@ namespace LapLapAutoTool.ViewModels
             SoftwareList = new ObservableCollection<SoftwareItem>();
             UtilityList = new ObservableCollection<SoftwareItem>();
             GameList = new ObservableCollection<SoftwareItem>();
+            StudentList = new ObservableCollection<SoftwareItem>();
             LoadSoftwareList();
+            SubscribeItemChanges();
+
+            SoftwareView = CollectionViewSource.GetDefaultView(SoftwareList);
+            SoftwareView.Filter = SearchFilter;
+            UtilityView = CollectionViewSource.GetDefaultView(UtilityList);
+            UtilityView.Filter = SearchFilter;
+            GameView = CollectionViewSource.GetDefaultView(GameList);
+            GameView.Filter = SearchFilter;
+            StudentView = CollectionViewSource.GetDefaultView(StudentList);
+            StudentView.Filter = SearchFilter;
 
             StartInstallCommand = new RelayCommand(async () => await RunInstallationSequence());
-            SelectAllCommand = new RelayCommand(SelectAll);
-            SelectNoneCommand = new RelayCommand(SelectNone);
+            SelectAllCommand = new RelayCommand<string>(SelectAll);
+            SelectNoneCommand = new RelayCommand<string>(SelectNone);
             RefreshCommand = new RelayCommand(RefreshSoftwareStatus);
+        }
+
+        private void SubscribeItemChanges()
+        {
+            foreach (var item in SoftwareList) item.PropertyChanged += OnSoftwareItemChanged;
+            foreach (var item in UtilityList) item.PropertyChanged += OnUtilityItemChanged;
+            foreach (var item in GameList) item.PropertyChanged += OnGameItemChanged;
+            foreach (var item in StudentList) item.PropertyChanged += OnStudentItemChanged;
+        }
+
+        private void OnSoftwareItemChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SoftwareItem.IsSelected) && !_suppressCheckAllUpdate)
+            {
+                _suppressCheckAllUpdate = true;
+                _isAllSoftwareSelected = SoftwareList.All(i => i.IsSelected);
+                OnPropertyChanged(nameof(IsAllSoftwareSelected));
+                _suppressCheckAllUpdate = false;
+            }
+        }
+
+        private void OnUtilityItemChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SoftwareItem.IsSelected) && !_suppressCheckAllUpdate)
+            {
+                _suppressCheckAllUpdate = true;
+                _isAllUtilitySelected = UtilityList.All(i => i.IsSelected);
+                OnPropertyChanged(nameof(IsAllUtilitySelected));
+                _suppressCheckAllUpdate = false;
+            }
+        }
+
+        private void OnGameItemChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SoftwareItem.IsSelected) && !_suppressCheckAllUpdate)
+            {
+                _suppressCheckAllUpdate = true;
+                _isAllGameSelected = GameList.All(i => i.IsSelected);
+                OnPropertyChanged(nameof(IsAllGameSelected));
+                _suppressCheckAllUpdate = false;
+            }
+        }
+
+        private void OnStudentItemChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SoftwareItem.IsSelected) && !_suppressCheckAllUpdate)
+            {
+                _suppressCheckAllUpdate = true;
+                _isAllStudentSelected = StudentList.All(i => i.IsSelected);
+                OnPropertyChanged(nameof(IsAllStudentSelected));
+                _suppressCheckAllUpdate = false;
+            }
         }
 
         private void RefreshSoftwareStatus()
@@ -115,6 +286,10 @@ namespace LapLapAutoTool.ViewModels
                             {
                                 UtilityList.Add(item);
                             }
+                            else if (item.Category == "student")
+                            {
+                                StudentList.Add(item);
+                            }
                             else
                             {
                                 SoftwareList.Add(item);
@@ -143,12 +318,35 @@ namespace LapLapAutoTool.ViewModels
         }
 
         public RelayCommand StartInstallCommand { get; }
-        public RelayCommand SelectAllCommand { get; }
-        public RelayCommand SelectNoneCommand { get; }
+        public RelayCommand<string> SelectAllCommand { get; }
+        public RelayCommand<string> SelectNoneCommand { get; }
         public RelayCommand RefreshCommand { get; }
 
-        private void SelectAll() { foreach (var item in AllItems) item.IsSelected = true; }
-        private void SelectNone() { foreach (var item in AllItems) item.IsSelected = false; }
+        private void SelectAll(string category)
+        {
+            var targets = category switch
+            {
+                "general" => SoftwareList,
+                "utility" => UtilityList,
+                "game" => GameList,
+                "student" => StudentList,
+                _ => AllItems
+            };
+            foreach (var item in targets) item.IsSelected = true;
+        }
+
+        private void SelectNone(string category)
+        {
+            var targets = category switch
+            {
+                "general" => SoftwareList,
+                "utility" => UtilityList,
+                "game" => GameList,
+                "student" => StudentList,
+                _ => AllItems
+            };
+            foreach (var item in targets) item.IsSelected = false;
+        }
 
         private async Task RunInstallationSequence()
         {
@@ -277,16 +475,53 @@ namespace LapLapAutoTool.ViewModels
                             continue;
                         }
 
-                        // Bắt đầu cài
-                        StatusText = $"Đang cài đặt {item.Name}...";
-                        item.DownloadStatusText = "Đang cài đặt...";
-                        item.Status = InstallStatus.Installing;
+                        // DOWNLOAD_ONLY: chỉ tải + giải nén + mở thư mục
+                        if (item.SilentArgs == "DOWNLOAD_ONLY")
+                        {
+                            StatusText = $"Đang xử lý {item.Name}...";
+                            item.Status = InstallStatus.Installing;
 
-                        bool success = await _installService.InstallAsync(item.LocalInstallerPath, item.SilentArgs, !item.IsAsync);
-                        await Task.Delay(500);
+                            string ext = Path.GetExtension(item.LocalInstallerPath).ToLower();
+                            string? finalFolder = null;
 
-                        item.Status = success ? InstallStatus.Completed : InstallStatus.Failed;
-                        item.DownloadStatusText = success ? "Hoàn tất!" : "Cài đặt thất bại!";
+                            if (ext == ".zip" || ext == ".rar" || ext == ".7z")
+                            {
+                                item.DownloadStatusText = "Đang giải nén...";
+                                item.DownloadStatus = DownloadStatus.Extracting;
+                                var extractProgress = new Progress<(double percent, string status)>(report =>
+                                {
+                                    Application.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        item.DownloadProgress = report.percent;
+                                        item.DownloadStatusText = report.status;
+                                    });
+                                });
+                                finalFolder = await _downloadService.ExtractArchiveAsync(item.LocalInstallerPath, extractProgress, item.Password);
+                            }
+                            else
+                            {
+                                finalFolder = Path.GetDirectoryName(item.LocalInstallerPath);
+                            }
+
+                            item.Status = InstallStatus.Completed;
+                            item.DownloadStatusText = "Hoàn tất! Đã mở thư mục.";
+
+                            if (!string.IsNullOrEmpty(finalFolder))
+                                _downloadService.OpenFolderInExplorer(finalFolder);
+                        }
+                        else
+                        {
+                            // Bắt đầu cài bình thường
+                            StatusText = $"Đang cài đặt {item.Name}...";
+                            item.DownloadStatusText = "Đang cài đặt...";
+                            item.Status = InstallStatus.Installing;
+
+                            bool success = await _installService.InstallAsync(item.LocalInstallerPath, item.SilentArgs, !item.IsAsync);
+                            await Task.Delay(500);
+
+                            item.Status = success ? InstallStatus.Completed : InstallStatus.Failed;
+                            item.DownloadStatusText = success ? "Hoàn tất!" : "Cài đặt thất bại!";
+                        }
 
                         Application.Current.Dispatcher.Invoke(() => {
                             installedCount++;

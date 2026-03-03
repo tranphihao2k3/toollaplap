@@ -1,0 +1,121 @@
+<UserControl x:Class="LapLapAutoTool.Views.MicTestControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             Background="#070A10">
+    <Grid Margin="22,18,22,18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,4">
+            <Border Width="3" Height="20" CornerRadius="2" Background="#8B5CF6" Margin="0,0,10,0" VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect Color="#8B5CF6" BlurRadius="4" ShadowDepth="0" Opacity="0.3"/>
+                </Border.Effect>
+            </Border>
+            <TextBlock Text="MICROPHONE_DIAGNOSTICS" FontSize="22" FontWeight="Black" Foreground="White"
+                       FontFamily="Rajdhani, Consolas"/>
+        </StackPanel>
+        <TextBlock Grid.Row="1" Text="Chọn thiết bị, ghi âm và phát lại để kiểm tra"
+                   FontSize="13.5" Foreground="#6A9AAA" FontWeight="SemiBold" Margin="0,4,0,16" FontFamily="Rajdhani, Consolas"/>
+
+        <!-- Device selection -->
+        <Grid Grid.Row="2" Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Thiết bị:" Foreground="#4A7A8A" FontSize="12"
+                       VerticalAlignment="Center" Margin="0,0,10,0" FontFamily="Rajdhani, Consolas"/>
+            <ComboBox Grid.Column="1" x:Name="DeviceCombo"
+                      SelectionChanged="DeviceCombo_Changed"
+                      Background="#0B101A" Foreground="Black"
+                      BorderBrush="#358B5CF6" FontSize="12" Padding="10,7">
+                <ComboBox.ItemContainerStyle>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Foreground" Value="Black"/>
+                    </Style>
+                </ComboBox.ItemContainerStyle>
+            </ComboBox>
+        </Grid>
+
+        <!-- Volume bar + Waveform -->
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0,0,0,10">
+                <Border Background="#0B101A" CornerRadius="4" Height="20" BorderBrush="#1A8B5CF6" BorderThickness="1">
+                    <Border x:Name="VolumeBar" Background="#8B5CF6" CornerRadius="4"
+                            HorizontalAlignment="Left" Width="0" MinWidth="0"/>
+                </Border>
+                <TextBlock x:Name="VolumeText" Text="0 dB" Foreground="White"
+                           FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontFamily="Rajdhani, Consolas"/>
+            </Grid>
+
+            <TextBlock Grid.Row="1" x:Name="RecordTimer" Text="00:00"
+                       Foreground="#4A7A8A" FontSize="13" FontWeight="Bold"
+                       HorizontalAlignment="Center" Margin="0,0,0,8"
+                       FontFamily="Rajdhani, Consolas"/>
+
+            <Border Grid.Row="2" Background="#05080E" CornerRadius="8" BorderBrush="#1A8B5CF6" BorderThickness="1">
+                <Canvas x:Name="WaveCanvas" ClipToBounds="True">
+                    <Polyline x:Name="WaveLine" Stroke="#8B5CF6" StrokeThickness="1.8"
+                              StrokeLineJoin="Round"/>
+                </Canvas>
+            </Border>
+        </Grid>
+
+        <!-- Playback panel -->
+        <Border Grid.Row="4" Background="#0B101A" CornerRadius="6" Padding="12,7" Margin="0,12,0,0"
+                Visibility="Collapsed" x:Name="PlaybackPanel"
+                BorderBrush="#1A8B5CF6" BorderThickness="1">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="RecordedInfo" Text="Đã ghi: 0s" Foreground="#4A7A8A" FontSize="12"
+                           VerticalAlignment="Center" FontFamily="Rajdhani, Consolas"/>
+                <Button x:Name="BtnPlay" Content="▶ Phát lại" Click="PlayRecording"
+                        Margin="12,0,0,0" Padding="12,5" Style="{StaticResource AccentButton}" FontSize="12"/>
+                <Button Content="🗑" Click="DeleteRecording"
+                        Margin="8,0,0,0" Padding="10,5" Style="{StaticResource SecondaryButton}" FontSize="12"
+                        ToolTip="Xoá bản ghi"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Controls -->
+        <Grid Grid.Row="5" Margin="0,14,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="#0B101A" CornerRadius="6" Padding="10,6"
+                    BorderBrush="#1A8B5CF6" BorderThickness="1">
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse x:Name="StatusDot" Width="8" Height="8" Fill="#1E293B"
+                             VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock x:Name="StatusLabel" Text="Chọn thiết bị để bắt đầu"
+                               Foreground="#4A7A8A" FontSize="12" VerticalAlignment="Center"
+                               FontFamily="Rajdhani, Consolas"/>
+                </StackPanel>
+            </Border>
+
+            <Button Grid.Column="1" x:Name="BtnRecord"
+                    Content="⏺  Ghi Âm" Click="ToggleRecord"
+                    Padding="16,8" Style="{StaticResource ModernButton}" FontSize="13"
+                    Margin="8,0,0,0"/>
+        </Grid>
+    </Grid>
+</UserControl>

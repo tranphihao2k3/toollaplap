@@ -1,0 +1,129 @@
+<UserControl x:Class="LapLapAutoTool.Views.SpeakerTestControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             Background="#070A10">
+    <Grid Margin="24,20,24,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,4">
+            <Border Width="3" Height="20" CornerRadius="2" Background="#F59E0B" Margin="0,0,10,0" VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect Color="#F59E0B" BlurRadius="4" ShadowDepth="0" Opacity="0.3"/>
+                </Border.Effect>
+            </Border>
+            <TextBlock Text="AUDIO_DIAGNOSTICS" FontSize="22" FontWeight="Black" Foreground="White"
+                       FontFamily="Rajdhani, Consolas"/>
+        </StackPanel>
+        <TextBlock Grid.Row="1" Text="Phát tone thuần, kiểm tra stereo, hoặc tải nhạc về để test"
+                   FontSize="13.5" Foreground="#6A9AAA" FontWeight="SemiBold" Margin="0,4,0,20" FontFamily="Rajdhani, Consolas"/>
+
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="TONE_GENERATOR" Foreground="#F59E0B" FontSize="11.5" FontWeight="ExtraBold" Margin="0,0,0,8"
+                           FontFamily="Rajdhani, Consolas" Opacity="0.8"/>
+                <Grid Margin="0,0,0,18">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="Bass 220Hz"  Tag="220" Click="PlayToneClick"
+                            Margin="0,0,4,0" Padding="8,11" Style="{StaticResource ModernButton}" FontSize="12"/>
+                    <Button Grid.Column="1" Content="Mid 440Hz"   Tag="440" Click="PlayToneClick"
+                            Margin="4,0" Padding="8,11" Style="{StaticResource ModernButton}" FontSize="12"/>
+                    <Button Grid.Column="2" Content="High 1000Hz" Tag="1000" Click="PlayToneClick"
+                            Margin="4,0,0,0" Padding="8,11" Style="{StaticResource ModernButton}" FontSize="12"/>
+                </Grid>
+
+                <TextBlock Text="STEREO_CHECK" Foreground="#F59E0B" FontSize="11.5" FontWeight="ExtraBold" Margin="0,0,0,8"
+                           FontFamily="Rajdhani, Consolas" Opacity="0.8"/>
+                <Grid Margin="0,0,0,18">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="◄ Loa Trái" Click="PlayLeft"
+                            Margin="0,0,4,0" Padding="8,11" Style="{StaticResource ModernButton}" FontSize="12"/>
+                    <Button Grid.Column="1" Content="● Cả Hai"   Click="PlayBoth"
+                            Margin="4,0" Padding="8,11" Style="{StaticResource ModernButton}" FontSize="12"/>
+                    <Button Grid.Column="2" Content="Loa Phải ►" Click="PlayRight"
+                            Margin="4,0,0,0" Padding="8,11" Style="{StaticResource ModernButton}" FontSize="12"/>
+                </Grid>
+
+                <TextBlock Text="AUDIO_STREAM" Foreground="#F59E0B" FontSize="11.5" FontWeight="ExtraBold" Margin="0,0,0,8"
+                           FontFamily="Rajdhani, Consolas" Opacity="0.8"/>
+                <Grid Margin="0,0,0,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" Background="#0B101A" CornerRadius="6" BorderBrush="#35F59E0B" BorderThickness="1"
+                            Margin="0,0,6,0">
+                        <TextBox x:Name="UrlBox"
+                                 Background="Transparent" BorderThickness="0"
+                                 Foreground="White" CaretBrush="#F59E0B"
+                                 FontSize="12" Padding="10,9"
+                                 VerticalContentAlignment="Center"
+                                 Text="https://..."
+                                 GotFocus="UrlBox_GotFocus"
+                                 FontFamily="Rajdhani, Consolas"/>
+                    </Border>
+                    <Button Grid.Column="1" x:Name="BtnDownload"
+                            Content="⬇ Tải &amp; Phát" Click="DownloadAndPlay"
+                            Padding="14,10" Style="{StaticResource AccentButton}" FontSize="12"/>
+                </Grid>
+                <Button Content="📂 Chọn file nhạc từ máy..." Click="OpenLocalFile"
+                        HorizontalAlignment="Left" Padding="12,7" Margin="0,0,0,14"
+                        Style="{StaticResource GhostButton}" FontSize="12"/>
+
+                <TextBlock Text="VOLUME_CONTROL" Foreground="#F59E0B" FontSize="11.5" FontWeight="ExtraBold" Margin="0,0,0,8"
+                           FontFamily="Rajdhani, Consolas" Opacity="0.8"/>
+                <Grid Margin="0,0,0,18">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider Grid.Column="0" x:Name="VolumeSlider" Minimum="0" Maximum="100" Value="70"
+                            VerticalAlignment="Center" Foreground="#F59E0B"
+                            ValueChanged="VolumeChanged"/>
+                    <TextBlock Grid.Column="1" x:Name="VolLabel" Text="70%"
+                               Foreground="#F59E0B" FontSize="12" FontWeight="Bold"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"
+                               FontFamily="Rajdhani, Consolas"/>
+                </Grid>
+
+                <Border Background="#0B101A" CornerRadius="8" Padding="14,10" Margin="0,0,0,14"
+                        BorderBrush="#1AF59E0B" BorderThickness="1">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse x:Name="PlayDot" Width="8" Height="8" Fill="#1E293B"
+                                 VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock x:Name="StatusText"
+                                   Text="Sẵn sàng — chọn tone hoặc tải nhạc để bắt đầu"
+                                   Foreground="#4A7A8A" FontSize="12" VerticalAlignment="Center"
+                                   TextWrapping="Wrap" MaxWidth="500"
+                                   FontFamily="Rajdhani, Consolas"/>
+                    </StackPanel>
+                </Border>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" x:Name="ProgressText" Text="" Foreground="#4A7A8A"
+                               FontSize="11" VerticalAlignment="Center" FontFamily="Rajdhani, Consolas"/>
+                    <Button Grid.Column="1" Content="⏹ Dừng" Click="Stop_Click"
+                            Padding="16,9" Style="{StaticResource SecondaryButton}" FontSize="12"/>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

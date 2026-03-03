@@ -18,6 +18,15 @@
     "FileSize": ""
   },
   {
+    "Name": "Brave Browser",
+    "FileName": "BraveBrowserSetup.exe",
+    "SilentArgs": "/silent /install",
+    "Description": "Trình duyệt bảo mật, chặn quảng cáo",
+    "Category": "general",
+    "DownloadUrl": "https://drive.google.com/file/d/13sOsZTu3baBUgIbdXl6Wskn-F4w1iPwp/view?usp=sharing",
+    "FileSize": ""
+  },
+  {
     "Name": "Zalo Desktop",
     "FileName": "ZaloSetup.exe",
     "SilentArgs": "/S",
@@ -63,30 +72,12 @@
     "FileSize": ""
   },
   {
-    "Name": "BatteryMon",
-    "FileName": "BatteryMon.exe",
-    "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
-    "Description": "Kiểm tra độ chai và thông tin của Pin",
+    "Name": "IDM",
+    "FileName": "IDM_setup.exe",
+    "SilentArgs": "/S",
+    "Description": "Internet Download Manager - Tăng tốc tải file",
     "Category": "general",
-    "DownloadUrl": "https://drive.google.com/file/d/1F1NOujTRcF8__Fw1HxsrOhgTlN48PZ7d/view?usp=sharing",
-    "FileSize": ""
-  },
-  {
-    "Name": "Hard Disk Sentinel Pro",
-    "FileName": "hdsentinel_pro_setup.exe",
-    "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
-    "Description": "Kiểm tra sức khỏe và nhiệt độ ổ cứng",
-    "Category": "general",
-    "DownloadUrl": "https://drive.google.com/file/d/1Y61TGigkaENIO6ypVe4GT5mIBdNlGJVH/view?usp=sharing",
-    "FileSize": ""
-  },
-  {
-    "Name": "Unigine Heaven Benchmark",
-    "FileName": "Unigine_Heaven.exe",
-    "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
-    "Description": "Phần mềm Stress Test và kiểm tra hiệu năng GPU",
-    "Category": "general",
-    "DownloadUrl": "https://drive.google.com/file/d/1lKj_wHHxE6l9smR-sSN_uCaxDeJ7xHGF/view?usp=sharing",
+    "DownloadUrl": "https://drive.google.com/file/d/16j6PxYUY4kuzJ6bvpHTBNf17uiw-citM/view?usp=sharing",
     "FileSize": ""
   },
   {
@@ -96,42 +87,207 @@
     "Description": "Bộ công cụ văn phòng (Word, Excel, PowerPoint)",
     "IsAsync": true,
     "Category": "general",
-    "DownloadUrl": "https://drive.google.com/file/d/1pPgEyS4-v9fTIaiesrqCykrU9z7RWr_E/view?usp=sharing"
+    "DownloadUrl": "https://drive.google.com/file/d/1pPgEyS4-v9fTIaiesrqCykrU9z7RWr_E/view?usp=sharing",
+    "FileSize": ""
   },
   {
-    "Name": "HWiNFO64 (Tiện ích mẫu)",
+    "Name": "Microsoft Visual C++ Redistributable",
+    "FileName": "VC_redist.x64.exe",
+    "SilentArgs": "/install /quiet /norestart",
+    "Description": "Thư viện runtime C++ cần thiết cho nhiều ứng dụng",
+    "Category": "general",
+    "DownloadUrl": "https://drive.google.com/file/d/1w-XSdryLEmzOhOSmFJKoxHY5Yc9o2iBy/view?usp=sharing",
+    "FileSize": ""
+  },
+  {
+    "Name": "BatteryMon",
+    "FileName": "BatteryMon.exe",
+    "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
+    "Description": "Kiểm tra độ chai và thông tin của Pin",
+    "Category": "utility",
+    "DownloadUrl": "https://drive.google.com/file/d/1F1NOujTRcF8__Fw1HxsrOhgTlN48PZ7d/view?usp=sharing",
+    "FileSize": ""
+  },
+  {
+    "Name": "Hard Disk Sentinel Pro",
+    "FileName": "hdsentinel_pro_setup.exe",
+    "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
+    "Description": "Kiểm tra sức khỏe và nhiệt độ ổ cứng",
+    "Category": "utility",
+    "DownloadUrl": "https://drive.google.com/file/d/1Y61TGigkaENIO6ypVe4GT5mIBdNlGJVH/view?usp=sharing",
+    "FileSize": ""
+  },
+  {
+    "Name": "Unigine Heaven Benchmark",
+    "FileName": "Unigine_Heaven.exe",
+    "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
+    "Description": "Phần mềm Stress Test và kiểm tra hiệu năng GPU",
+    "Category": "utility",
+    "DownloadUrl": "https://drive.google.com/file/d/1lKj_wHHxE6l9smR-sSN_uCaxDeJ7xHGF/view?usp=sharing",
+    "FileSize": ""
+  },
+  {
+    "Name": "MiniTool Partition Wizard",
+    "FileName": "MiniToolPartitionWizard_setup.exe",
+    "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
+    "Description": "Quản lý phân vùng ổ cứng chuyên nghiệp",
+    "Category": "utility",
+    "DownloadUrl": "https://drive.google.com/file/d/1ftPUQPhW7flFG0mCibJ985qVLeQyuOZo/view?usp=sharing",
+    "FileSize": ""
+  },
+  {
+    "Name": "HWiNFO64",
     "FileName": "hwi64_installer.exe",
     "SilentArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-",
     "Description": "Tiện ích theo dõi phần cứng chi tiết",
     "Category": "utility",
-    "DownloadUrl": "",
-    "FileSize": "10 MB"
+    "DownloadUrl": "https://drive.google.com/file/d/1I3yywLhFfBSk5BJR3I9IB35jVSAp6TEM/view?usp=sharing",
+    "FileSize": ""
   },
   {
-    "Name": "Rufus (Tiện ích mẫu)",
+    "Name": "Rufus",
     "FileName": "rufus.exe",
     "SilentArgs": "COPY_TO_DESKTOP",
     "Description": "Tiện ích tạo USB Boot cài Win",
     "Category": "utility",
     "DownloadUrl": "",
-    "FileSize": "1.4 MB"
+    "FileSize": ""
   },
   {
-    "Name": "Steam (Game mẫu)",
+    "Name": "f.lux",
+    "FileName": "flux-setup.exe",
+    "SilentArgs": "/S",
+    "Description": "Chỉnh màu màn hình, bảo vệ mắt ban đêm",
+    "Category": "utility",
+    "DownloadUrl": "https://drive.google.com/file/d/1IN3o_1xObyHvvaUW68dQnHh0GhDUeYpI/view?usp=sharing",
+    "FileSize": ""
+  },
+  {
+    "Name": "Everything",
+    "FileName": "Everything_setup.exe",
+    "SilentArgs": "/S",
+    "Description": "Công cụ tìm kiếm file siêu nhanh",
+    "Category": "utility",
+    "DownloadUrl": "https://drive.google.com/file/d/1ooiOtSjlP966iflCG-Tbklr0EoCCPgd-/view?usp=sharing",
+    "FileSize": ""
+  },
+  {
+    "Name": "Steam",
     "FileName": "SteamSetup.exe",
     "SilentArgs": "/S",
     "Description": "Cửa hàng phát hành game số",
     "Category": "game",
-    "DownloadUrl": "",
-    "FileSize": "2.5 MB"
+    "DownloadUrl": "https://drive.google.com/file/d/1RX8sDR8tH2Qmvzos4aJzKPkONEsW0kk0/view?usp=sharing",
+    "FileSize": ""
   },
   {
-    "Name": "Liên Minh Huyền Thoại (Game mẫu)",
+    "Name": "Liên Minh Huyền Thoại",
     "FileName": "LoL_Installer.exe",
     "SilentArgs": "",
     "Description": "Game chiến thuật MOBA",
+    "IsAsync": true,
     "Category": "game",
-    "DownloadUrl": "",
-    "FileSize": "15 GB"
+    "DownloadUrl": "https://drive.google.com/file/d/19RPgaGbctCUo9h4izvtlkxhHQqLQpk_a/view?usp=sharing",
+    "FileSize": ""
+  },
+  {
+    "Name": "Valorant",
+    "FileName": "ValorantInstaller.exe",
+    "SilentArgs": "",
+    "Description": "Game bắn súng chiến thuật FPS",
+    "IsAsync": true,
+    "Category": "game",
+    "DownloadUrl": "https://drive.google.com/file/d/10Db1macZLdeAOP03dJwz9PASYkTPtOPf/view?usp=sharing",
+    "FileSize": ""
+  },
+  {
+    "Name": "Adobe Photoshop 2024",
+    "FileName": "Photoshop_2024.rar",
+    "SilentArgs": "DOWNLOAD_ONLY",
+    "Description": "Chỉnh sửa ảnh chuyên nghiệp",
+    "Category": "student",
+    "DownloadUrl": "https://drive.usercontent.google.com/download?id=10wurA1yJoWlksHuYn6ikzznLKWGmSp80&authuser=0",
+    "FileSize": "",
+    "Password": "linkneverdie.com"
+  },
+  {
+    "Name": "Adobe Photoshop 2023",
+    "FileName": "Photoshop_2023.rar",
+    "SilentArgs": "DOWNLOAD_ONLY",
+    "Description": "Chỉnh sửa ảnh chuyên nghiệp",
+    "Category": "student",
+    "DownloadUrl": "https://drive.usercontent.google.com/download?id=16O4hligcbMb3rPo4fd1xEAInw6nHtSIF&authuser=0",
+    "FileSize": "",
+    "Password": "linkneverdie.com"
+  },
+  {
+    "Name": "Adobe Illustrator 2024",
+    "FileName": "Illustrator_2024.rar",
+    "SilentArgs": "DOWNLOAD_ONLY",
+    "Description": "Thiết kế đồ họa vector",
+    "Category": "student",
+    "DownloadUrl": "https://drive.usercontent.google.com/download?id=12hA4HCwNui7TAyrAaEDMceuImc8ehige&authuser=0",
+    "FileSize": "",
+    "Password": "linkneverdie.com"
+  },
+  {
+    "Name": "Adobe Premiere Pro 2024",
+    "FileName": "PremierePro_2024.rar",
+    "SilentArgs": "DOWNLOAD_ONLY",
+    "Description": "Dựng phim và chỉnh sửa video",
+    "Category": "student",
+    "DownloadUrl": "https://drive.usercontent.google.com/download?id=1_4YUvixnJ3IZU_VvlREZ5-PpJllQyMfY&authuser=0",
+    "FileSize": "",
+    "Password": "linkneverdie.com"
+  },
+  {
+    "Name": "Adobe After Effects 2024",
+    "FileName": "AfterEffects_2024.rar",
+    "SilentArgs": "DOWNLOAD_ONLY",
+    "Description": "Kỹ xảo và hiệu ứng video",
+    "Category": "student",
+    "DownloadUrl": "https://drive.usercontent.google.com/download?id=1_aUqoCzM0tjuW9f_H04yG_-5zgTu6jl1&authuser=0",
+    "FileSize": "",
+    "Password": "linkneverdie.com"
+  },
+  {
+    "Name": "Adobe InDesign 2024",
+    "FileName": "InDesign_2024.rar",
+    "SilentArgs": "DOWNLOAD_ONLY",
+    "Description": "Thiết kế ấn phẩm và xuất bản",
+    "Category": "student",
+    "DownloadUrl": "https://drive.usercontent.google.com/download?id=1DUf_VFtB0WYXDX_zJEpfie3O2LEMbsut&authuser=0",
+    "FileSize": "",
+    "Password": "linkneverdie.com"
+  },
+  {
+    "Name": "AutoCAD 2021",
+    "FileName": "AutoCAD_2021.rar",
+    "SilentArgs": "DOWNLOAD_ONLY",
+    "Description": "Phần mềm thiết kế kỹ thuật 2D/3D",
+    "Category": "student",
+    "DownloadUrl": "https://drive.usercontent.google.com/download?id=15wDzWF7POgBSZR6lyodF6UYDBM3O0BFx&authuser=0",
+    "FileSize": "",
+    "Password": "linkneverdie.com"
+  },
+  {
+    "Name": "SketchUp Pro 2021",
+    "FileName": "SketchUp_2021.rar",
+    "SilentArgs": "DOWNLOAD_ONLY",
+    "Description": "Thiết kế mô hình 3D",
+    "Category": "student",
+    "DownloadUrl": "https://drive.usercontent.google.com/download?id=147ox9OASHdWufVaFrF84sWcC-3PpgK6I&authuser=0",
+    "FileSize": "",
+    "Password": "linkneverdie.com"
+  },
+  {
+    "Name": "CorelDRAW X7",
+    "FileName": "CorelDRAW_X7.rar",
+    "SilentArgs": "DOWNLOAD_ONLY",
+    "Description": "Thiết kế đồ họa và minh họa",
+    "Category": "student",
+    "DownloadUrl": "https://drive.usercontent.google.com/download?id=1_8BvLFAwnbz4EeRAey0AGoJKZ6i2l9Ym&authuser=0",
+    "FileSize": "",
+    "Password": "linkneverdie.com"
   }
 ]

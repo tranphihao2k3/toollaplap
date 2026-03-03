@@ -1,0 +1,258 @@
+<UserControl x:Class="LapLapAutoTool.Views.AudioTestControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             Background="#070A10">
+    <Grid Margin="20,14">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="16"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ════ LEFT: Output (Speaker) ════ -->
+        <Border Grid.Column="0" Background="#0A0E16" CornerRadius="12"
+                BorderBrush="#1A00D2FF" BorderThickness="1" Padding="20,16">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Output Validation" FontSize="18" FontWeight="Bold"
+                           Foreground="#00D2FF" FontFamily="Rajdhani, Consolas" Margin="0,0,0,16"/>
+
+                <!-- Speaker circles -->
+                <UniformGrid Grid.Row="1" Columns="3" HorizontalAlignment="Center" Margin="0,0,0,14">
+                    <Button x:Name="BtnLeft" Click="PlayLeft" Cursor="Hand" Margin="0,0,8,0">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Bd" Width="90" Height="90" CornerRadius="45"
+                                        Background="Transparent" BorderBrush="#3364748B" BorderThickness="2">
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <Path Data="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"
+                                              Fill="#94A3B8" Stretch="Uniform" Width="22" Height="22"
+                                              HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                                        <TextBlock Text="Left" Foreground="#94A3B8" FontSize="11"
+                                                   FontWeight="SemiBold" HorizontalAlignment="Center"
+                                                   FontFamily="Rajdhani, Consolas"/>
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Bd" Property="BorderBrush" Value="#8800D2FF"/>
+                                        <Setter TargetName="Bd" Property="Background" Value="#0A00D2FF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button x:Name="BtnBoth" Click="PlayBoth" Cursor="Hand" Margin="8,0">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Bd" Width="90" Height="90" CornerRadius="45"
+                                        Background="Transparent" BorderBrush="#3364748B" BorderThickness="2">
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <Path Data="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"
+                                              Fill="#00D2FF" Stretch="Uniform" Width="22" Height="22"
+                                              HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                                        <TextBlock Text="Both" Foreground="#00D2FF" FontSize="11"
+                                                   FontWeight="SemiBold" HorizontalAlignment="Center"
+                                                   FontFamily="Rajdhani, Consolas"/>
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Bd" Property="BorderBrush" Value="#8800D2FF"/>
+                                        <Setter TargetName="Bd" Property="Background" Value="#0A00D2FF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button x:Name="BtnRight" Click="PlayRight" Cursor="Hand" Margin="8,0,0,0">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Bd" Width="90" Height="90" CornerRadius="45"
+                                        Background="Transparent" BorderBrush="#3364748B" BorderThickness="2">
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <Path Data="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"
+                                              Fill="#94A3B8" Stretch="Uniform" Width="22" Height="22"
+                                              HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                                        <TextBlock Text="Right" Foreground="#94A3B8" FontSize="11"
+                                                   FontWeight="SemiBold" HorizontalAlignment="Center"
+                                                   FontFamily="Rajdhani, Consolas"/>
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Bd" Property="BorderBrush" Value="#8800D2FF"/>
+                                        <Setter TargetName="Bd" Property="Background" Value="#0A00D2FF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </UniformGrid>
+
+                <!-- Tone buttons -->
+                <Grid Grid.Row="2" Margin="0,0,0,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="Bass 220Hz" Tag="220" Click="PlayToneClick"
+                            Margin="0,0,3,0" Padding="6,7" Style="{StaticResource ModernButton}" FontSize="11"/>
+                    <Button Grid.Column="1" Content="Mid 440Hz" Tag="440" Click="PlayToneClick"
+                            Margin="3,0" Padding="6,7" Style="{StaticResource ModernButton}" FontSize="11"/>
+                    <Button Grid.Column="2" Content="High 1kHz" Tag="1000" Click="PlayToneClick"
+                            Margin="3,0,0,0" Padding="6,7" Style="{StaticResource ModernButton}" FontSize="11"/>
+                </Grid>
+
+                <!-- Audio stream download -->
+                <TextBlock Grid.Row="3" Text="AUDIO_STREAM" Foreground="#00D2FF" FontSize="10.5"
+                           FontWeight="ExtraBold" Margin="0,0,0,6" FontFamily="Rajdhani, Consolas" Opacity="0.7"/>
+                <Grid Grid.Row="4" Margin="0,0,0,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" Background="#0B101A" CornerRadius="5" BorderBrush="#1A00D2FF" BorderThickness="1"
+                            Margin="0,0,4,0">
+                        <TextBox x:Name="UrlBox" Background="Transparent" BorderThickness="0"
+                                 Foreground="White" CaretBrush="#00D2FF" FontSize="11" Padding="8,6"
+                                 VerticalContentAlignment="Center" Text="https://..."
+                                 GotFocus="UrlBox_GotFocus" FontFamily="Rajdhani, Consolas"/>
+                    </Border>
+                    <Button Grid.Column="1" x:Name="BtnDownload" Content="⬇ Tải" Click="DownloadAndPlay"
+                            Padding="10,6" Style="{StaticResource ModernButton}" FontSize="11"/>
+                </Grid>
+                <Button Grid.Row="5" Content="📂 Chọn file nhạc..." Click="OpenLocalFile"
+                        HorizontalAlignment="Left" Padding="10,5" Margin="0,0,0,10"
+                        Style="{StaticResource GhostButton}" FontSize="11" VerticalAlignment="Top"/>
+
+                <!-- Status -->
+                <Border Grid.Row="6" Background="#0B101A" CornerRadius="6" Padding="10,6"
+                        BorderBrush="#1A00D2FF" BorderThickness="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse x:Name="PlayDot" Width="8" Height="8" Fill="#1E293B"
+                                     VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock x:Name="SpeakerStatus" Text="Nhấn nút để test loa"
+                                       Foreground="#4A7A8A" FontSize="11" VerticalAlignment="Center"
+                                       FontFamily="Rajdhani, Consolas" TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+                        <Button Grid.Column="1" Content="⏹" Click="StopSpeaker_Click"
+                                Padding="8,3" Style="{StaticResource SecondaryButton}" FontSize="11" Margin="6,0,0,0"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- ════ RIGHT: Input (Mic) ════ -->
+        <Border Grid.Column="2" Background="#0A0E16" CornerRadius="12"
+                BorderBrush="#1A00D2FF" BorderThickness="1" Padding="20,16">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Input Validation (Mic)" FontSize="18" FontWeight="Bold"
+                           Foreground="#00D2FF" FontFamily="Rajdhani, Consolas" Margin="0,0,0,16"/>
+
+                <!-- Mic circle with pulse rings -->
+                <Grid Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,16">
+                    <!-- Pulse ring 3 (outermost) -->
+                    <Ellipse x:Name="PulseRing3" Width="180" Height="180" Stroke="#00D2FF" StrokeThickness="1.5"
+                             Fill="Transparent" Opacity="0"/>
+                    <!-- Pulse ring 2 -->
+                    <Ellipse x:Name="PulseRing2" Width="155" Height="155" Stroke="#00D2FF" StrokeThickness="1.5"
+                             Fill="Transparent" Opacity="0"/>
+                    <!-- Pulse ring 1 -->
+                    <Ellipse x:Name="PulseRing1" Width="130" Height="130" Stroke="#00D2FF" StrokeThickness="2"
+                             Fill="Transparent" Opacity="0"/>
+                    <!-- Base ring -->
+                    <Ellipse Width="110" Height="110" Stroke="#00D2FF" StrokeThickness="2.5" Fill="Transparent">
+                        <Ellipse.Effect>
+                            <DropShadowEffect Color="#00D2FF" BlurRadius="10" ShadowDepth="0" Opacity="0.25"/>
+                        </Ellipse.Effect>
+                    </Ellipse>
+                    <!-- Mic icon center -->
+                    <Border Width="60" Height="60" CornerRadius="30" Background="#0F1923">
+                        <Path Data="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"
+                              Fill="#64748B" Stretch="Uniform" Width="20" Height="20"
+                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+
+                <!-- Level meter -->
+                <Grid Grid.Row="2" Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Input Level" Foreground="#64748B" FontSize="11"
+                               FontFamily="Rajdhani, Consolas" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="2" x:Name="DbText" Text="0 dB" Foreground="#64748B" FontSize="11"
+                               FontFamily="Rajdhani, Consolas" VerticalAlignment="Center"/>
+                </Grid>
+                <Border Grid.Row="3" Background="#0B101A" CornerRadius="4" Height="16"
+                        BorderBrush="#1A00D2FF" BorderThickness="1" Margin="0,0,0,10">
+                    <Border x:Name="MicBar" Background="#22C55E" CornerRadius="3"
+                            HorizontalAlignment="Left" Width="0" MinWidth="0"/>
+                </Border>
+
+                <!-- Device + Record + Playback -->
+                <Grid Grid.Row="4" Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Thiết bị:" Foreground="#4A7A8A" FontSize="11"
+                               VerticalAlignment="Center" Margin="0,0,6,0" FontFamily="Rajdhani, Consolas"/>
+                    <ComboBox Grid.Column="1" x:Name="DeviceCombo" SelectionChanged="DeviceCombo_Changed"
+                              Background="#0B101A" Foreground="Black" BorderBrush="#1A00D2FF"
+                              FontSize="11" Padding="6,4">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                    </ComboBox>
+                </Grid>
+                <Grid Grid.Row="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" x:Name="RecordStatus" Text="Sẵn sàng" Foreground="#4A7A8A"
+                               FontSize="11" VerticalAlignment="Center" FontFamily="Rajdhani, Consolas"/>
+                    <Button Grid.Column="1" x:Name="BtnRecord" Content="⏺ Ghi" Click="ToggleRecord"
+                            Padding="10,5" Style="{StaticResource ModernButton}" FontSize="11" Margin="0,0,4,0"/>
+                    <Button Grid.Column="2" x:Name="BtnPlayback" Content="▶ Phát" Click="PlayRecording"
+                            Padding="10,5" Style="{StaticResource AccentButton}" FontSize="11"
+                            IsEnabled="False"/>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

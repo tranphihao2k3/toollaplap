@@ -24,7 +24,7 @@ namespace LapLapAutoTool.Models
     public class SoftwareItem : INotifyPropertyChanged
     {
         private InstallStatus _status = InstallStatus.Pending;
-        private bool _isSelected = true;
+        private bool _isSelected = false;
         private bool _isAlreadyInstalled;
         private DownloadStatus _downloadStatus = DownloadStatus.Idle;
         private double _downloadProgress;
@@ -41,6 +41,7 @@ namespace LapLapAutoTool.Models
         public string DownloadUrl { get; set; } = string.Empty;
         public string Category { get; set; } = "general"; // "general" | "student"
         public string FileSize { get; set; } = "";        // VD: "2.4 GB" — chỉ để hiển thị
+        public string Password { get; set; } = "";       // Mật khẩu giải nén (nếu có)
         public string LocalInstallerPath { get; set; } = string.Empty; // Đường dẫn file sau khi tải/có sẵn
 
         // === Trạng thái UI ===
