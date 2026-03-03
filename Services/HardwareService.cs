@@ -325,23 +325,8 @@ namespace LapLapAutoTool.Services
             {
                 // We need to map DeviceID (e.g. \\.\PHYSICALDRIVE0) to smartctl format (/dev/pd0)
                 string smartDevice = deviceId.Replace(@"\\.\PHYSICALDRIVE", "/dev/pd");
-                
-                var psi = new ProcessStartInfo
-                {
-                    FileName = smartctlPath,
-                    Arguments = $"-a {smartDevice} -j",
-                    RedirectStandardOutput = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                };
-
-                using var process = Process.Start(psi);
-                string output = process.StandardOutput.ReadToEnd();
-                process.WaitForExit();
-
-                if (string.IsNullOrEmpty(output)) return;
-
-                using var doc = JsonDocument.Parse(output);
+                using var doc = ExecuteSmartctlJson(smartctlPath, smartDevice);
+                if (doc == null) return;
                 var root = doc.RootElement;
 
                 // 1. Dành cho NVMe
@@ -349,20 +334,20 @@ namespace LapLapAutoTool.Services
                 {
                     storage.HasSmartInfo = true;
                     if (nvme.TryGetProperty("percentage_used", out var wear))
-                        storage.HealthRemaining = 100 - wear.GetInt32();
+                        storage.HealthRemaining = 100 - GetIntValue(wear);
                     if (nvme.TryGetProperty("available_spare", out var spare))
-                        storage.AvailableSpare = spare.GetInt32();
+                        storage.AvailableSpare = GetIntValue(spare);
                     if (nvme.TryGetProperty("temperature", out var temp))
-                        storage.Temperature = temp.GetInt32();
+                        storage.Temperature = GetIntValue(temp);
                     // data_units_written * 512 * 1000 bytes per unit
                     if (nvme.TryGetProperty("data_units_written", out var duw))
                     {
-                        double tb = duw.GetInt64() * 512.0 * 1000.0 / (1024.0 * 1024.0 * 1024.0 * 1024.0);
+                        double tb = GetLongValue(duw) * 512.0 * 1000.0 / (1024.0 * 1024.0 * 1024.0 * 1024.0);
                         storage.TotalHostWrites = tb >= 1 ? $"{tb:0.1} TB" : $"{tb * 1024:0} GB";
                     }
                     if (nvme.TryGetProperty("data_units_read", out var dur))
                     {
-                        double tb = dur.GetInt64() * 512.0 * 1000.0 / (1024.0 * 1024.0 * 1024.0 * 1024.0);
+                        double tb = GetLongValue(dur) * 512.0 * 1000.0 / (1024.0 * 1024.0 * 1024.0 * 1024.0);
                         storage.TotalHostReads = tb >= 1 ? $"{tb:0.1} TB" : $"{tb * 1024:0} GB";
                     }
                 }
@@ -378,16 +363,16 @@ namespace LapLapAutoTool.Services
                     {
                         if (element.TryGetProperty("id", out var attrId) && element.TryGetProperty("value", out var attrValue))
                         {
-                            int id = attrId.GetInt32();
+                            int id = GetIntValue(attrId);
                             // ID 231 hoặc 202 là SSD Life Left (còn lại), nếu có lấy cái này làm Health
                             if (id == 231 || id == 202 || id == 169)
                             {
-                                storage.HealthRemaining = attrValue.GetInt32();
+                                storage.HealthRemaining = GetIntValue(attrValue);
                             }
                             // Nhiệt độ thường nằm ở ID 194
                             if (id == 194 && element.TryGetProperty("raw", out var raw) && raw.TryGetProperty("value", out var rawValue))
                             {
-                                storage.Temperature = rawValue.GetInt32();
+                                storage.Temperature = GetIntValue(rawValue);
                             }
                         }
                     }
@@ -405,7 +390,7 @@ namespace LapLapAutoTool.Services
                 // Lấy giờ chạy (Power on hours) - Hỗ trợ cả NVMe & SATA
                 if (root.TryGetProperty("power_on_time", out var pot) && pot.TryGetProperty("hours", out var hours))
                 {
-                    storage.PowerOnDays = hours.GetInt32() / 24;
+                    storage.PowerOnDays = GetIntValue(hours) / 24;
                     storage.HasSmartInfo = true;
                 }
             }
@@ -413,6 +398,100 @@ namespace LapLapAutoTool.Services
             {
                 _logService.LogWarning($"Lỗi khi đọc SMART cho {deviceId}: {ex.Message}");
             }
+        }
+
+        private JsonDocument ExecuteSmartctlJson(string smartctlPath, string smartDevice)
+        {
+            // Một số máy cần khai báo type (-d) khác nhau thì smartctl mới trả đúng SMART.
+            var argumentCandidates = new[]
+            {
+                $"-a {smartDevice} -j",
+                $"-a {smartDevice} -d auto -j",
+                $"-a {smartDevice} -d nvme -j",
+                $"-a {smartDevice} -d sat -j",
+                $"-a {smartDevice} -d scsi -j"
+            };
+
+            foreach (var args in argumentCandidates)
+            {
+                try
+                {
+                    var psi = new ProcessStartInfo
+                    {
+                        FileName = smartctlPath,
+                        Arguments = args,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+
+                    using var process = Process.Start(psi);
+                    if (process == null) continue;
+
+                    string output = process.StandardOutput.ReadToEnd();
+                    string err = process.StandardError.ReadToEnd();
+                    process.WaitForExit();
+
+                    if (string.IsNullOrWhiteSpace(output))
+                    {
+                        _logService.LogWarning($"smartctl không có output với args '{args}' ({smartDevice}). stderr: {err}");
+                        continue;
+                    }
+
+                    using var parsed = JsonDocument.Parse(output);
+                    // smartctl có thể trả JSON nhưng exit code != 0, nên ưu tiên check phần JSON này.
+                    if (parsed.RootElement.TryGetProperty("smartctl", out var smartctl) &&
+                        smartctl.TryGetProperty("exit_status", out var exitStatus) &&
+                        (GetIntValue(exitStatus) & 0x03) != 0)
+                    {
+                        _logService.LogWarning($"smartctl trả lỗi thiết bị với args '{args}' ({smartDevice}), thử profile khác.");
+                        continue;
+                    }
+
+                    return JsonDocument.Parse(output);
+                }
+                catch (Exception ex)
+                {
+                    _logService.LogWarning($"smartctl lỗi với args '{args}' ({smartDevice}): {ex.Message}");
+                }
+            }
+
+            return null;
+        }
+
+        private int GetIntValue(JsonElement element)
+        {
+            if (element.ValueKind == JsonValueKind.Number)
+            {
+                if (element.TryGetInt32(out int intValue)) return intValue;
+                if (element.TryGetInt64(out long longValue)) return (int)longValue;
+            }
+
+            if (element.ValueKind == JsonValueKind.String)
+            {
+                string text = element.GetString() ?? "0";
+                if (int.TryParse(text, out int parsedInt)) return parsedInt;
+                if (long.TryParse(text, out long parsedLong)) return (int)parsedLong;
+            }
+
+            return 0;
+        }
+
+        private long GetLongValue(JsonElement element)
+        {
+            if (element.ValueKind == JsonValueKind.Number && element.TryGetInt64(out long value))
+            {
+                return value;
+            }
+
+            if (element.ValueKind == JsonValueKind.String)
+            {
+                string text = element.GetString() ?? "0";
+                if (long.TryParse(text, out long parsed)) return parsed;
+            }
+
+            return 0;
         }
 
 
