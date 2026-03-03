@@ -65,13 +65,13 @@ namespace LapLapAutoTool.ViewModels
         {
             foreach (var item in AllItems)
             {
-                item.IsAlreadyInstalled = _installService.IsSoftwareInstalled(item.Name);
-                if (item.IsAlreadyInstalled)
-                    item.Status = InstallStatus.Completed;
-                else if (item.Status == InstallStatus.Completed || item.Status == InstallStatus.Failed)
+                // Bỏ logic kiểm tra phần mềm đã cài
+                item.IsAlreadyInstalled = false; 
+                
+                if (item.Status == InstallStatus.Completed || item.Status == InstallStatus.Failed)
                     item.Status = InstallStatus.Pending;
             }
-            StatusText = "Đã cập nhật trạng thái phần mềm!";
+            StatusText = "Đã cập nhật trạng thái (Bỏ qua phần mềm có sẵn)";
         }
 
         private void LoadSoftwareList()
@@ -106,7 +106,7 @@ namespace LapLapAutoTool.ViewModels
                     {
                         foreach (var item in items)
                         {
-                            item.IsAlreadyInstalled = _installService.IsSoftwareInstalled(item.Name);
+                            item.IsAlreadyInstalled = false; // _installService.IsSoftwareInstalled(item.Name);
                             if (item.Category == "game")
                             {
                                 GameList.Add(item);
@@ -137,7 +137,7 @@ namespace LapLapAutoTool.ViewModels
             };
             foreach (var item in fallback)
             {
-                item.IsAlreadyInstalled = _installService.IsSoftwareInstalled(item.Name);
+                item.IsAlreadyInstalled = false; // _installService.IsSoftwareInstalled(item.Name);
                 SoftwareList.Add(item);
             }
         }
@@ -156,15 +156,11 @@ namespace LapLapAutoTool.ViewModels
             IsBusy = true;
             Progress = 0;
 
-            var selectedItems = AllItems.Where(s => s.IsSelected && !s.IsAlreadyInstalled).ToList();
-            var alreadyDone = AllItems.Where(s => s.IsSelected && s.IsAlreadyInstalled).ToList();
-
-            foreach (var item in alreadyDone)
-                item.Status = InstallStatus.Completed;
+            var selectedItems = AllItems.Where(s => s.IsSelected).ToList();
 
             if (selectedItems.Count == 0)
             {
-                StatusText = alreadyDone.Count > 0 ? "Tất cả phần mềm đã được cài đặt!" : "Chưa chọn phần mềm nào!";
+                StatusText = "Chưa chọn phần mềm nào!";
                 IsBusy = false;
                 return;
             }

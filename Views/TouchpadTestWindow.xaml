@@ -1,9 +1,9 @@
 <Window x:Class="LapLapAutoTool.Views.TouchpadTestWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Test Touchpad" Width="520" Height="460"
+        Title="TOUCHPAD_DIAGNOSTICS" Width="520" Height="460"
         WindowStartupLocation="CenterScreen"
-        Background="#0F172A"
+        Background="#070A10"
         ResizeMode="NoResize">
     <Grid Margin="25">
         <Grid.RowDefinitions>
@@ -13,25 +13,41 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="👆 Test Touchpad" FontSize="24" FontWeight="Black" Foreground="White" Margin="0,0,0,5"/>
-        <TextBlock Grid.Row="1" Text="Di chuyển chuột trong vùng bên dưới để kiểm tra touchpad" FontSize="13" Foreground="#94A3B8" Margin="0,0,0,20"/>
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,5">
+            <Border Width="3" Height="20" CornerRadius="2" Background="#14B8A6" Margin="0,0,10,0" VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect Color="#14B8A6" BlurRadius="4" ShadowDepth="0" Opacity="0.3"/>
+                </Border.Effect>
+            </Border>
+            <TextBlock Text="TOUCHPAD_DIAGNOSTICS" FontSize="24" FontWeight="Black" Foreground="White"
+                       FontFamily="Rajdhani, Consolas"/>
+        </StackPanel>
+        <TextBlock Grid.Row="1" Text="Di chuyển chuột trong vùng bên dưới để kiểm tra touchpad"
+                   FontSize="14" Foreground="#6A9AAA" FontWeight="SemiBold" Margin="0,4,0,20" FontFamily="Rajdhani, Consolas"/>
 
         <!-- Touch Area -->
-        <Border Grid.Row="2" Background="#1E293B" CornerRadius="12" BorderBrush="#334155" BorderThickness="1"
+        <Border Grid.Row="2" Background="#0B101A" CornerRadius="12" BorderBrush="#3514B8A6" BorderThickness="1"
                 MouseMove="TouchArea_MouseMove"
                 MouseLeftButtonDown="TouchArea_MouseDown"
                 MouseRightButtonDown="TouchArea_RightDown"
                 MouseLeftButtonUp="TouchArea_MouseUp"
                 MouseLeave="TouchArea_Leave"
                 Margin="0,0,0,15">
+            <Border.Effect>
+                <DropShadowEffect Color="#14B8A6" BlurRadius="8" ShadowDepth="0" Opacity="0.1"/>
+            </Border.Effect>
             <Grid>
                 <!-- Trail Canvas -->
                 <Canvas x:Name="TrailCanvas" ClipToBounds="True"/>
 
                 <!-- Cursor dot -->
-                <Ellipse x:Name="CursorDot" Width="18" Height="18" Fill="#2563EB"
+                <Ellipse x:Name="CursorDot" Width="18" Height="18" Fill="#14B8A6"
                          IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5"
                          HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Ellipse.Effect>
+                        <DropShadowEffect Color="#14B8A6" BlurRadius="6" ShadowDepth="0" Opacity="0.4"/>
+                    </Ellipse.Effect>
                     <Ellipse.RenderTransform>
                         <TranslateTransform x:Name="CursorTransform"/>
                     </Ellipse.RenderTransform>
@@ -39,8 +55,10 @@
 
                 <!-- Center hint -->
                 <StackPanel x:Name="HintPanel" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
-                    <TextBlock Text="Di chuyển chuột vào đây" Foreground="#334155" FontSize="16" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Click L / Click R để test nút" Foreground="#334155" FontSize="13" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    <TextBlock Text="Di chuyển chuột vào đây" Foreground="#1E293B" FontSize="16" HorizontalAlignment="Center"
+                               FontFamily="Rajdhani, Consolas"/>
+                    <TextBlock Text="Click L / Click R để test nút" Foreground="#1E293B" FontSize="13" HorizontalAlignment="Center" Margin="0,5,0,0"
+                               FontFamily="Rajdhani, Consolas"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -53,22 +71,28 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" Background="#1E293B" CornerRadius="6" Padding="12,8" Margin="0,0,5,0">
+            <Border Grid.Column="0" Background="#0B101A" CornerRadius="6" Padding="12,8" Margin="0,0,5,0"
+                    BorderBrush="#1A14B8A6" BorderThickness="1">
                 <StackPanel>
-                    <TextBlock Text="VỊ TRÍ" Foreground="#64748B" FontSize="10" FontWeight="Bold"/>
-                    <TextBlock x:Name="PosText" Text="X:0  Y:0" Foreground="White" FontSize="12" FontWeight="SemiBold"/>
+                    <TextBlock Text="VỊ TRÍ" Foreground="#4A7A8A" FontSize="11.5" FontWeight="ExtraBold" FontFamily="Rajdhani, Consolas"/>
+                    <TextBlock x:Name="PosText" Text="X:0  Y:0" Foreground="White" FontSize="14" FontWeight="Bold"
+                               FontFamily="Rajdhani, Consolas"/>
                 </StackPanel>
             </Border>
-            <Border Grid.Column="1" Background="#1E293B" CornerRadius="6" Padding="12,8" Margin="5,0">
+            <Border Grid.Column="1" Background="#0B101A" CornerRadius="6" Padding="12,8" Margin="5,0"
+                    BorderBrush="#1A1ae65d" BorderThickness="1">
                 <StackPanel>
-                    <TextBlock Text="CLICK TRÁI" Foreground="#64748B" FontSize="10" FontWeight="Bold"/>
-                    <TextBlock x:Name="LClickText" Text="0 lần" Foreground="#10B981" FontSize="12" FontWeight="SemiBold"/>
+                    <TextBlock Text="CLICK TRÁI" Foreground="#4A7A8A" FontSize="11.5" FontWeight="ExtraBold" FontFamily="Rajdhani, Consolas"/>
+                    <TextBlock x:Name="LClickText" Text="0 lần" Foreground="#1ae65d" FontSize="14" FontWeight="Bold"
+                               FontFamily="Rajdhani, Consolas"/>
                 </StackPanel>
             </Border>
-            <Border Grid.Column="2" Background="#1E293B" CornerRadius="6" Padding="12,8" Margin="5,0">
+            <Border Grid.Column="2" Background="#0B101A" CornerRadius="6" Padding="12,8" Margin="5,0"
+                    BorderBrush="#1AF59E0B" BorderThickness="1">
                 <StackPanel>
-                    <TextBlock Text="CLICK PHẢI" Foreground="#64748B" FontSize="10" FontWeight="Bold"/>
-                    <TextBlock x:Name="RClickText" Text="0 lần" Foreground="#F59E0B" FontSize="12" FontWeight="SemiBold"/>
+                    <TextBlock Text="CLICK PHẢI" Foreground="#4A7A8A" FontSize="11.5" FontWeight="ExtraBold" FontFamily="Rajdhani, Consolas"/>
+                    <TextBlock x:Name="RClickText" Text="0 lần" Foreground="#F59E0B" FontSize="14" FontWeight="Bold"
+                               FontFamily="Rajdhani, Consolas"/>
                 </StackPanel>
             </Border>
             <Button Grid.Column="3" Content="Xóa" Click="Clear_Click"

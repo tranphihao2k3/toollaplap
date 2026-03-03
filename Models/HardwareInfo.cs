@@ -72,5 +72,7 @@ namespace LapLapAutoTool.Models
         public int AvailableSpare { get; set; }
         public int Temperature { get; set; }
         public int PowerOnDays { get; set; }
+        public string TotalHostWrites { get; set; } = "N/A";
+        public string TotalHostReads { get; set; } = "N/A";
     }
 }

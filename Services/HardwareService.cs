@@ -248,10 +248,10 @@ namespace LapLapAutoTool.Services
                         Capacity = $"{Math.Round(sizeBytes / (1024.0 * 1024.0 * 1024.0), 1)} GB"
                     };
 
-                    // Try SMART info if NVMe
-                    if (!string.IsNullOrEmpty(smartctlPath) && (type.Contains("NVMe") || disk["Model"]?.ToString()?.Contains("NVMe", StringComparison.OrdinalIgnoreCase) == true))
+                    // Try SMART info if smartctl is available
+                    if (!string.IsNullOrEmpty(smartctlPath))
                     {
-                        UpdateNvmeSmartInfo(storage, smartctlPath, deviceId);
+                        UpdateSmartInfo(storage, smartctlPath, deviceId);
                     }
 
                     info.Storages.Add(storage);
@@ -265,6 +265,29 @@ namespace LapLapAutoTool.Services
 
         private string FindSmartctlPath()
         {
+            // 0. Extract from embedded resource to Temp
+            string tempPath = Path.Combine(Path.GetTempPath(), "LapLap_smartctl.exe");
+            try
+            {
+                using (var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("LapLapAutoTool.smartctl.exe"))
+                {
+                    if (stream != null)
+                    {
+                        // Luôn ghi đè để đảm bảo bản mới nhất được dùng nếu có cập nhật
+                        using (var fileStream = new FileStream(tempPath, FileMode.Create))
+                        {
+                            stream.CopyTo(fileStream);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logService.LogError("Lỗi trích xuất smartctl.exe: " + ex.Message, ex);
+            }
+
+            if (File.Exists(tempPath)) return tempPath;
+
             // 1. Check local directory
             string localPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "smartctl.exe");
             if (File.Exists(localPath)) return localPath;
@@ -296,7 +319,7 @@ namespace LapLapAutoTool.Services
             return null;
         }
 
-        private void UpdateNvmeSmartInfo(StorageInfo storage, string smartctlPath, string deviceId)
+        private void UpdateSmartInfo(StorageInfo storage, string smartctlPath, string deviceId)
         {
             try
             {
@@ -321,6 +344,7 @@ namespace LapLapAutoTool.Services
                 using var doc = JsonDocument.Parse(output);
                 var root = doc.RootElement;
 
+                // 1. Dành cho NVMe
                 if (root.TryGetProperty("nvme_smart_health_information_log", out var nvme))
                 {
                     storage.HasSmartInfo = true;
@@ -330,21 +354,64 @@ namespace LapLapAutoTool.Services
                         storage.AvailableSpare = spare.GetInt32();
                     if (nvme.TryGetProperty("temperature", out var temp))
                         storage.Temperature = temp.GetInt32();
+                    // data_units_written * 512 * 1000 bytes per unit
+                    if (nvme.TryGetProperty("data_units_written", out var duw))
+                    {
+                        double tb = duw.GetInt64() * 512.0 * 1000.0 / (1024.0 * 1024.0 * 1024.0 * 1024.0);
+                        storage.TotalHostWrites = tb >= 1 ? $"{tb:0.1} TB" : $"{tb * 1024:0} GB";
+                    }
+                    if (nvme.TryGetProperty("data_units_read", out var dur))
+                    {
+                        double tb = dur.GetInt64() * 512.0 * 1000.0 / (1024.0 * 1024.0 * 1024.0 * 1024.0);
+                        storage.TotalHostReads = tb >= 1 ? $"{tb:0.1} TB" : $"{tb * 1024:0} GB";
+                    }
+                }
+                // 2. Dành cho SATA SSD
+                else if (root.TryGetProperty("ata_smart_attributes", out var ataParams) && 
+                         ataParams.TryGetProperty("table", out var table) && 
+                         table.ValueKind == JsonValueKind.Array)
+                {
+                    storage.HasSmartInfo = true;
+                    
+                    // Một số ID thường dùng cho % Health của SATA SSD: 231 (SSD/Life Left), 202 (Percent Lifetime Remaining), hoặc 169 (Remaining Life)
+                    foreach (var element in table.EnumerateArray())
+                    {
+                        if (element.TryGetProperty("id", out var attrId) && element.TryGetProperty("value", out var attrValue))
+                        {
+                            int id = attrId.GetInt32();
+                            // ID 231 hoặc 202 là SSD Life Left (còn lại), nếu có lấy cái này làm Health
+                            if (id == 231 || id == 202 || id == 169)
+                            {
+                                storage.HealthRemaining = attrValue.GetInt32();
+                            }
+                            // Nhiệt độ thường nằm ở ID 194
+                            if (id == 194 && element.TryGetProperty("raw", out var raw) && raw.TryGetProperty("value", out var rawValue))
+                            {
+                                storage.Temperature = rawValue.GetInt32();
+                            }
+                        }
+                    }
+                    
+                    // Dự phòng: nếu tìm Smart Status trong `smart_status`
+                    if (storage.HealthRemaining == 0 && root.TryGetProperty("smart_status", out var smartStatus))
+                    {
+                        if (smartStatus.TryGetProperty("passed", out var passed) && passed.GetBoolean())
+                        {
+                            storage.HealthRemaining = 100; // Passed thì tạm xem như Good
+                        }
+                    }
                 }
 
-                // Also grab Power on hours for NVMe
-                if (root.TryGetProperty("power_on_time", out var pot))
+                // Lấy giờ chạy (Power on hours) - Hỗ trợ cả NVMe & SATA
+                if (root.TryGetProperty("power_on_time", out var pot) && pot.TryGetProperty("hours", out var hours))
                 {
-                    if (pot.TryGetProperty("hours", out var hours))
-                    {
-                        storage.PowerOnDays = hours.GetInt32() / 24;
-                        storage.HasSmartInfo = true;
-                    }
+                    storage.PowerOnDays = hours.GetInt32() / 24;
+                    storage.HasSmartInfo = true;
                 }
             }
             catch (Exception ex)
             {
-                _logService.LogWarning($"Lỗi khi đọc SMART NVMe cho {deviceId}: {ex.Message}");
+                _logService.LogWarning($"Lỗi khi đọc SMART cho {deviceId}: {ex.Message}");
             }
         }
 

@@ -3,201 +3,244 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             mc:Ignorable="d">
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800">
+
     <UserControl.Resources>
-        <!-- Shared input field style -->
-        <Style x:Key="FieldBox" TargetType="TextBox">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="#0F172A"/>
-            <Setter Property="BorderBrush" Value="#334155"/>
+        <SolidColorBrush x:Key="AppBgBrush" Color="#070A10"/>
+        <SolidColorBrush x:Key="CardBgBrush" Color="#0B101A"/>
+        <SolidColorBrush x:Key="CardBorderBrush" Color="#1E293B"/>
+        <SolidColorBrush x:Key="HeaderBgBrush" Color="#0C141E"/>
+        <SolidColorBrush x:Key="MutedTextBrush" Color="#64748B"/>
+        
+        <SolidColorBrush x:Key="CyanAccent" Color="#00D2FF"/>
+        <SolidColorBrush x:Key="PurpleAccent" Color="#B25CFF"/>
+        <SolidColorBrush x:Key="GreenAccent" Color="#00FF66"/>
+        <SolidColorBrush x:Key="OrangeAccent" Color="#FFB800"/>
+        <SolidColorBrush x:Key="DangerAccent" Color="#EF4444"/>
+
+        <Style x:Key="SciFiCard" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBgBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="8,5"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="CaretBrush" Value="White"/>
+            <Setter Property="CornerRadius" Value="4"/>
         </Style>
+
+        <Style x:Key="TerminalTextBox" TargetType="TextBox">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#04060A"/>
+            <Setter Property="BorderBrush" Value="#1E293B"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="CaretBrush" Value="{StaticResource CyanAccent}"/>
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="{StaticResource CyanAccent}"/>
+                    <Setter Property="Background" Value="#0A1828"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="HighContrastButton" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Background" Value="#0A1828"/>
+            <Setter Property="Foreground" Value="{StaticResource CyanAccent}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource CyanAccent}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="2" Padding="{TemplateBinding Padding}">
+                            <TextBlock x:Name="txt" Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource CyanAccent}"/>
+                                <Setter TargetName="txt" Property="Foreground" Value="#070A10"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
 
-    <Grid Margin="18,14,18,14">
+    <Grid Margin="20" Background="{StaticResource AppBgBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- ===================== HEADER ===================== -->
-        <Grid Grid.Row="0" Margin="0,0,0,16">
+        <Grid Grid.Row="0" Margin="0,0,0,25">
             <StackPanel>
-                <TextBlock Text="📋 Phiếu Thẩm Định Laptop" FontSize="22" FontWeight="Black" Foreground="White"/>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Path Data="M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V5H19V19M17,17H7V15H17V17M17,13H7V11H17V13M17,9H7V7H17V9Z" 
+                          Fill="{StaticResource CyanAccent}" Width="28" Height="28" Stretch="Uniform" Margin="0,0,12,0"/>
+                    <TextBlock Text="PHIẾU THẨM ĐỊNH LAPTOP" FontSize="26" FontWeight="Black" FontFamily="Consolas" Foreground="White"/>
+                </StackPanel>
                 <TextBlock Text="Ghi nhận cấu hình · Kiểm tra chức năng · Xuất phiếu thẩm định giá"
-                           Foreground="{StaticResource MutedTextBrush}" FontSize="12" Margin="0,3,0,0"/>
+                           Foreground="{StaticResource CyanAccent}" FontSize="12" Margin="0,5,0,0" Opacity="0.8" FontFamily="Consolas"/>
             </StackPanel>
+            
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Button Content="📋 Sao chép" Command="{Binding CopyReportCommand}"
-                        Style="{StaticResource SecondaryButton}" Padding="14,8" Margin="0,0,8,0"/>
-                <Button Content="💾 Xuất TXT" Command="{Binding ExportTextCommand}"
-                        Style="{StaticResource SecondaryButton}" Padding="14,8" Margin="0,0,8,0"/>
-                <Button Content="📱 Tạo QR" Command="{Binding GenerateQrCommand}"
-                        Style="{StaticResource ModernButton}" Padding="16,8"/>
+                <Button Content="[ COPY REPORT ]" Command="{Binding CopyReportCommand}" Style="{StaticResource HighContrastButton}" Padding="15,10" Margin="0,0,10,0"/>
+                <Button Content="[ XUẤT TXT ]" Command="{Binding ExportTextCommand}" Style="{StaticResource HighContrastButton}" Padding="15,10" Margin="0,0,10,0"/>
+                <Button Content="[ TẠO QR ]" Command="{Binding GenerateQrCommand}" Style="{StaticResource HighContrastButton}" Padding="15,10"/>
             </StackPanel>
         </Grid>
 
-        <!-- ===================== BODY ===================== -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Auto" Margin="0,0,-14,0">
-            <Grid Margin="0,0,14,0" MinWidth="760">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Padding="0,0,10,0">
+            <Grid MinWidth="760">
                 <Grid.ColumnDefinitions>
-                    <!-- Specs + Appearance -->
-                    <ColumnDefinition Width="1.4*" MinWidth="210"/>
-                    <!-- Check items -->
-                    <ColumnDefinition Width="1.6*" MinWidth="230"/>
-                    <!-- QR + Export -->
-                    <ColumnDefinition Width="1.1*" MinWidth="180"/>
-                </Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.4*" MinWidth="210"/> <ColumnDefinition Width="1.6*" MinWidth="230"/> <ColumnDefinition Width="1.1*" MinWidth="180"/> </Grid.ColumnDefinitions>
 
-                <!-- ========== COL 0: SPECS + APPEARANCE ========== -->
-                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                <StackPanel Grid.Column="0" Margin="0,0,15,0">
 
-                    <!-- Hardware Specs Card -->
-                    <Border Style="{StaticResource ModernCard}" Padding="0" Margin="0,0,0,10">
+                    <Border Style="{StaticResource SciFiCard}" Margin="0,0,0,20">
                         <StackPanel>
-                            <Border Background="#1E40AF" CornerRadius="12,12,0,0" Padding="14,10">
-                                <TextBlock Text="⚙ THÔNG SỐ PHẦN CỨNG" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                            <Border Background="{StaticResource HeaderBgBrush}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="4,4,0,0" Padding="15,12">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M17,17H7V7H17M21,11V9H19V7C19,5.89 18.1,5 17,5H15V3H13V5H11V3H9V5H7C5.89,5 5,5.89 5,7V9H3V11H5V13H3V15H5V17A2,2 0 0,0 7,19H9V21H11V19H13V21H15V19H17A2,2 0 0,0 19,17V15H21V13H19V11Z" 
+                                          Fill="{StaticResource CyanAccent}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0"/>
+                                    <TextBlock Text="THÔNG SỐ PHẦN CỨNG" FontSize="14" FontWeight="Bold" Foreground="White" FontFamily="Consolas"/>
+                                </StackPanel>
                             </Border>
-                            <StackPanel Margin="14,12,14,14">
-
-                                <!-- Model -->
-                                <Grid Margin="0,0,0,8">
+                            
+                            <StackPanel Margin="15,15,15,20">
+                                <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="80"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Model" FontSize="11" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding ModelName}" Style="{StaticResource FieldBox}"/>
+                                    <TextBlock Text="Model_ID" FontSize="11" Foreground="{StaticResource MutedTextBrush}" FontFamily="Consolas" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding ModelName}" Style="{StaticResource TerminalTextBox}"/>
                                 </Grid>
 
-                                <!-- Serial -->
-                                <Grid Margin="0,0,0,8">
+                                <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="80"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Serial" FontSize="11" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding SerialNumber}" Style="{StaticResource FieldBox}"
-                                             Foreground="{StaticResource AccentBrush}" FontWeight="Bold"/>
+                                    <TextBlock Text="Serial_SN" FontSize="11" Foreground="{StaticResource MutedTextBrush}" FontFamily="Consolas" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding SerialNumber}" Style="{StaticResource TerminalTextBox}" Foreground="{StaticResource OrangeAccent}" FontWeight="Bold"/>
                                 </Grid>
 
-                                <!-- CPU -->
-                                <Grid Margin="0,0,0,8">
+                                <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="80"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="CPU" FontSize="11" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding CpuName}" Style="{StaticResource FieldBox}" TextWrapping="Wrap"/>
+                                    <TextBlock Text="CPU_Core" FontSize="11" Foreground="{StaticResource MutedTextBrush}" FontFamily="Consolas" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding CpuName}" Style="{StaticResource TerminalTextBox}" TextWrapping="Wrap"/>
                                 </Grid>
 
-                                <!-- RAM + Bus row -->
-                                <Grid Margin="0,0,0,8">
+                                <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="80"/>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="8"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="RAM" FontSize="11" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding RamSize}" Style="{StaticResource FieldBox}" Width="55"/>
-                                    <!-- spacer -->
-                                    <TextBox Grid.Column="3" Text="{Binding RamBus}" Style="{StaticResource FieldBox}"
-                                             Foreground="{StaticResource MutedTextBrush}" ToolTip="Bus tốc độ RAM"/>
+                                    <TextBlock Text="Memory_RAM" FontSize="11" Foreground="{StaticResource MutedTextBrush}" FontFamily="Consolas" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding RamSize}" Style="{StaticResource TerminalTextBox}" Width="65"/>
+                                    <TextBox Grid.Column="3" Text="{Binding RamBus}" Style="{StaticResource TerminalTextBox}" Foreground="{StaticResource MutedTextBrush}" ToolTip="Bus tốc độ RAM"/>
                                 </Grid>
 
-                                <!-- VGA -->
-                                <Grid Margin="0,0,0,8">
+                                <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="80"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="VGA" FontSize="11" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding GpuName}" Style="{StaticResource FieldBox}" TextWrapping="Wrap"/>
+                                    <TextBlock Text="GPU_VGA" FontSize="11" Foreground="{StaticResource MutedTextBrush}" FontFamily="Consolas" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding GpuName}" Style="{StaticResource TerminalTextBox}" TextWrapping="Wrap"/>
                                 </Grid>
 
-                                <!-- SSD/HDD -->
-                                <Grid Margin="0,0,0,8">
+                                <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="80"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="SSD/HDD" FontSize="11" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding SsdSize}" Style="{StaticResource FieldBox}"/>
+                                    <TextBlock Text="Disk_DRV" FontSize="11" Foreground="{StaticResource MutedTextBrush}" FontFamily="Consolas" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding SsdSize}" Style="{StaticResource TerminalTextBox}"/>
                                 </Grid>
 
-                                <!-- Battery -->
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="80"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Pin" FontSize="11" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding BatteryHealth}" Style="{StaticResource FieldBox}"
-                                             Foreground="#10B981" FontWeight="Bold"/>
+                                    <TextBlock Text="Power_BAT" FontSize="11" Foreground="{StaticResource MutedTextBrush}" FontFamily="Consolas" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding BatteryHealth}" Style="{StaticResource TerminalTextBox}" Foreground="{StaticResource GreenAccent}" FontWeight="Bold"/>
                                 </Grid>
-
                             </StackPanel>
                         </StackPanel>
                     </Border>
 
-                    <!-- Appearance Card -->
-                    <Border Style="{StaticResource ModernCard}" Padding="0">
+                    <Border Style="{StaticResource SciFiCard}">
                         <StackPanel>
-                            <Border Background="#6D28D9" CornerRadius="12,12,0,0" Padding="14,10">
-                                <TextBlock Text="🔍 NGOẠI HÌNH" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                            <Border Background="{StaticResource HeaderBgBrush}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="4,4,0,0" Padding="15,12">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z" 
+                                          Fill="{StaticResource PurpleAccent}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0"/>
+                                    <TextBlock Text="THẨM ĐỊNH NGOẠI HÌNH" FontSize="14" FontWeight="Bold" Foreground="White" FontFamily="Consolas"/>
+                                </StackPanel>
                             </Border>
-                            <StackPanel Margin="14,12,14,14">
-                                <TextBlock Text="Xếp loại:" FontSize="11"
-                                           Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,6"/>
-                                <ComboBox FontSize="13" FontWeight="Bold"
+                            
+                            <StackPanel Margin="15,15,15,20">
+                                <TextBlock Text="Xếp loại (Grade):" FontSize="11" FontFamily="Consolas" Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,8"/>
+                                <ComboBox FontSize="12" FontFamily="Consolas" FontWeight="Bold"
                                           SelectedValue="{Binding AppearanceGrade}"
-                                          Background="#1E293B" Foreground="White" BorderBrush="#334155"
-                                          SelectedValuePath="Content" HorizontalAlignment="Stretch" Padding="8,6">
+                                          Background="#04060A" Foreground="White" BorderBrush="#1E293B"
+                                          SelectedValuePath="Content" HorizontalAlignment="Stretch" Padding="10,8">
                                     <ComboBox.Items>
-                                        <ComboBoxItem Content="S — Như mới" Foreground="Black"/>
-                                        <ComboBoxItem Content="A — Rất đẹp" Foreground="Black"/>
-                                        <ComboBoxItem Content="B — Đẹp" Foreground="Black"/>
-                                        <ComboBoxItem Content="C — Trung bình" Foreground="Black"/>
-                                        <ComboBoxItem Content="D — Xấu" Foreground="Black"/>
+                                        <ComboBoxItem Content="[ S ] Như mới" Foreground="Black"/>
+                                        <ComboBoxItem Content="[ A ] Rất đẹp" Foreground="Black"/>
+                                        <ComboBoxItem Content="[ B ] Đẹp" Foreground="Black"/>
+                                        <ComboBoxItem Content="[ C ] Trung bình" Foreground="Black"/>
+                                        <ComboBoxItem Content="[ D ] Xấu" Foreground="Black"/>
                                     </ComboBox.Items>
                                 </ComboBox>
-                                <TextBlock Text="Ghi chú ngoại hình:" FontSize="11"
-                                           Foreground="{StaticResource MutedTextBrush}" Margin="0,10,0,5"/>
-                                <TextBox Text="{Binding AppearanceNote}" Style="{StaticResource FieldBox}"
-                                         MinHeight="70" TextWrapping="Wrap" AcceptsReturn="True"
-                                         VerticalScrollBarVisibility="Auto"
-                                         ToolTip="VD: Trầy nắp lưng góc phải, bàn phím thiếu phím..."/>
+                                
+                                <TextBlock Text="Log ngoại hình:" FontSize="11" FontFamily="Consolas" Foreground="{StaticResource MutedTextBrush}" Margin="0,15,0,8"/>
+                                <TextBox Text="{Binding AppearanceNote}" Style="{StaticResource TerminalTextBox}" MinHeight="70" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" ToolTip="VD: Trầy nắp lưng góc phải, bàn phím bóng..."/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
                 </StackPanel>
 
-                <!-- ========== COL 1: FUNCTION CHECK ========== -->
-                <Border Grid.Column="1" Style="{StaticResource ModernCard}" Padding="0" Margin="0,0,10,0">
+                <Border Grid.Column="1" Style="{StaticResource SciFiCard}" Margin="0,0,15,0">
                     <StackPanel>
-                        <Border Background="#065F46" CornerRadius="12,12,0,0" Padding="14,10">
-                            <TextBlock Text="✅ KIỂM TRA CHỨC NĂNG" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                        <Border Background="{StaticResource HeaderBgBrush}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="4,4,0,0" Padding="15,12">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V5H19V19M10,17L5,12L6.41,10.59L10,14.17L17.59,6.58L19,8L10,17Z" 
+                                      Fill="{StaticResource GreenAccent}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0"/>
+                                <TextBlock Text="KIỂM TRA CHỨC NĂNG" FontSize="14" FontWeight="Bold" Foreground="White" FontFamily="Consolas"/>
+                            </StackPanel>
                         </Border>
-                        <StackPanel Margin="12,10,12,12">
+                        
+                        <StackPanel Margin="15,15,15,15">
                             <ItemsControl ItemsSource="{Binding CheckItems}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Border Margin="0,2" CornerRadius="8" Padding="10,7" Cursor="Hand">
+                                        <Border Margin="0,0,0,8" CornerRadius="2" Padding="12,10" Cursor="Hand" BorderThickness="1">
                                             <Border.Style>
                                                 <Style TargetType="Border">
-                                                    <Setter Property="Background" Value="#0F172A"/>
+                                                    <Setter Property="Background" Value="#04060A"/>
+                                                    <Setter Property="BorderBrush" Value="#141E2D"/>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding IsOk}" Value="False">
-                                                            <Setter Property="Background" Value="#2D0000"/>
+                                                            <Setter Property="Background" Value="#2D0A0A"/>
+                                                            <Setter Property="BorderBrush" Value="#4A1010"/>
                                                         </DataTrigger>
                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="Background" Value="#1E293B"/>
+                                                            <Setter Property="BorderBrush" Value="{StaticResource CyanAccent}"/>
                                                         </Trigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -212,25 +255,24 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <!-- Status pill -->
-                                                <Border Grid.Column="0" CornerRadius="6" Padding="8,3" Margin="0,0,10,0" VerticalAlignment="Center">
+                                                <Border Grid.Column="0" CornerRadius="2" Padding="12,4" Margin="0,0,12,0" VerticalAlignment="Center">
                                                     <Border.Style>
                                                         <Style TargetType="Border">
-                                                            <Setter Property="Background" Value="#10B981"/>
+                                                            <Setter Property="Background" Value="{StaticResource GreenAccent}"/>
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding IsOk}" Value="False">
-                                                                    <Setter Property="Background" Value="#EF4444"/>
+                                                                    <Setter Property="Background" Value="{StaticResource DangerAccent}"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
                                                     </Border.Style>
-                                                    <TextBlock FontSize="10" FontWeight="Black" Foreground="White" VerticalAlignment="Center">
+                                                    <TextBlock FontSize="10" FontFamily="Consolas" FontWeight="Black" Foreground="#070A10" VerticalAlignment="Center">
                                                         <TextBlock.Style>
                                                             <Style TargetType="TextBlock">
-                                                                <Setter Property="Text" Value=" OK "/>
+                                                                <Setter Property="Text" Value="[ OK ]"/>
                                                                 <Style.Triggers>
                                                                     <DataTrigger Binding="{Binding IsOk}" Value="False">
-                                                                        <Setter Property="Text" Value="LỖI"/>
+                                                                        <Setter Property="Text" Value="[ ERR ]"/>
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
@@ -238,94 +280,94 @@
                                                     </TextBlock>
                                                 </Border>
 
-                                                <!-- Item name -->
-                                                <TextBlock Grid.Column="1" Text="{Binding Name}"
-                                                           FontSize="13" VerticalAlignment="Center">
+                                                <TextBlock Grid.Column="1" Text="{Binding Name}" FontSize="12" FontFamily="Consolas" FontWeight="Bold" VerticalAlignment="Center">
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
                                                             <Setter Property="Foreground" Value="White"/>
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding IsOk}" Value="False">
-                                                                    <Setter Property="Foreground" Value="#FCA5A5"/>
+                                                                    <Setter Property="Foreground" Value="{StaticResource DangerAccent}"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
                                                     </TextBlock.Style>
                                                 </TextBlock>
 
-                                                <!-- Mini note -->
-                                                <TextBox Grid.Column="2" Text="{Binding Note, UpdateSourceTrigger=PropertyChanged}"
-                                                         FontSize="13" Width="90" VerticalAlignment="Center"
-                                                         Foreground="White"
-                                                         Background="#1E293B" BorderBrush="#334155" BorderThickness="1"
-                                                         Padding="6,4" ToolTip="Ghi chú lỗi..."/>
+                                                <TextBox Grid.Column="2" Text="{Binding Note, UpdateSourceTrigger=PropertyChanged}" Width="120" VerticalAlignment="Center" ToolTip="Ghi chú chi tiết lỗi...">
+                                                    <TextBox.Style>
+                                                        <Style TargetType="TextBox" BasedOn="{StaticResource TerminalTextBox}">
+                                                            <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsOk}" Value="False">
+                                                                    <Setter Property="Foreground" Value="White"/>
+                                                                    <Setter Property="BorderBrush" Value="{StaticResource DangerAccent}"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBox.Style>
+                                                </TextBox>
                                             </Grid>
                                         </Border>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
 
-                            <!-- General note -->
-                            <Border Background="#1E2A1F" CornerRadius="8" Margin="0,12,0,0" Padding="10,10">
+                            <Border Background="#040A06" BorderBrush="#0A2111" BorderThickness="1" CornerRadius="2" Margin="0,10,0,0" Padding="15">
                                 <StackPanel>
-                                    <TextBlock Text="📝 Ghi chú tổng" FontSize="11" FontWeight="Bold"
-                                               Foreground="#6EE7B7" Margin="0,0,0,6"/>
-                                    <TextBox Text="{Binding GeneralNote}" Style="{StaticResource FieldBox}"
-                                             Background="#0F172A" BorderBrush="#1E3A2F"
-                                             MinHeight="60" TextWrapping="Wrap" AcceptsReturn="True"
-                                             VerticalScrollBarVisibility="Auto"
-                                             ToolTip="VD: Màn hình ám vàng 1/4 góc phải, bàn phím thiếu phím F6..."/>
+                                    <TextBlock Text="> SYS_LOG_WARNING" FontSize="11" FontFamily="Consolas" FontWeight="Bold" Foreground="{StaticResource GreenAccent}" Margin="0,0,0,8"/>
+                                    <TextBox Text="{Binding GeneralNote}" Style="{StaticResource TerminalTextBox}" Background="#020503" BorderBrush="#0A2111" Foreground="{StaticResource GreenAccent}"
+                                             MinHeight="80" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" ToolTip="Nhập ghi chú tổng hợp cho thiết bị..."/>
                                 </StackPanel>
                             </Border>
                         </StackPanel>
                     </StackPanel>
                 </Border>
 
-                <!-- ========== COL 2: QR + EXPORT ========== -->
                 <StackPanel Grid.Column="2">
 
-                    <!-- QR Code Card -->
-                    <Border Style="{StaticResource ModernCard}" Padding="0" Margin="0,0,0,10">
+                    <Border Style="{StaticResource SciFiCard}" Margin="0,0,0,20">
                         <StackPanel>
-                            <Border Background="#92400E" CornerRadius="12,12,0,0" Padding="14,10">
-                                <TextBlock Text="📱 QR CODE" FontSize="11" FontWeight="Bold"
-                                           Foreground="White" HorizontalAlignment="Center"/>
+                            <Border Background="{StaticResource HeaderBgBrush}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="4,4,0,0" Padding="15,12">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Path Data="M3,3H11V11H3V3M5,5V9H9V5H5M13,3H21V11H13V3M15,5V9H19V5H15M3,13H11V21H3V13M5,15V19H9V15H5M18,13H21V16H18V13M13,13H16V16H13V13M13,18H16V21H13V18M18,18H21V21H18V18Z" 
+                                          Fill="{StaticResource OrangeAccent}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0"/>
+                                    <TextBlock Text="QR CODE" FontSize="14" FontWeight="Bold" Foreground="White" FontFamily="Consolas"/>
+                                </StackPanel>
                             </Border>
-                            <StackPanel Margin="14,14,14,14" HorizontalAlignment="Center">
-                                <!-- QR image -->
-                                <Border Background="White" Padding="8" CornerRadius="8"
+                            
+                            <StackPanel Margin="15,20,15,20" HorizontalAlignment="Center">
+                                <Border Background="White" Padding="10" CornerRadius="4"
                                         Visibility="{Binding QrImage, Converter={StaticResource NullToVisibilityConverter}, FallbackValue=Collapsed}">
                                     <Image Source="{Binding QrImage}" Width="150" Height="150"/>
                                 </Border>
-                                <!-- QR placeholder -->
-                                <Border Background="#0F172A" CornerRadius="8" Width="160" Height="160"
+                                
+                                <Border Background="#04060A" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="1" CornerRadius="4" Width="170" Height="170"
                                         Visibility="{Binding QrImage, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=Inverse, FallbackValue=Visible}">
                                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                        <TextBlock Text="▦" FontSize="48" Foreground="#334155" HorizontalAlignment="Center"/>
-                                        <TextBlock Text="Nhấn Tạo QR" Foreground="#475569" FontSize="11"
-                                                   HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                                        <Path Data="M3,3H9V5H5V9H3V3M3,21V15H5V19H9V21H3M21,3V9H19V5H15V3H21M21,21H15V19H19V15H21V21M7,7H17V17H7V7Z" 
+                                              Fill="{StaticResource MutedTextBrush}" Width="48" Height="48" Stretch="Uniform" Margin="0,0,0,10"/>
+                                        <TextBlock Text="AWAITING_QR_GEN" Foreground="{StaticResource MutedTextBrush}" FontSize="11" FontFamily="Consolas" FontWeight="Bold" HorizontalAlignment="Center"/>
                                     </StackPanel>
                                 </Border>
-                                <Button Content="📱 Tạo QR Code" Command="{Binding GenerateQrCommand}"
-                                        Style="{StaticResource ModernButton}" Padding="14,10" Margin="0,12,0,0"
-                                        FontSize="12" HorizontalAlignment="Stretch"/>
+                                
+                                <Button Content="[ KHỞI TẠO QR ]" Command="{Binding GenerateQrCommand}" Style="{StaticResource HighContrastButton}" Padding="15,12" Margin="0,15,0,0" HorizontalAlignment="Stretch"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
 
-                    <!-- Export Card -->
-                    <Border Style="{StaticResource ModernCard}" Padding="0">
+                    <Border Style="{StaticResource SciFiCard}">
                         <StackPanel>
-                            <Border Background="#1E3A5F" CornerRadius="12,12,0,0" Padding="14,10">
-                                <TextBlock Text="📤 XUẤT PHIẾU" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                            <Border Background="{StaticResource HeaderBgBrush}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="4,4,0,0" Padding="15,12">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z" 
+                                          Fill="{StaticResource CyanAccent}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0"/>
+                                    <TextBlock Text="DATA EXPORT" FontSize="14" FontWeight="Bold" Foreground="White" FontFamily="Consolas"/>
+                                </StackPanel>
                             </Border>
-                            <StackPanel Margin="14,12,14,14">
-                                <Button Content="💾 Xuất ra Desktop" Command="{Binding ExportTextCommand}"
-                                        Style="{StaticResource ModernButton}" Padding="10,11" Margin="0,0,0,8"
-                                        FontSize="12" HorizontalAlignment="Stretch"/>
-                                <Button Content="📋 Sao chép toàn bộ" Command="{Binding CopyReportCommand}"
-                                        Style="{StaticResource SecondaryButton}" Padding="10,11"
-                                        FontSize="12" HorizontalAlignment="Stretch"/>
+                            
+                            <StackPanel Margin="15,15,15,15">
+                                <Button Content="[ XUẤT RA DESKTOP ]" Command="{Binding ExportTextCommand}" Style="{StaticResource HighContrastButton}" Padding="15,12" Margin="0,0,0,10" HorizontalAlignment="Stretch"/>
+                                <Button Content="[ SAO CHÉP TOÀN BỘ ]" Command="{Binding CopyReportCommand}" Style="{StaticResource HighContrastButton}" Padding="15,12" HorizontalAlignment="Stretch"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>

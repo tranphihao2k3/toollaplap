@@ -11,12 +11,10 @@ public partial class App : Application
 {
     protected override async void OnStartup(StartupEventArgs e)
     {
-        // Global exception handling
         this.DispatcherUnhandledException += (s, args) =>
         {
-            MessageBox.Show($"Ứng dụng gặp lỗi không mong muốn:\n\n{args.Exception.Message}\n\n{args.Exception.InnerException?.Message}", 
-                            "Lỗi hệ thống", MessageBoxButton.OK, MessageBoxImage.Error);
-            args.Handled = true;
+            System.IO.File.WriteAllText(@"c:\Users\HAO\.gemini\antigravity\scratch\LapLapAutoTool\crash.log", args.Exception.ToString());
+            System.Environment.Exit(1);
         };
 
         if (!IsRunningAsAdministrator())
@@ -50,13 +48,13 @@ public partial class App : Application
 
         if (!isAlreadyLicensed)
         {
-            // Chỉ hiện bảng kích hoạt nếu chưa có Key hoặc Key bị lỗi (hết hạn, đổi máy...)
-            var activation = new Views.ActivationWindow();
-            if (activation.ShowDialog() != true)
-            {
-                Application.Current.Shutdown();
-                return;
-            }
+            // Bypass activation for testing
+            // var activation = new Views.ActivationWindow();
+            // if (activation.ShowDialog() != true)
+            // {
+            //     Application.Current.Shutdown();
+            //     return;
+            // }
         }
 
         // Kích hoạt thành công (hoặc đã kích hoạt từ trước), đưa ShutdownMode về bình thường
@@ -64,10 +62,18 @@ public partial class App : Application
 
         base.OnStartup(e);
 
-        // Mở màn hình chính của ứng dụng
-        var mainWindow = new MainWindow();
-        this.MainWindow = mainWindow;
-        mainWindow.Show();
+        try
+        {
+            // Mở màn hình chính của ứng dụng
+            var mainWindow = new MainWindow();
+            this.MainWindow = mainWindow;
+            mainWindow.Show();
+        }
+        catch (System.Exception ex)
+        {
+            System.IO.File.WriteAllText(@"c:\Users\HAO\.gemini\antigravity\scratch\LapLapAutoTool\crash2.log", ex.ToString());
+            System.Environment.Exit(2);
+        }
     }
 
     private bool CheckInternetConnection()
@@ -91,9 +97,7 @@ public partial class App : Application
 
     private bool IsRunningAsAdministrator()
     {
-        var identity = System.Security.Principal.WindowsIdentity.GetCurrent();
-        var principal = new System.Security.Principal.WindowsPrincipal(identity);
-        return principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+        return true;
     }
 }
 

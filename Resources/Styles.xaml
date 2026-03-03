@@ -8,16 +8,17 @@
     <conv:DownloadFailedVisibilityConverter x:Key="DownloadFailedVisibilityConverter"/>
     <conv:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
     
-    <!-- Color Palette -->
-    <Color x:Key="PrimaryColor">#2563EB</Color>
-    <Color x:Key="SecondaryColor">#1E293B</Color>
-    <Color x:Key="BackgroundColor">#0F172A</Color>
-    <Color x:Key="SurfaceColor">#1E293B</Color>
-    <Color x:Key="TextColor">#F8FAFC</Color>
-    <Color x:Key="MutedTextColor">#94A3B8</Color>
-    <Color x:Key="AccentColor">#38BDF8</Color>
-    <Color x:Key="SuccessColor">#10B981</Color>
-    <Color x:Key="DangerColor">#EF4444</Color>
+    <!-- Color Palette - Futuristic/Cyberpunk -->
+    <Color x:Key="PrimaryColor">#00F2FF</Color> <!-- Cyan Neon -->
+    <Color x:Key="SecondaryColor">#10141D</Color> 
+    <Color x:Key="BackgroundColor">#080A0F</Color>
+    <Color x:Key="SurfaceColor">#121826</Color>
+    <Color x:Key="TextColor">#E2E8F0</Color>
+    <Color x:Key="MutedTextColor">#64748B</Color>
+    <Color x:Key="AccentColor">#00F2FF</Color>
+    <Color x:Key="SuccessColor">#00FF9D</Color>
+    <Color x:Key="DangerColor">#FF2D55</Color>
+    <Color x:Key="WarningColor">#FFD600</Color>
 
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
     <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}"/>
@@ -27,19 +28,27 @@
     <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
     <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}"/>
     <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}"/>
+    <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}"/>
 
-    <!-- Modern Card Style -->
+    <!-- Modern Card Style - Glassmorphism & Neon Glow -->
     <Style x:Key="ModernCard" TargetType="Border">
-        <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
-        <Setter Property="CornerRadius" Value="12"/>
-        <Setter Property="Padding" Value="20"/>
-        <Setter Property="BorderBrush" Value="#334155"/>
+        <Setter Property="Background" Value="#1A1E293B"/> <!-- Translucent slate -->
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="BorderBrush" Value="#4400F2FF"/> <!-- Faint Cyan border -->
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Effect">
             <Setter.Value>
-                <DropShadowEffect BlurRadius="15" ShadowDepth="2" Opacity="0.2" Color="Black"/>
+                <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.1" Color="{StaticResource PrimaryColor}"/>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="GlassCard" TargetType="Border">
+        <Setter Property="Background" Value="#0DFFFFFF"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="BorderBrush" Value="#20FFFFFF"/>
+        <Setter Property="BorderThickness" Value="1"/>
     </Style>
 
     <!-- Sidebar Button Style -->
@@ -47,17 +56,25 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
-                    <Border x:Name="border" Background="Transparent" CornerRadius="8" Margin="0,5" Padding="15,12">
-                        <StackPanel Orientation="Horizontal">
-                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Border>
+                    <Grid x:Name="rootGrid" Background="Transparent" Margin="0,1" Cursor="Hand">
+                        <!-- Active left border indicator -->
+                        <Border x:Name="activeLine" Width="3" HorizontalAlignment="Left"
+                                Background="{StaticResource PrimaryBrush}" CornerRadius="0,2,2,0"
+                                Visibility="Collapsed"/>
+                        <!-- Hover/active background -->
+                        <Border x:Name="bg" Background="Transparent" Padding="18,11,14,11" Margin="0,0,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#334155"/>
+                            <Setter TargetName="bg" Property="Background" Value="#0AFFFFFF"/>
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                            <Setter TargetName="bg" Property="Background" Value="#1200F2FF"/>
+                            <Setter TargetName="activeLine" Property="Visibility" Value="Visible"/>
                             <Setter Property="Foreground" Value="White"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -65,40 +82,53 @@
             </Setter.Value>
         </Setter>
         <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}"/>
-        <Setter Property="FontSize" Value="15"/>
-        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontFamily" Value="Consolas"/>
     </Style>
 
     <!-- Modern Button Style -->
     <Style x:Key="ModernButton" TargetType="Button">
-        <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="20,10"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" Padding="{TemplateBinding Padding}">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Opacity" Value="0.9"/>
+                            <Setter TargetName="border" Property="Background" Value="#1500F2FF"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Opacity" Value="0.8"/>
+                            <Setter TargetName="border" Property="Background" Value="#3000F2FF"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
-        <Setter Property="Background" Value="#475569"/>
+        <Setter Property="BorderBrush" Value="#475569"/>
+        <Setter Property="Foreground" Value="#94A3B8"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" Value="0.8"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="SidebarHWIDButton" TargetType="Button">

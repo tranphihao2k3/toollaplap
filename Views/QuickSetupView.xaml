@@ -4,256 +4,350 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
-    <UserControl.Resources>
-        <!-- Pill tab style - no flicker -->
-        <Style x:Key="PillTabItem" TargetType="TabItem">
-            <Setter Property="Padding" Value="18,8"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#64748B"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Margin" Value="0,0,4,0"/>
-            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TabItem">
-                        <Border x:Name="TabBorder" CornerRadius="8" Padding="{TemplateBinding Padding}"
-                                Background="{TemplateBinding Background}" Cursor="Hand">
-                            <ContentPresenter ContentSource="Header"
-                                              HorizontalAlignment="Center" VerticalAlignment="Center"
-                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <!-- Hover only when NOT selected -->
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsMouseOver" Value="True"/>
-                                    <Condition Property="IsSelected" Value="False"/>
-                                </MultiTrigger.Conditions>
-                                <Setter TargetName="TabBorder" Property="Background" Value="#1E293B"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </MultiTrigger>
-                            <!-- Selected always wins -->
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="TabBorder" Property="Background" Value="{StaticResource AccentBrush}"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Resources>
+             d:DesignHeight="700" d:DesignWidth="900">
 
-    <Grid Margin="18,14,18,14">
+    <Grid Background="{StaticResource BackgroundBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>   <!-- Header -->
-            <RowDefinition Height="*"/>      <!-- TabControl fills all space -->
-            <RowDefinition Height="Auto"/>   <!-- Footer sticky -->
+            <RowDefinition Height="Auto"/>  <!-- Header -->
+            <RowDefinition Height="Auto"/>  <!-- Progress bar -->
+            <RowDefinition Height="*"/>     <!-- Table -->
         </Grid.RowDefinitions>
 
         <!-- ===== HEADER ===== -->
-        <Grid Grid.Row="0" Margin="0,0,0,14">
-            <StackPanel>
-                <TextBlock Text="Cài đặt nhanh" FontSize="22" FontWeight="Black" Foreground="{StaticResource TextBrush}"/>
-                <TextBlock Text="Các phần mềm thiết yếu — chọn tab theo nhu cầu"
-                           Foreground="{StaticResource MutedTextBrush}" FontSize="13" Margin="0,3,0,0"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Button Content="🔄 Quét lại" Command="{Binding RefreshCommand}"
-                        Style="{StaticResource GhostButton}" Margin="0,0,8,0" Padding="12,6"/>
-                <Button Content="Tất cả" Command="{Binding SelectAllCommand}"
-                        Style="{StaticResource GhostButton}" Margin="0,0,8,0" Padding="12,6"/>
-                <Button Content="Bỏ chọn" Command="{Binding SelectNoneCommand}"
-                        Style="{StaticResource GhostButton}" Padding="12,6"/>
-            </StackPanel>
-        </Grid>
-
-        <!-- ===== TAB CONTROL (fills * row) ===== -->
-        <TabControl Grid.Row="1" SelectedIndex="0"
-                    Background="Transparent" BorderThickness="0">
-            <TabControl.Resources>
-                <DataTemplate x:Key="SoftwareItemTemplate">
-                    <Border Style="{StaticResource ModernCard}" Margin="0,0,12,12" Padding="15,12">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Center" Margin="0,0,14,0">
-                                <CheckBox.Style>
-                                    <Style TargetType="CheckBox">
-                                        <Setter Property="RenderTransform">
-                                            <Setter.Value>
-                                                <ScaleTransform ScaleX="1.2" ScaleY="1.2"/>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </CheckBox.Style>
-                            </CheckBox>
-                            <StackPanel Grid.Column="1">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold"
-                                               TextWrapping="Wrap" Margin="0,0,8,0">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Foreground" Value="White"/>
-                                                <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsAlreadyInstalled}" Value="True">
-                                            <Setter Property="Foreground" Value="#10B981"/>
-                                        </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                    <TextBlock Grid.Column="1" FontSize="11" FontWeight="Bold" VerticalAlignment="Top">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Status}" Value="Pending">
-                                            <Setter Property="Text" Value="Chờ... ⏳"/>
-                                            <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Status}" Value="Installing">
-                                            <Setter Property="Text" Value="Đang cài ⚙️"/>
-                                            <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Status}" Value="Completed">
-                                            <Setter Property="Text" Value="Hoàn tất ✅"/>
-                                            <Setter Property="Foreground" Value="#10B981"/>
-                                        </DataTrigger>
-                                        <MultiDataTrigger>
-                                            <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding Status}" Value="Completed"/>
-                                                <Condition Binding="{Binding IsAlreadyInstalled}" Value="True"/>
-                                            </MultiDataTrigger.Conditions>
-                                            <Setter Property="Text" Value="Đã có sẵn ✅"/>
-                                        </MultiDataTrigger>
-                                        <DataTrigger Binding="{Binding Status}" Value="Failed">
-                                            <Setter Property="Text" Value="Lỗi ❌"/>
-                                            <Setter Property="Foreground" Value="#EF4444"/>
-                                        </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </Grid>
-                                <TextBlock Text="{Binding Description}" FontSize="12"
-                                           Foreground="{StaticResource MutedTextBrush}"
-                                           TextWrapping="Wrap" Margin="0,3,0,0"/>
-                                <!-- Download progress -->
-                                <StackPanel Margin="0,8,0,0"
-                                            Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    <Grid Margin="0,0,0,3">
-                                        <TextBlock Text="{Binding DownloadStatusText}" FontSize="10"
-                                                   Foreground="{StaticResource MutedTextBrush}"
-                                                   HorizontalAlignment="Left" TextWrapping="Wrap"/>
-                                        <TextBlock Text="{Binding DownloadProgress, StringFormat='{}{0:0}%'}"
-                                                   FontSize="10" Foreground="{StaticResource AccentBrush}"
-                                                   HorizontalAlignment="Right"/>
-                                    </Grid>
-                                    <ProgressBar Value="{Binding DownloadProgress}" Maximum="100" Height="4"
-                                                 Background="#334155" Foreground="{StaticResource AccentBrush}"
-                                                 BorderThickness="0"/>
-                                </StackPanel>
-                                <TextBlock Text="{Binding DownloadStatusText}" FontSize="10"
-                                           Foreground="#10B981" Margin="0,6,0,0"
-                                           Visibility="{Binding DownloadStatus, Converter={StaticResource DownloadDoneVisibilityConverter}}"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </TabControl.Resources>
-            <TabControl.Style>
-                <Style TargetType="TabControl">
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="TabControl">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
-                                    <!-- Tab strip in a pill container -->
-                                    <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}"
-                                            CornerRadius="10" Padding="6" Margin="0,0,0,12">
-                                        <TabPanel IsItemsHost="True" Background="Transparent"/>
-                                    </Border>
-                                    <!-- Content fills remaining space -->
-                                    <ContentPresenter Grid.Row="1" ContentSource="SelectedContent"/>
-                                </Grid>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </TabControl.Style>
-
-            <!-- ===== TAB 1: CÀI WIN ===== -->
-            <TabItem Header="🖥️  Cài Win" Style="{StaticResource PillTabItem}">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,-14,0">
-                    <ItemsControl ItemsSource="{Binding SoftwareList}" Margin="0,0,14,0" ItemTemplate="{StaticResource SoftwareItemTemplate}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="2" VerticalAlignment="Top"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </ScrollViewer>
-            </TabItem>
-            <!-- ===== TAB 2: TIỆN ÍCH ===== -->
-            <TabItem Header="🔧  Tiện ích" Style="{StaticResource PillTabItem}">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,-14,0">
-                    <ItemsControl ItemsSource="{Binding UtilityList}" Margin="0,0,14,0" ItemTemplate="{StaticResource SoftwareItemTemplate}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="2" VerticalAlignment="Top"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </ScrollViewer>
-            </TabItem>
-            <!-- ===== TAB 3: GAME ===== -->
-            <TabItem Header="🎮  Game" Style="{StaticResource PillTabItem}">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,-14,0">
-                    <ItemsControl ItemsSource="{Binding GameList}" Margin="0,0,14,0" ItemTemplate="{StaticResource SoftwareItemTemplate}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="2" VerticalAlignment="Top"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </ScrollViewer>
-            </TabItem>
-        </TabControl>
-
-        <!-- ===== FOOTER — STICKY ===== -->
-        <Border Grid.Row="2" Background="{StaticResource SurfaceBrush}"
-                CornerRadius="12" Padding="20" Margin="0,12,0,0">
+        <Border Grid.Row="0" Background="#0A0C12" BorderBrush="#1500F2FF" BorderThickness="0,0,0,1" Padding="30,20">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,20,0">
-                    <TextBlock Text="{Binding StatusText}" Foreground="White" FontSize="14" Margin="0,0,0,10"/>
-                    <ProgressBar Value="{Binding Progress}" Maximum="100" Height="8"
-                                 Foreground="{StaticResource PrimaryBrush}"
-                                 Background="#334155" BorderThickness="0"/>
+                <StackPanel>
+                    <!-- Title row -->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,4">
+                        <Path Data="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"
+                              Fill="{StaticResource PrimaryBrush}" Width="20" Height="20" Stretch="Uniform" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="AUTO_DEPLOYMENT" FontSize="24" Foreground="White" FontWeight="Black" FontFamily="Consolas"/>
+                    </StackPanel>
+                    <TextBlock FontSize="12" Foreground="{StaticResource PrimaryBrush}" FontFamily="Consolas" Opacity="0.7"
+                               Text="Batch Silent Installer System • Loading config: software_config.json"/>
                 </StackPanel>
-                <Button Grid.Column="1" Content="Bắt đầu cài đặt"
-                        Command="{Binding StartInstallCommand}"
-                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                        Style="{StaticResource ModernButton}"
-                        Padding="40,15"/>
+
+                <!-- Action Buttons (top right) -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,0,0">
+                    <!-- SELECT ALL -->
+                    <Button Content="SELECT_ALL" Command="{Binding SelectAllCommand}"
+                            FontFamily="Consolas" FontSize="11" FontWeight="Bold"
+                            Padding="14,7" Margin="0,0,10,0" Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="bd" Background="Transparent"
+                                        BorderBrush="#40FFFFFF" BorderThickness="1" CornerRadius="3"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bd" Property="Background" Value="#15FFFFFF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <Button.Foreground>
+                            <SolidColorBrush Color="#94A3B8"/>
+                        </Button.Foreground>
+                    </Button>
+                    
+                    <!-- DESELECT ALL -->
+                    <Button Content="DESELECT_ALL" Command="{Binding SelectNoneCommand}"
+                            FontFamily="Consolas" FontSize="11" FontWeight="Bold"
+                            Padding="14,7" Margin="0,0,10,0" Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="bd" Background="Transparent"
+                                        BorderBrush="#40FFFFFF" BorderThickness="1" CornerRadius="3"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bd" Property="Background" Value="#15FFFFFF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <Button.Foreground>
+                            <SolidColorBrush Color="#94A3B8"/>
+                        </Button.Foreground>
+                    </Button>
+
+                    <!-- DEPLOYING / DEPLOY button -->
+                    <Button Command="{Binding StartInstallCommand}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                            FontFamily="Consolas" FontSize="11" FontWeight="Bold"
+                            Padding="14,7" Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="bd2"
+                                        BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="1" CornerRadius="3"
+                                        Padding="{TemplateBinding Padding}">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="#1200F2FF"/>
+                                    </Border.Background>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse x:Name="dot" Width="6" Height="6" Fill="{StaticResource PrimaryBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0.7"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bd2" Property="Background">
+                                            <Setter.Value><SolidColorBrush Color="#2000F2FF"/></Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <Button.Foreground>
+                            <SolidColorBrush Color="{StaticResource AccentColor}"/>
+                        </Button.Foreground>
+                        <TextBlock FontFamily="Consolas" FontSize="11" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value="DEPLOYING..."/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsBusy}" Value="False">
+                                            <Setter Property="Text" Value="DEPLOY_ALL"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Button>
+                </StackPanel>
             </Grid>
         </Border>
+
+        <!-- ===== GLOBAL PROGRESS BAR ===== -->
+        <Grid Grid.Row="1" Margin="30,14,30,0">
+            <Border Background="#0800F2FF" BorderBrush="#2000F2FF" BorderThickness="1" CornerRadius="2" Padding="12,7">
+                <Grid>
+                    <TextBlock Text="GLOBAL_DEPLOYMENT_PROGRESS_" FontSize="10" FontFamily="Consolas" FontWeight="Bold"
+                               Foreground="{StaticResource PrimaryBrush}" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Progress, StringFormat='{}{0:0}%'}"
+                               FontSize="10" FontFamily="Consolas" FontWeight="Bold"
+                               Foreground="{StaticResource PrimaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+            <ProgressBar Value="{Binding Progress}" Maximum="100" Height="2"
+                         Foreground="{StaticResource PrimaryBrush}" Background="Transparent"
+                         BorderThickness="0" VerticalAlignment="Bottom"
+                         Style="{StaticResource ModernProgressBar}"/>
+        </Grid>
+
+        <!-- ===== TABLE ===== -->
+        <Grid Grid.Row="2" Margin="30,14,30,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>   <!-- Column Headers -->
+                <RowDefinition Height="Auto"/>   <!-- Header separator -->  
+                <RowDefinition Height="*"/>      <!-- Rows -->
+            </Grid.RowDefinitions>
+
+            <!-- Column header row -->
+            <Grid Grid.Row="0" Margin="0,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="44"/>     <!-- SELECT -->
+                    <ColumnDefinition Width="*"/>      <!-- APPLICATION NAME -->
+                    <ColumnDefinition Width="120"/>    <!-- CATEGORY -->
+                    <ColumnDefinition Width="70"/>     <!-- SIZE -->
+                    <ColumnDefinition Width="180"/>    <!-- STATUS -->
+                </Grid.ColumnDefinitions>
+                <Border Grid.ColumnSpan="5" Background="#0AFFFFFF" BorderBrush="#10FFFFFF" BorderThickness="0,1,0,1" Padding="0,8"/>
+                <TextBlock Grid.Column="0" Text="SELECT" FontSize="10" FontFamily="Consolas" FontWeight="Bold"
+                           Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="APPLICATION NAME" FontSize="10" FontFamily="Consolas" FontWeight="Bold"
+                           Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                <TextBlock Grid.Column="2" Text="CATEGORY" FontSize="10" FontFamily="Consolas" FontWeight="Bold"
+                           Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="3" Text="SIZE" FontSize="10" FontFamily="Consolas" FontWeight="Bold"
+                           Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="4" Text="STATUS" FontSize="10" FontFamily="Consolas" FontWeight="Bold"
+                           Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+            </Grid>
+
+            <!-- Rows list -->
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding AllItems}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid MinHeight="42">
+                                <!-- Hover background -->
+                                <Grid.Style>
+                                    <Style TargetType="Grid">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#07FFFFFF"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="44"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="70"/>
+                                    <ColumnDefinition Width="180"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Bottom border -->
+                                <Border Grid.ColumnSpan="5" BorderBrush="#0CFFFFFF" BorderThickness="0,0,0,1" VerticalAlignment="Bottom"/>
+
+                                <!-- COL 0: Checkbox (Visual only, clicks handled by card overlay) -->
+                                <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}" IsHitTestVisible="False"
+                                          VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+                                <!-- COL 1: App Name + icon + download progress -->
+                                <Grid Grid.Column="1" Margin="6,6,8,6" VerticalAlignment="Center">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Name + status icon -->
+                                    <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <!-- Circle icon (idle/pending = hollow circle) -->
+                                        <Ellipse Width="13" Height="13" Margin="0,0,9,0" VerticalAlignment="Center">
+                                            <Ellipse.Style>
+                                                <Style TargetType="Ellipse">
+                                                    <Setter Property="Stroke" Value="#30FFFFFF"/>
+                                                    <Setter Property="StrokeThickness" Value="1.5"/>
+                                                    <Setter Property="Fill" Value="Transparent"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Installing">
+                                                            <Setter Property="Stroke" Value="{StaticResource PrimaryBrush}"/>
+                                                            <Setter Property="StrokeDashArray" Value="3,1"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Completed">
+                                                            <Setter Property="Fill" Value="{StaticResource SuccessBrush}"/>
+                                                            <Setter Property="Stroke" Value="{StaticResource SuccessBrush}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Failed">
+                                                            <Setter Property="Fill" Value="{StaticResource DangerBrush}"/>
+                                                            <Setter Property="Stroke" Value="{StaticResource DangerBrush}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding DownloadStatus}" Value="Downloading">
+                                                            <Setter Property="Stroke" Value="#A855F7"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Ellipse.Style>
+                                        </Ellipse>
+
+                                        <!-- Download arrow (only visible when downloading) -->
+                                        <Path Data="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"
+                                              Width="12" Height="12" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center">
+                                            <Path.Style>
+                                                <Style TargetType="Path">
+                                                    <Setter Property="Fill" Value="{StaticResource PrimaryBrush}"/>
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding DownloadStatus}" Value="Downloading">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Path.Style>
+                                        </Path>
+
+                                        <!-- App Name text -->
+                                        <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="White"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Installing">
+                                                            <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                                            <Setter Property="TextDecorations" Value="Underline"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding DownloadStatus}" Value="Downloading">
+                                                            <Setter Property="Foreground" Value="#A855F7"/>
+                                                            <Setter Property="TextDecorations" Value="Underline"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Completed">
+                                                            <Setter Property="Foreground" Value="{StaticResource SuccessBrush}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Failed">
+                                                            <Setter Property="Foreground" Value="{StaticResource DangerBrush}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <!-- Download progress (only visible when downloading) -->
+                                    <StackPanel Grid.Row="1" Margin="22,3,0,0"
+                                                Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <Grid Margin="0,0,0,2">
+                                            <TextBlock Text="{Binding DownloadStatusText}" FontSize="9"
+                                                       Foreground="{StaticResource MutedTextBrush}" FontFamily="Consolas"/>
+                                            <TextBlock Text="{Binding DownloadProgress, StringFormat='{}{0:0}%'}"
+                                                       FontSize="9" Foreground="#A855F7"
+                                                       HorizontalAlignment="Right" FontFamily="Consolas" FontWeight="Bold"/>
+                                        </Grid>
+                                        <ProgressBar Value="{Binding DownloadProgress}" Maximum="100" Height="2"
+                                                     Foreground="#A855F7" Background="#15FFFFFF"
+                                                     BorderThickness="0" Style="{StaticResource ModernProgressBar}"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- COL 2: Category -->
+                                <TextBlock Grid.Column="2" Text="{Binding Category}" VerticalAlignment="Center"
+                                           FontSize="12" FontFamily="Consolas" Foreground="{StaticResource MutedTextBrush}"/>
+
+                                <!-- COL 3: Size -->
+                                <TextBlock Grid.Column="3" Text="{Binding FileSize}" VerticalAlignment="Center"
+                                           FontSize="12" FontFamily="Consolas" Foreground="{StaticResource MutedTextBrush}"/>
+
+                                <!-- COL 4: Status label -->
+                                <TextBlock Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Right"
+                                           FontSize="12" FontFamily="Consolas" FontWeight="Bold">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="Queued"/>
+                                            <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status}" Value="Installing">
+                                                    <Setter Property="Text" Value="Silent Install (/S)"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding DownloadStatus}" Value="Downloading">
+                                                    <Setter Property="Text" Value="Downloading..."/>
+                                                    <Setter Property="Foreground" Value="#A855F7"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="Completed">
+                                                    <Setter Property="Text" Value="✓  Installed"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource SuccessBrush}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="Failed">
+                                                    <Setter Property="Text" Value="✕  Failed"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource DangerBrush}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+
+                                <!-- Transparent toggle overlay for entire row click -->
+                                <ToggleButton Grid.ColumnSpan="5" IsChecked="{Binding IsSelected}" Cursor="Hand">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <Border Background="Transparent"/>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </UserControl>

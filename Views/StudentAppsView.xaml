@@ -5,22 +5,63 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:models="clr-namespace:LapLapAutoTool.Models"
              mc:Ignorable="d">
-    <Grid Margin="18,14,18,14">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="AppBgBrush"      Color="#070A10"/>
+        <SolidColorBrush x:Key="CardBgBrush"     Color="#0B101A"/>
+        <SolidColorBrush x:Key="CardBorderBrush" Color="#1E293B"/>
+        <SolidColorBrush x:Key="HeaderBgBrush"   Color="#0C141E"/>
+        <SolidColorBrush x:Key="MutedText"       Color="#64748B"/>
+        <SolidColorBrush x:Key="CyanAccent"      Color="#00D2FF"/>
+        <SolidColorBrush x:Key="PurpleAccent"    Color="#B25CFF"/>
+        <SolidColorBrush x:Key="PinkAccent"      Color="#F052B6"/>
+        <SolidColorBrush x:Key="GreenAccent"     Color="#1ae65d"/>
+        <SolidColorBrush x:Key="OrangeAccent"    Color="#FFB800"/>
+        <SolidColorBrush x:Key="ProgBg"          Color="#1A2436"/>
+
+        <Style x:Key="SciFiCard" TargetType="Border">
+            <Setter Property="Background"       Value="{StaticResource CardBgBrush}"/>
+            <Setter Property="BorderBrush"      Value="{StaticResource CardBorderBrush}"/>
+            <Setter Property="BorderThickness"  Value="1"/>
+            <Setter Property="CornerRadius"     Value="4"/>
+        </Style>
+
+        <Style x:Key="FlatBar" TargetType="ProgressBar">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Border Background="{StaticResource ProgBg}" CornerRadius="2" Height="{TemplateBinding Height}">
+                            <Border x:Name="PART_Indicator" Background="{TemplateBinding Foreground}"
+                                    HorizontalAlignment="Left" CornerRadius="2"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource AppBgBrush}" Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <Grid Grid.Row="0" Margin="0,0,0,14">
+        <!-- ===== HEADER ===== -->
+        <Grid Grid.Row="0" Margin="0,0,0,25">
             <StackPanel>
-                <TextBlock Text="Phần mềm Sinh viên" FontSize="22" FontWeight="Black" Foreground="White"/>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Path Data="M3,3H21V21H3V3M5,5V19H19V5H5M7,7H11V11H7V7M13,7H17V11H13V7M7,13H11V17H7V13M13,13H17V17H13V13Z"
+                          Fill="{StaticResource CyanAccent}" Width="26" Height="26" Stretch="Uniform" Margin="0,0,12,0"/>
+                    <TextBlock Text="SOFTWARE_REPOSITORY" FontSize="26" Foreground="White" FontWeight="Bold"
+                               FontFamily="Rajdhani, Consolas"/>
+                </StackPanel>
                 <TextBlock Text="Chọn phiên bản cần tải — tự động giải nén và mở thư mục"
-                           Foreground="{StaticResource MutedTextBrush}" FontSize="13"/>
+                           Foreground="{StaticResource CyanAccent}" FontSize="12" Margin="0,5,0,0"
+                           Opacity="0.8" FontFamily="Rajdhani, Consolas"/>
             </StackPanel>
         </Grid>
 
-        <!-- 2-column group grid -->
+        <!-- ===== APP GROUPS GRID ===== -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding AppGroups}">
                 <ItemsControl.ItemsPanel>
@@ -30,35 +71,46 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <!-- Card per group, ~half width -->
-                        <Border Style="{StaticResource ModernCard}" VerticalAlignment="Top"
-                                Margin="0,0,12,12" Padding="0">
+                        <Border Style="{StaticResource SciFiCard}" VerticalAlignment="Top"
+                                Margin="0,0,10,12" Padding="0">
                             <StackPanel>
-                                <!-- Group header -->
-                                <Border Background="#0F172A" CornerRadius="12,12,0,0" Padding="14,10">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Border Background="{StaticResource PrimaryBrush}" CornerRadius="5"
-                                                Width="28" Height="20" Margin="0,0,10,0" VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding Icon}" FontSize="10" FontWeight="Bold"
-                                                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                       Foreground="White" FontFamily="Segoe UI"/>
-                                        </Border>
-                                        <TextBlock Text="{Binding Group}" FontSize="14" FontWeight="Bold"
-                                                   Foreground="White" VerticalAlignment="Center"/>
-                                    </StackPanel>
+                                <!-- Group header with cyberpunk style -->
+                                <Border Background="{StaticResource HeaderBgBrush}"
+                                        BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="0,0,0,1"
+                                        CornerRadius="4,4,0,0" Padding="14,10">
+                                    <Grid>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border Background="#1500D2FF" BorderBrush="{StaticResource CyanAccent}"
+                                                    BorderThickness="1" CornerRadius="3"
+                                                    Width="30" Height="22" Margin="0,0,10,0" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Icon}" FontSize="10" FontWeight="Black"
+                                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                           Foreground="{StaticResource CyanAccent}" FontFamily="Consolas"/>
+                                            </Border>
+                                            <TextBlock Text="{Binding Group}" FontSize="14" FontWeight="Bold"
+                                                       Foreground="White" VerticalAlignment="Center"
+                                                       FontFamily="Rajdhani, Consolas"/>
+                                        </StackPanel>
+                                        <!-- Decorative dot -->
+                                        <Ellipse Width="6" Height="6" Fill="{StaticResource CyanAccent}"
+                                                 HorizontalAlignment="Right" VerticalAlignment="Center" Opacity="0.6"/>
+                                    </Grid>
                                 </Border>
 
-                                <!-- Version list (compact rows) -->
+                                <!-- Version list -->
                                 <ItemsControl ItemsSource="{Binding Versions}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Padding="14,7,14,7">
+                                            <Border Padding="14,8,14,8">
                                                 <Border.Style>
                                                     <Style TargetType="Border">
                                                         <Setter Property="Background" Value="Transparent"/>
+                                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
                                                         <Style.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Background" Value="#0F172A"/>
+                                                                <Setter Property="Background" Value="#0800D2FF"/>
+                                                                <Setter Property="BorderBrush" Value="#14364D"/>
                                                             </Trigger>
                                                         </Style.Triggers>
                                                     </Style>
@@ -72,24 +124,28 @@
                                                     </Grid.ColumnDefinitions>
 
                                                     <!-- Year badge -->
-                                                    <Border Grid.Column="0" CornerRadius="5" Padding="8,2" Margin="0,0,10,0" VerticalAlignment="Center">
+                                                    <Border Grid.Column="0" CornerRadius="3" Padding="8,3" Margin="0,0,10,0" VerticalAlignment="Center">
                                                         <Border.Style>
                                                             <Style TargetType="Border">
-                                                                <Setter Property="Background" Value="#1E293B"/>
+                                                                <Setter Property="Background" Value="#0D1520"/>
+                                                                <Setter Property="BorderBrush" Value="#14364D"/>
+                                                                <Setter Property="BorderThickness" Value="1"/>
                                                                 <Style.Triggers>
                                                                     <DataTrigger Binding="{Binding DownloadStatus}" Value="{x:Static models:DownloadStatus.Done}">
-                                                                        <Setter Property="Background" Value="#064E3B"/>
+                                                                        <Setter Property="Background" Value="#06261B"/>
+                                                                        <Setter Property="BorderBrush" Value="#1ae65d"/>
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </Border.Style>
-                                                        <TextBlock Text="{Binding Year}" FontSize="11" FontWeight="Bold" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Year}" FontSize="11" FontWeight="Bold"
+                                                                   VerticalAlignment="Center" FontFamily="Consolas">
                                                             <TextBlock.Style>
                                                                 <Style TargetType="TextBlock">
-                                                                    <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+                                                                    <Setter Property="Foreground" Value="{StaticResource CyanAccent}"/>
                                                                     <Style.Triggers>
                                                                         <DataTrigger Binding="{Binding DownloadStatus}" Value="{x:Static models:DownloadStatus.Done}">
-                                                                            <Setter Property="Foreground" Value="#10B981"/>
+                                                                            <Setter Property="Foreground" Value="#1ae65d"/>
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
                                                                 </Style>
@@ -99,71 +155,95 @@
 
                                                     <!-- Name + progress -->
                                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                        <TextBlock Text="{Binding Name}" FontSize="12" Foreground="White" TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Text="{Binding Name}" FontSize="12.5" FontWeight="SemiBold"
+                                                                   Foreground="#E2E8F0" TextTrimming="CharacterEllipsis"
+                                                                   FontFamily="Rajdhani, Consolas"/>
                                                         <StackPanel Margin="0,4,0,0"
                                                                     Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                             <ProgressBar Value="{Binding DownloadProgress}" Maximum="100"
-                                                                         Height="3" Background="#334155"
-                                                                         Foreground="{StaticResource AccentBrush}" BorderThickness="0"/>
+                                                                         Height="3" Foreground="{StaticResource CyanAccent}"
+                                                                         Style="{StaticResource FlatBar}"/>
                                                             <TextBlock Text="{Binding DownloadProgress, StringFormat='{}{0:0}%'}"
-                                                                       FontSize="9" Foreground="{StaticResource MutedTextBrush}"/>
+                                                                       FontSize="9" Foreground="{StaticResource MutedText}"
+                                                                       FontFamily="Consolas"/>
                                                         </StackPanel>
-                                                        <TextBlock Text="{Binding DownloadStatusText}" FontSize="10" Foreground="#10B981"
+                                                        <TextBlock Text="{Binding DownloadStatusText}" FontSize="10" Foreground="#1ae65d"
+                                                                   FontFamily="Consolas"
                                                                    Visibility="{Binding DownloadStatus, Converter={StaticResource DownloadDoneVisibilityConverter}}"/>
                                                     </StackPanel>
 
                                                     <!-- Size badge -->
-                                                    <Border Grid.Column="2" CornerRadius="4" Padding="6,2" Margin="6,0" VerticalAlignment="Center"
-                                                            Background="#0F172A"
+                                                    <Border Grid.Column="2" CornerRadius="3" Padding="6,2" Margin="6,0" VerticalAlignment="Center"
+                                                            Background="#0D1520" BorderBrush="#14364D" BorderThickness="1"
                                                             Visibility="{Binding FileSize, Converter={StaticResource StringToVisibilityConverter}}">
-                                                        <TextBlock Text="{Binding FileSize}" FontSize="10" Foreground="{StaticResource MutedTextBrush}"/>
+                                                        <TextBlock Text="{Binding FileSize}" FontSize="10" Foreground="{StaticResource MutedText}"
+                                                                   FontFamily="Consolas"/>
                                                     </Border>
 
                                                     <!-- Action buttons -->
                                                     <StackPanel Grid.Column="3" VerticalAlignment="Center">
-                                                        <Button Padding="12,5" Tag="{Binding}" Click="DownloadButton_Click"
-                                                                FontSize="11" FontWeight="SemiBold">
+                                                        <Button Padding="14,6" Tag="{Binding}" Click="DownloadButton_Click" Cursor="Hand">
+                                                            <Button.Template>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border x:Name="BtnBorder" Background="Transparent"
+                                                                            BorderBrush="{StaticResource CyanAccent}" BorderThickness="1"
+                                                                            CornerRadius="3" Padding="{TemplateBinding Padding}">
+                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                    </Border>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter TargetName="BtnBorder" Property="Background" Value="{StaticResource CyanAccent}"/>
+                                                                        </Trigger>
+                                                                        <Trigger Property="IsEnabled" Value="False">
+                                                                            <Setter TargetName="BtnBorder" Property="BorderBrush" Value="#334155"/>
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Button.Template>
+                                                            <Button.Style>
+                                                                <Style TargetType="Button">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding DownloadUrl}" Value="">
+                                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Button.Style>
                                                             <Button.Visibility>
                                                                 <MultiBinding Converter="{StaticResource DownloadIdleVisibilityConverter}">
                                                                     <Binding Path="DownloadStatus"/>
                                                                     <Binding Path="DownloadUrl"/>
                                                                 </MultiBinding>
                                                             </Button.Visibility>
-                                                            <Button.Style>
-                                                                <Style TargetType="Button" BasedOn="{StaticResource ModernButton}">
-                                                                    <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding DownloadUrl}" Value="">
-                                                                            <Setter Property="Background" Value="#334155"/>
-                                                                            <Setter Property="IsEnabled" Value="False"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </Button.Style>
-                                                            <TextBlock FontSize="11">
+                                                            <TextBlock FontSize="11" FontWeight="Bold" FontFamily="Consolas">
                                                                 <TextBlock.Style>
                                                                     <Style TargetType="TextBlock">
-                                                                        <Setter Property="Text" Value="⬇ Tải"/>
+                                                                        <Setter Property="Text" Value="⬇ GET"/>
+                                                                        <Setter Property="Foreground" Value="{StaticResource CyanAccent}"/>
                                                                         <Style.Triggers>
                                                                             <DataTrigger Binding="{Binding DownloadUrl}" Value="">
                                                                                 <Setter Property="Text" Value="—"/>
+                                                                                <Setter Property="Foreground" Value="#475569"/>
                                                                             </DataTrigger>
+                                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                                <Setter Property="Foreground" Value="#070A10"/>
+                                                                            </Trigger>
                                                                         </Style.Triggers>
                                                                     </Style>
                                                                 </TextBlock.Style>
                                                             </TextBlock>
                                                         </Button>
-                                                        <Border Background="#1E3A5F" CornerRadius="6" Padding="10,5"
+                                                        <Border Background="#0A1828" BorderBrush="#14364D" BorderThickness="1" CornerRadius="3" Padding="10,5"
                                                                 Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                            <TextBlock Text="⏳" FontSize="12" Foreground="{StaticResource AccentBrush}"/>
+                                                            <TextBlock Text="⏳" FontSize="12" Foreground="{StaticResource CyanAccent}"/>
                                                         </Border>
-                                                        <Border Background="#064E3B" CornerRadius="6" Padding="10,5"
+                                                        <Border Background="#06261B" BorderBrush="#1ae65d" BorderThickness="1" CornerRadius="3" Padding="10,5"
                                                                 Visibility="{Binding DownloadStatus, Converter={StaticResource DownloadDoneVisibilityConverter}}">
-                                                            <TextBlock Text="✅" FontSize="12" Foreground="#10B981"/>
+                                                            <TextBlock Text="✓" FontSize="12" Foreground="#1ae65d" FontWeight="Black" FontFamily="Consolas"/>
                                                         </Border>
-                                                        <Border Background="#450A0A" CornerRadius="6" Padding="10,5"
+                                                        <Border Background="#1A0A0A" BorderBrush="#EF4444" BorderThickness="1" CornerRadius="3" Padding="10,5"
                                                                 Visibility="{Binding DownloadStatus, Converter={StaticResource DownloadFailedVisibilityConverter}}">
-                                                            <TextBlock Text="❌" FontSize="12" Foreground="#EF4444"/>
+                                                            <TextBlock Text="✗" FontSize="12" Foreground="#EF4444" FontWeight="Black" FontFamily="Consolas"/>
                                                         </Border>
                                                     </StackPanel>
                                                 </Grid>

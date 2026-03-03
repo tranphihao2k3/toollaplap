@@ -7,7 +7,7 @@
         xmlns:views="clr-namespace:LapLapAutoTool.Views"
         xmlns:converters="clr-namespace:LapLapAutoTool.Converters"
         mc:Ignorable="d"
-        Title="tool v1" 
+        Title="LapLap Auto Setup" 
         Height="780" Width="1100"
         MinHeight="700" MinWidth="900"
         Icon="/Resources/app_icon.png"
@@ -56,46 +56,88 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>  <!-- Top bar -->
+            <RowDefinition Height="*"/>     <!-- Main -->
+            <RowDefinition Height="Auto"/> <!-- Bottom bar -->
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
+        <!-- ===== TOP STATUS BAR (Cyberpunk style) ===== -->
+        <Border Grid.Row="0" Background="#08080D" BorderBrush="#1500F2FF" BorderThickness="0,0,0,1" Padding="20,8">
+            <Grid>
+                <!-- Left: SYS_NODE -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Path Data="M17,8C8,10 5.9,16.17 3.82,19.34C2.63,21.07 1,22 1,22H23C23,22 7.9,15.1 17,8Z"
+                          Fill="{StaticResource PrimaryBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
+                    <TextBlock FontFamily="Consolas" FontSize="11" Foreground="{StaticResource MutedTextBrush}">
+                        <Run Text="SYS_NODE:"/>
+                        <Run Text=" LOCAL_HOST_002" Foreground="White" FontWeight="Bold"/>
+                    </TextBlock>
+                </StackPanel>
+                <!-- Right: SECURE CONNECTION -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Ellipse Width="6" Height="6" Fill="{StaticResource PrimaryBrush}" Margin="0,0,6,0"/>
+                    <TextBlock Text="SECURE CONNECTION" FontFamily="Consolas" FontSize="11" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ===== MAIN LAYOUT ===== -->
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="170"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <!-- Sidebar -->
-            <Border Grid.Column="0" Background="{StaticResource SurfaceBrush}" Padding="15,40,15,20">
+            <Border Grid.Column="0" Background="#09090F" BorderBrush="#1500F2FF" BorderThickness="0,0,1,0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Row="0" Margin="0,0,0,40">
-                        <TextBlock Text="LapLapCanTho" FontSize="20" FontWeight="Black" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Center"/>
-                        <TextBlock Text="X LapTopThanhVo" FontSize="12" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
-
+                    <!-- Logo -->
+                    <StackPanel Grid.Row="0" Margin="18,22,18,22">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="{StaticResource PrimaryBrush}" CornerRadius="4" Width="28" Height="28" Margin="0,0,10,0">
+                                <TextBlock Text="L" FontSize="16" FontWeight="Black" Foreground="#08080D" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="LAPLAP" FontSize="14" FontWeight="Black" Foreground="White" FontFamily="Consolas"/>
+                                <TextBlock Text="AUTO SETUP" FontSize="8" FontFamily="Consolas" Foreground="{StaticResource PrimaryBrush}" Margin="0,-1,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
                         <!-- Customer Greeting -->
-                        <Border Background="#10B981" CornerRadius="4" Padding="10,5" Margin="0,15,0,0" HorizontalAlignment="Center" Visibility="{Binding GreetingVisibility}">
-                            <TextBlock Text="{Binding CustomerGreeting}" FontWeight="Bold" Foreground="#0F172A" FontSize="11" TextAlignment="Center" TextWrapping="Wrap"/>
+                        <Border Background="#1500F2FF" BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="1"
+                                CornerRadius="4" Padding="8,4" Margin="0,12,0,0" HorizontalAlignment="Left"
+                                Visibility="{Binding GreetingVisibility}">
+                            <TextBlock Text="{Binding CustomerGreeting}" FontWeight="Bold" FontFamily="Consolas"
+                                       Foreground="{StaticResource PrimaryBrush}" FontSize="10" TextWrapping="Wrap"/>
                         </Border>
                     </StackPanel>
 
-                    <StackPanel Grid.Row="1">
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Thông tin phần cứng" Command="{Binding ShowHardwareCommand}" IsChecked="True"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Cài đặt nhanh" Command="{Binding ShowQuickSetupCommand}"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Phần mềm sinh viên" Command="{Binding ShowStudentAppsCommand}"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Công cụ hệ thống" Command="{Binding ShowUtilitiesCommand}"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Sao lưu dữ liệu" Command="{Binding ShowBackupCommand}"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Test chức năng" Command="{Binding ShowLaptopTestCommand}"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Xoá phần mềm" Command="{Binding ShowUninstallCommand}"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="📋 Phiếu thẩm định" Command="{Binding ShowAssessmentCommand}"/>
-                        
-                        <Separator Background="#334155" Margin="0,15"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Cài đặt &amp; Bản quyền" Command="{Binding ShowSettingsCommand}"/>
+                    <!-- Section label -->
+                    <TextBlock Grid.Row="1" Text="SYSTEM MODULES" FontSize="9" FontFamily="Consolas" FontWeight="Bold"
+                               Foreground="{StaticResource MutedTextBrush}" Margin="18,0,0,10"/>
+
+                    <!-- Nav Items -->
+                    <StackPanel Grid.Row="2">
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Hardware Scan" Command="{Binding ShowHardwareCommand}" IsChecked="True"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Auto Install" Command="{Binding ShowQuickSetupCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Student Apps" Command="{Binding ShowStudentAppsCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="System Tools" Command="{Binding ShowUtilitiesCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Backup Data" Command="{Binding ShowBackupCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Test Functions" Command="{Binding ShowLaptopTestCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Remove Apps" Command="{Binding ShowUninstallCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Assessment" Command="{Binding ShowAssessmentCommand}"/>
+                    </StackPanel>
+
+                    <!-- Bottom nav -->
+                    <StackPanel Grid.Row="3" Margin="0,0,0,12">
+                        <Separator Background="#1500F2FF" Margin="18,8"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Settings &amp; License" Command="{Binding ShowSettingsCommand}"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -105,7 +147,7 @@
         </Grid>
 
         <!-- Unified Bottom Status Bar -->
-        <Border Grid.Row="1" Background="{StaticResource SurfaceBrush}" BorderBrush="#334155" BorderThickness="0,1,0,0" Padding="15,10">
+        <Border Grid.Row="2" Background="#08080D" BorderBrush="#1500F2FF" BorderThickness="0,1,0,0" Padding="15,8">
             <Grid>
                 <!-- Left Details (Admin, HWID, System Status) -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">

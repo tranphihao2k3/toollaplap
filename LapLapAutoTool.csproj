@@ -30,9 +30,14 @@
     <Resource Include="Resources\software_config.json" />
     <Resource Include="Resources\student_config.json" />
     
-    <None Update="smartctl.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <EmbeddedResource Include="smartctl.exe" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <!-- Thiết lập để dễ dàng publish Single File Self-Contained -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+  </PropertyGroup>
 
 </Project>

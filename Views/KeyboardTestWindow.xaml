@@ -1,10 +1,10 @@
 <Window x:Class="LapLapAutoTool.Views.KeyboardTestWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Test Bàn Phím — Nhấn từng phím để kiểm tra"
-        Width="1400" Height="550" 
+        Title="KEYBOARD_DIAGNOSTICS — Nhấn từng phím để kiểm tra"
+        Width="1400" Height="550"
         WindowStartupLocation="CenterScreen"
-        Background="#0F172A"
+        Background="#070A10"
         ResizeMode="CanMinimize"
         PreviewKeyDown="Window_PreviewKeyDown"
         KeyDown="Window_KeyDown"
@@ -19,14 +19,21 @@
 
         <!-- Header -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12" VerticalAlignment="Center">
-            <TextBlock Text="⌨ Test Bàn Phím" FontSize="20" FontWeight="Black" Foreground="White" VerticalAlignment="Center"/>
-            <TextBlock Text="  —  Nhấn từng phím, phím sáng xanh = hoạt động tốt" 
-                       FontSize="12" Foreground="#64748B" VerticalAlignment="Center" Margin="8,0,0,0"/>
+            <Border Width="3" Height="20" CornerRadius="2" Background="#6366F1" Margin="0,0,10,0" VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect Color="#6366F1" BlurRadius="4" ShadowDepth="0" Opacity="0.3"/>
+                </Border.Effect>
+            </Border>
+            <TextBlock Text="KEYBOARD_DIAGNOSTICS" FontSize="20" FontWeight="Black" Foreground="White"
+                       FontFamily="Rajdhani, Consolas" VerticalAlignment="Center"/>
+            <TextBlock Text="  —  Nhấn từng phím, phím sáng = hoạt động tốt"
+                       FontSize="13.5" Foreground="#6A9AAA" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0,0,0"
+                       FontFamily="Rajdhani, Consolas"/>
         </StackPanel>
 
-        <!-- Keyboard Canvas (auto-scaled) -->
+        <!-- Keyboard Canvas -->
         <Viewbox Grid.Row="1" Stretch="Uniform" VerticalAlignment="Top" Margin="0,10,0,10">
-            <Canvas x:Name="KeyboardCanvas" 
+            <Canvas x:Name="KeyboardCanvas"
                     Width="1015" Height="270"
                     VerticalAlignment="Top" HorizontalAlignment="Center"/>
         </Viewbox>
@@ -39,14 +46,18 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0" Background="#1E293B" CornerRadius="6" Padding="12,6">
+            <Border Grid.Column="0" Background="#0B101A" CornerRadius="6" Padding="12,6"
+                    BorderBrush="#1A6366F1" BorderThickness="1">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Phím: " Foreground="#64748B" FontSize="12" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="PressedKeyText" Text="-" 
-                               Foreground="#38BDF8" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
-                    <TextBlock Text="   |   " Foreground="#334155" FontSize="12" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="StatusText" Text="Đã test: 0 phím" 
-                               Foreground="#10B981" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <TextBlock Text="Phím: " Foreground="#4A7A8A" FontSize="12" VerticalAlignment="Center"
+                               FontFamily="Rajdhani, Consolas"/>
+                    <TextBlock x:Name="PressedKeyText" Text="-"
+                               Foreground="#00D2FF" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Center"
+                               FontFamily="Rajdhani, Consolas"/>
+                    <TextBlock Text="   |   " Foreground="#1E293B" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="StatusText" Text="Đã test: 0 phím"
+                               Foreground="#1ae65d" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Center"
+                               FontFamily="Rajdhani, Consolas"/>
                 </StackPanel>
             </Border>
 

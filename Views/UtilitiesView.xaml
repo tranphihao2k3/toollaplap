@@ -5,88 +5,170 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="750" d:DesignWidth="900">
+    
     <UserControl.Resources>
-        <!-- Style for compact utility buttons -->
-        <Style x:Key="UtilButton" TargetType="Button" BasedOn="{StaticResource SecondaryButton}">
-            <Setter Property="Padding" Value="16,10"/>
-            <Setter Property="Margin" Value="0,0,10,10"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="MinHeight" Value="38"/>
+        <SolidColorBrush x:Key="AppBgBrush" Color="#070A10"/>
+        <SolidColorBrush x:Key="CardBgBrush" Color="#0B101A"/>
+        <SolidColorBrush x:Key="CardBorderBrush" Color="#1E293B"/>
+        <SolidColorBrush x:Key="HeaderBgBrush" Color="#0C141E"/>
+        <SolidColorBrush x:Key="MutedTextBrush" Color="#64748B"/>
+        
+        <SolidColorBrush x:Key="CyanAccent" Color="#00D2FF"/>
+        <SolidColorBrush x:Key="PurpleAccent" Color="#B25CFF"/>
+        <SolidColorBrush x:Key="GreenAccent" Color="#00FF66"/>
+        <SolidColorBrush x:Key="OrangeAccent" Color="#FFB800"/>
+        <SolidColorBrush x:Key="DangerAccent" Color="#EF4444"/>
+        
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+        <Style x:Key="FlatProgressBar" TargetType="ProgressBar">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Border Background="#1A2436" CornerRadius="2" Height="{TemplateBinding Height}">
+                            <Border x:Name="PART_Indicator" Background="{TemplateBinding Foreground}" HorizontalAlignment="Left" CornerRadius="2"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
-        <Style x:Key="UtilPrimaryButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
-            <Setter Property="Padding" Value="16,10"/>
-            <Setter Property="Margin" Value="0,0,10,10"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="MinHeight" Value="38"/>
+
+        <Style x:Key="SciFiCard" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBgBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
         </Style>
+
+        <Style x:Key="BaseTerminalButton" TargetType="Button">
+            <Setter Property="Margin" Value="0,0,10,12"/>
+            <Setter Property="Padding" Value="14,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Background" Value="#0A1828"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="2" Padding="{TemplateBinding Padding}">
+                            <TextBlock x:Name="txt" Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource CyanAccent}"/>
+                                <Setter TargetName="txt" Property="Foreground" Value="#070A10"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CyanButton" TargetType="Button" BasedOn="{StaticResource BaseTerminalButton}">
+            <Setter Property="Foreground" Value="{StaticResource CyanAccent}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource CyanAccent}"/>
+        </Style>
+        <Style x:Key="PurpleButton" TargetType="Button" BasedOn="{StaticResource BaseTerminalButton}">
+            <Setter Property="Foreground" Value="{StaticResource PurpleAccent}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PurpleAccent}"/>
+        </Style>
+        <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource BaseTerminalButton}">
+            <Setter Property="Foreground" Value="{StaticResource DangerAccent}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource DangerAccent}"/>
+        </Style>
+        <Style x:Key="OrangeButton" TargetType="Button" BasedOn="{StaticResource BaseTerminalButton}">
+            <Setter Property="Foreground" Value="{StaticResource OrangeAccent}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource OrangeAccent}"/>
+        </Style>
+
     </UserControl.Resources>
 
-    <Grid Margin="20">
+    <Grid Margin="20" Background="{StaticResource AppBgBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,16">
-            <TextBlock Text="⚙️ Công cụ hệ thống" FontSize="26" FontWeight="Black" Foreground="{StaticResource TextBrush}"/>
-            <TextBlock Text="Tối ưu và bảo trì hệ thống thiết kế gọn gàng, truy cập tức thì" Foreground="{StaticResource MutedTextBrush}" FontSize="14" Margin="0,4,0,0"/>
-        </StackPanel>
+        <Grid Grid.Row="0" Margin="0,0,0,25">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Path Data="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.98C19.47,12.66 19.5,12.34 19.5,12C19.5,11.66 19.47,11.34 19.43,11.02L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.65 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11.02C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.66 4.57,12.98L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.98Z" 
+                          Fill="White" Width="28" Height="28" Stretch="Uniform" Margin="0,0,12,0"/>
+                    <TextBlock Text="CÔNG CỤ HỆ THỐNG" FontSize="26" FontWeight="Black" FontFamily="Consolas" Foreground="White"/>
+                </StackPanel>
+                <TextBlock Text="Tối ưu và bảo trì hệ thống thiết kế gọn gàng, truy cập tức thì" Foreground="{StaticResource MutedTextBrush}" FontSize="12" Margin="0,5,0,0" FontFamily="Consolas"/>
+            </StackPanel>
+        </Grid>
 
-        <!-- Content Area -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="0,0,10,0">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,10,0">
+            <StackPanel>
                 
-                <!-- ROW 1: System Shortcuts + Activations -->
-                <UniformGrid Columns="2" Margin="0,0,0,12">
+                <UniformGrid Columns="2" Margin="0,0,0,15">
                     
-                    <!-- Truy cập nhanh Windows -->
-                    <Border Style="{StaticResource ModernCard}" Margin="0,0,6,0" VerticalAlignment="Top">
+                    <Border Style="{StaticResource SciFiCard}" Margin="0,0,7.5,0" VerticalAlignment="Top">
                         <StackPanel>
-                            <TextBlock Text="📂 TRUY CẬP NHANH WINDOWS" FontSize="13" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}" Margin="0,0,0,12"/>
-                            <WrapPanel>
-                                <Button Content="Thiết bị (Device)" Command="{Binding OpenDeviceManagerCommand}" Style="{StaticResource UtilButton}"/>
-                                <Button Content="Ổ đĩa (Disk)" Command="{Binding OpenDiskMgmtCommand}" Style="{StaticResource UtilButton}"/>
-                                <Button Content="System Config" Command="{Binding OpenMsconfigCommand}" Style="{StaticResource UtilButton}"/>
-                                <Button Content="Event Viewer" Command="{Binding OpenEventViewerCommand}" Style="{StaticResource UtilButton}"/>
-                                <Button Content="Task Manager" Command="{Binding OpenTaskManagerCommand}" Style="{StaticResource UtilButton}"/>
-                                <Button Content="System Props" Command="{Binding OpenSystemPropsCommand}" Style="{StaticResource UtilButton}"/>
+                            <Border Background="{StaticResource HeaderBgBrush}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="4,4,0,0" Padding="15,12">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M10,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8C22,6.89 21.1,6 20,6H12L10,4Z" 
+                                          Fill="{StaticResource CyanAccent}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0"/>
+                                    <TextBlock Text="TRUY CẬP NHANH WINDOWS" FontSize="14" FontWeight="Bold" Foreground="White" FontFamily="Consolas"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <WrapPanel Margin="15,15,5,5">
+                                <Button Content="Thiết bị (Device)" Command="{Binding OpenDeviceManagerCommand}" Style="{StaticResource CyanButton}"/>
+                                <Button Content="Ổ đĩa (Disk)" Command="{Binding OpenDiskMgmtCommand}" Style="{StaticResource CyanButton}"/>
+                                <Button Content="System Config" Command="{Binding OpenMsconfigCommand}" Style="{StaticResource CyanButton}"/>
+                                <Button Content="Event Viewer" Command="{Binding OpenEventViewerCommand}" Style="{StaticResource CyanButton}"/>
+                                <Button Content="Task Manager" Command="{Binding OpenTaskManagerCommand}" Style="{StaticResource CyanButton}"/>
+                                <Button Content="System Props" Command="{Binding OpenSystemPropsCommand}" Style="{StaticResource CyanButton}"/>
                             </WrapPanel>
                         </StackPanel>
                     </Border>
 
-                    <!-- Chức năng kích hoạt & Tùy biến -->
-                    <Border Style="{StaticResource ModernCard}" Margin="6,0,0,0" VerticalAlignment="Top">
+                    <Border Style="{StaticResource SciFiCard}" Margin="7.5,0,0,0" VerticalAlignment="Top">
                         <StackPanel>
-                            <TextBlock Text="🔑 KÍCH HOẠT &amp; THIẾT LẬP" FontSize="13" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,12"/>
-                            <WrapPanel>
-                                <Button Content="Bản quyền Windows" Command="{Binding ActivateWindowsCommand}" Style="{StaticResource UtilPrimaryButton}"/>
-                                <Button Content="Bản quyền Office" Command="{Binding ActivateOfficeCommand}" Style="{StaticResource UtilPrimaryButton}"/>
-                                <Button Content="Giờ UK (Vùng)" Command="{Binding SetupTimeAndRegionCommand}" Style="{StaticResource UtilButton}"/>
-                                <Button Content="Hiện Icon Desktop" Command="{Binding ShowDesktopIconsCommand}" Style="{StaticResource UtilButton}"/>
+                            <Border Background="{StaticResource HeaderBgBrush}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="4,4,0,0" Padding="15,12">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M7,14A2,2 0 0,1 5,12A2,2 0 0,1 7,10A2,2 0 0,1 9,12A2,2 0 0,1 7,14M12.65,10C11.83,7.67 9.61,6 7,6A6,6 0 0,0 1,12A6,6 0 0,0 7,18C9.61,18 11.83,16.33 12.65,14H17V18H21V14H23V10H12.65Z" 
+                                          Fill="{StaticResource PurpleAccent}" Width="18" Height="18" Stretch="Uniform" Margin="0,0,10,0"/>
+                                    <TextBlock Text="KÍCH HOẠT &amp; THIẾT LẬP" FontSize="14" FontWeight="Bold" Foreground="White" FontFamily="Consolas"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <WrapPanel Margin="15,15,5,5">
+                                <Button Content="Bản quyền Windows" Command="{Binding ActivateWindowsCommand}" Style="{StaticResource PurpleButton}"/>
+                                <Button Content="Bản quyền Office" Command="{Binding ActivateOfficeCommand}" Style="{StaticResource PurpleButton}"/>
+                                <Button Content="Giờ UK (Vùng)" Command="{Binding SetupTimeAndRegionCommand}" Style="{StaticResource PurpleButton}"/>
+                                <Button Content="Hiện Icon Desktop" Command="{Binding ShowDesktopIconsCommand}" Style="{StaticResource PurpleButton}"/>
                             </WrapPanel>
                         </StackPanel>
                     </Border>
                 </UniformGrid>
 
-                <!-- ROW 2: Optimization + Security -->
-                <UniformGrid Columns="2">
+                <UniformGrid Columns="2" Margin="0,0,0,15">
                     
-                    <!-- Bảo mật & Quản lý -->
-                    <Border Style="{StaticResource ModernCard}" Margin="0,0,6,0" VerticalAlignment="Top">
+                    <Border Style="{StaticResource SciFiCard}" Margin="0,0,7.5,0" VerticalAlignment="Top">
                         <StackPanel>
-                            <TextBlock Text="🛡️ BẢO MẬT &amp; DỊCH VỤ CỐT LÕI" FontSize="13" FontWeight="Bold" Foreground="#EF4444" Margin="0,0,0,12"/>
-                            <WrapPanel>
+                            <Border Background="{StaticResource HeaderBgBrush}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="4,4,0,0" Padding="15,12">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1Z" 
+                                          Fill="{StaticResource DangerAccent}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0"/>
+                                    <TextBlock Text="BẢO MẬT &amp; DỊCH VỤ CỐT LÕI" FontSize="14" FontWeight="Bold" Foreground="White" FontFamily="Consolas"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <WrapPanel Margin="15,15,5,5">
                                 <Button Content="{Binding WindowsUpdateText}" Command="{Binding DisableUpdateCommand}">
                                     <Button.Style>
-                                        <Style TargetType="Button" BasedOn="{StaticResource UtilButton}">
+                                        <Style TargetType="Button" BasedOn="{StaticResource DangerButton}">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsWUEnabled}" Value="False">
-                                                    <Setter Property="Background" Value="#1A10B981"/>
-                                                    <Setter Property="Foreground" Value="#10B981"/>
-                                                    <Setter Property="BorderBrush" Value="#3010B981"/>
+                                                    <Setter Property="Background" Value="#0A2111"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource GreenAccent}"/>
+                                                    <Setter Property="BorderBrush" Value="{StaticResource GreenAccent}"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -95,41 +177,47 @@
                                 
                                 <Button Content="{Binding DefenderText}" Command="{Binding DisableDefenderCommand}">
                                     <Button.Style>
-                                        <Style TargetType="Button" BasedOn="{StaticResource UtilButton}">
+                                        <Style TargetType="Button" BasedOn="{StaticResource DangerButton}">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsDefEnabled}" Value="False">
-                                                    <Setter Property="Background" Value="#1A10B981"/>
-                                                    <Setter Property="Foreground" Value="#10B981"/>
-                                                    <Setter Property="BorderBrush" Value="#3010B981"/>
+                                                    <Setter Property="Background" Value="#0A2111"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource GreenAccent}"/>
+                                                    <Setter Property="BorderBrush" Value="{StaticResource GreenAccent}"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Button.Style>
                                 </Button>
                                 
-                                <Button Content="Tắt Telemetry" Command="{Binding DisableTelemetryCommand}" Style="{StaticResource UtilButton}"/>
-                                <Button Content="Gỡ ép BitLocker" Command="{Binding DisableBitLockerCommand}" Style="{StaticResource UtilButton}"/>
+                                <Button Content="Tắt Telemetry" Command="{Binding DisableTelemetryCommand}" Style="{StaticResource DangerButton}"/>
+                                <Button Content="Gỡ ép BitLocker" Command="{Binding DisableBitLockerCommand}" Style="{StaticResource DangerButton}"/>
                             </WrapPanel>
                         </StackPanel>
                     </Border>
 
-                    <!-- Hiệu suất / Sửa lỗi -->
-                    <Border Style="{StaticResource ModernCard}" Margin="6,0,0,0" VerticalAlignment="Top">
+                    <Border Style="{StaticResource SciFiCard}" Margin="7.5,0,0,0" VerticalAlignment="Top">
                         <StackPanel>
-                            <TextBlock Text="⚡ HIỆU SUẤT &amp; SỬA LỖI" FontSize="13" FontWeight="Bold" Foreground="#F59E0B" Margin="0,0,0,12"/>
-                            <WrapPanel>
-                                <Button Content="Dọn rác (Temp)" Command="{Binding CleanTempCommand}" Style="{StaticResource UtilButton}"/>
-                                <Button Content="Xóa Flush DNS" Command="{Binding FlushDnsCommand}" Style="{StaticResource UtilButton}"/>
-                                <Button Content="Sửa lỗi SFC/DISM" Command="{Binding RunSfcDismCommand}" Style="{StaticResource UtilPrimaryButton}"/>
+                            <Border Background="{StaticResource HeaderBgBrush}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="4,4,0,0" Padding="15,12">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M11,2L2,14H10L8,22L18,9H11Z" 
+                                          Fill="{StaticResource OrangeAccent}" Width="14" Height="16" Stretch="Uniform" Margin="0,0,10,0"/>
+                                    <TextBlock Text="HIỆU SUẤT &amp; SỬA LỖI" FontSize="14" FontWeight="Bold" Foreground="White" FontFamily="Consolas"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <WrapPanel Margin="15,15,5,5">
+                                <Button Content="Dọn rác (Temp)" Command="{Binding CleanTempCommand}" Style="{StaticResource OrangeButton}"/>
+                                <Button Content="Xóa Flush DNS" Command="{Binding FlushDnsCommand}" Style="{StaticResource OrangeButton}"/>
+                                <Button Content="Sửa lỗi SFC/DISM" Command="{Binding RunSfcDismCommand}" Style="{StaticResource OrangeButton}"/>
                                 
                                 <Button Content="{Binding FastBootText}" Command="{Binding DisableFastBootCommand}">
                                     <Button.Style>
-                                        <Style TargetType="Button" BasedOn="{StaticResource UtilButton}">
+                                        <Style TargetType="Button" BasedOn="{StaticResource OrangeButton}">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsFBEnabled}" Value="False">
-                                                    <Setter Property="Background" Value="#1A10B981"/>
-                                                    <Setter Property="Foreground" Value="#10B981"/>
-                                                    <Setter Property="BorderBrush" Value="#3010B981"/>
+                                                    <Setter Property="Background" Value="#0A2111"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource GreenAccent}"/>
+                                                    <Setter Property="BorderBrush" Value="{StaticResource GreenAccent}"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -138,19 +226,25 @@
 
                                 <Button Content="{Binding PowerPlanText}" Command="{Binding TogglePowerPlanCommand}">
                                     <Button.Style>
-                                        <Style TargetType="Button" BasedOn="{StaticResource UtilButton}">
+                                        <Style TargetType="Button" BasedOn="{StaticResource BaseTerminalButton}">
+                                            <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource MutedTextBrush}"/>
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsHighPerf}" Value="True">
-                                                    <Setter Property="Background" Value="#1AF59E0B"/>
-                                                    <Setter Property="Foreground" Value="#F59E0B"/>
-                                                    <Setter Property="BorderBrush" Value="#30F59E0B"/>
+                                                    <Setter Property="Background" Value="#1A1800"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource OrangeAccent}"/>
+                                                    <Setter Property="BorderBrush" Value="{StaticResource OrangeAccent}"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Button.Style>
                                 </Button>
 
-                                <Button Content="{Binding SleepText}" Command="{Binding ToggleSleepCommand}" Style="{StaticResource UtilButton}"/>
+                                <Button Content="{Binding SleepText}" Command="{Binding ToggleSleepCommand}">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource OrangeButton}"/>
+                                    </Button.Style>
+                                </Button>
                             </WrapPanel>
                         </StackPanel>
                     </Border>
@@ -158,12 +252,11 @@
             </StackPanel>
         </ScrollViewer>
 
-        <!-- Loading Overlay -->
-        <Grid Grid.RowSpan="2" Background="#DD000000" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="420">
-                <TextBlock Text="{Binding StatusText}" Foreground="White" Margin="0,0,0,15" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
-                <ProgressBar IsIndeterminate="True" Height="5" 
-                             Background="#1E293B" Foreground="{StaticResource AccentBrush}"/>
+        <Grid Grid.RowSpan="2" Background="#DD070A10" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="450">
+                <TextBlock Text="{Binding StatusText}" Foreground="White" Margin="0,0,0,20" FontSize="16" FontFamily="Consolas" FontWeight="SemiBold" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                <ProgressBar IsIndeterminate="True" Height="4" Width="250" Foreground="{StaticResource CyanAccent}" Style="{StaticResource FlatProgressBar}"/>
+                <TextBlock Text="EXECUTING_SYSTEM_TASK..." Foreground="{StaticResource CyanAccent}" Margin="0,15,0,0" HorizontalAlignment="Center" FontSize="11" FontFamily="Consolas" FontWeight="Bold"/>
             </StackPanel>
         </Grid>
     </Grid>
