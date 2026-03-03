@@ -6,137 +6,91 @@
              mc:Ignorable="d"
              d:DesignHeight="700" d:DesignWidth="900">
 
-    <Grid Background="#070A10" Margin="30">
+    <Grid Background="#070A10" Margin="20,16,20,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header with neon glow -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,5">
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
             <Path Data="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"
-                  Fill="#00D2FF" Width="28" Height="28" Stretch="Uniform" Margin="0,0,12,0">
+                  Fill="#00D2FF" Width="24" Height="24" Stretch="Uniform" Margin="0,0,10,0">
                 <Path.Effect>
                     <DropShadowEffect Color="#00D2FF" BlurRadius="8" ShadowDepth="0" Opacity="0.4"/>
                 </Path.Effect>
             </Path>
             <TextBlock Text="HARDWARE_DIAGNOSTICS"
-                       FontSize="28" FontWeight="Black" Foreground="White"
-                       FontFamily="Rajdhani, Consolas">
-                <TextBlock.Effect>
-                    <DropShadowEffect Color="#00D2FF" BlurRadius="5" ShadowDepth="0" Opacity="0.15"/>
-                </TextBlock.Effect>
-            </TextBlock>
+                       FontSize="22" FontWeight="Black" Foreground="White"
+                       FontFamily="Rajdhani, Consolas" VerticalAlignment="Center"/>
         </StackPanel>
-        <TextBlock Grid.Row="1"
-                   Text="Kiểm tra toàn bộ phần cứng laptop — không cần phần mềm bên ngoài"
-                   FontSize="14" Foreground="#6A9AAA" Margin="0,4,0,28" FontWeight="SemiBold"
-                   FontFamily="Rajdhani, Consolas"/>
 
-        <!-- Test Cards Grid -->
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding TestItems}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Columns="2"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Height="210" Margin="0,0,16,16"
-                                Background="#0B101A"
-                                CornerRadius="10"
-                                BorderBrush="{Binding AccentColor, Converter={StaticResource ColorToBrushConverter}}"
-                                BorderThickness="1"
-                                Padding="20" Opacity="0.95">
-                            <Border.Effect>
-                                <DropShadowEffect Color="{Binding AccentColor}" BlurRadius="10" ShadowDepth="0" Opacity="0.18"/>
-                            </Border.Effect>
-
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-
-                                <!-- Neon accent bar + Title -->
-                                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,0,0,8">
-                                    <Border Width="3" Height="18" CornerRadius="2"
-                                            Background="{Binding AccentColor, Converter={StaticResource ColorToBrushConverter}}"
-                                            Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding Title}"
-                                               FontSize="18" FontWeight="ExtraBold" Foreground="White"
-                                               FontFamily="Rajdhani, Consolas" VerticalAlignment="Center"/>
-                                </StackPanel>
-
-                                <!-- Watermark Icon top-right -->
-                                <Border Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
-                                        Width="52" Height="52" CornerRadius="12"
-                                        Background="{Binding AccentColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0.12">
-                                    <Path Data="{Binding IconData}"
-                                          Fill="White"
-                                          Stretch="Uniform"
-                                          Width="26" Height="26"
-                                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <!-- Tab Bar - compact -->
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding TestItems}" Margin="0,0,0,12">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Command="{Binding Command}" Cursor="Hand" Margin="0,0,6,6">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="TabBd" Background="#0B101A"
+                                        CornerRadius="8" Padding="12,8"
+                                        BorderBrush="{Binding AccentColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        BorderThickness="1">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="24" Height="24" CornerRadius="6"
+                                                Background="{Binding AccentColor, Converter={StaticResource ColorToBrushConverter}}"
+                                                Margin="0,0,8,0">
+                                            <Path Data="{Binding IconData}"
+                                                  Fill="White" Stretch="Uniform"
+                                                  Width="12" Height="12"
+                                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Title}"
+                                                       FontSize="12" FontWeight="ExtraBold" Foreground="White"
+                                                       FontFamily="Rajdhani, Consolas"/>
+                                            <TextBlock Text="{Binding Description}"
+                                                       FontSize="9.5" Foreground="#64748B"
+                                                       FontFamily="Rajdhani, Consolas"/>
+                                        </StackPanel>
+                                    </StackPanel>
                                 </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="TabBd" Property="Background" Value="#162232"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
 
-                                <!-- Colored Icon -->
-                                <Border Grid.Row="1" Grid.Column="0" Width="40" Height="40" CornerRadius="8"
-                                        Background="{Binding AccentColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        HorizontalAlignment="Left" Margin="0,0,0,10">
-                                    <Border.Effect>
-                                        <DropShadowEffect Color="{Binding AccentColor}" BlurRadius="8" ShadowDepth="0" Opacity="0.3"/>
-                                    </Border.Effect>
-                                    <Path Data="{Binding IconData}"
-                                          Fill="White"
-                                          Stretch="Uniform"
-                                          Width="20" Height="20"
-                                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
+        <!-- Test Content Area -->
+        <Border Grid.Row="2" Background="#0A0E16" CornerRadius="10"
+                BorderBrush="#1E293B" BorderThickness="1">
+            <Grid>
+                <!-- Hint when no test selected -->
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Visibility="{Binding CurrentTestControl, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=Inverse}">
+                    <Path Data="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"
+                          Fill="#1E293B" Width="40" Height="40" Stretch="Uniform" Margin="0,0,0,12"/>
+                    <TextBlock Text="Chọn một mục test ở trên"
+                               FontSize="15" Foreground="#334155" FontWeight="SemiBold"
+                               HorizontalAlignment="Center"
+                               FontFamily="Rajdhani, Consolas"/>
+                </StackPanel>
 
-                                <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                                           Text="{Binding Description}"
-                                           FontSize="13" Foreground="#8A9BB8"
-                                           TextWrapping="Wrap" LineHeight="19"
-                                           VerticalAlignment="Top"
-                                           FontFamily="Rajdhani, Consolas"/>
-
-                                <!-- Neon Button -->
-                                <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                                        Command="{Binding Command}"
-                                        HorizontalAlignment="Left"
-                                        Margin="0,8,0,0" Cursor="Hand">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border x:Name="BtnBorder"
-                                                    BorderBrush="{Binding AccentColor, Converter={StaticResource ColorToBrushConverter}}"
-                                                    BorderThickness="1" Background="Transparent"
-                                                    CornerRadius="5" Padding="16,7">
-                                                <TextBlock Text="TEST NGAY →" FontSize="12.5" FontWeight="ExtraBold"
-                                                           Foreground="{Binding AccentColor, Converter={StaticResource ColorToBrushConverter}}"
-                                                           FontFamily="Rajdhani, Consolas"/>
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="BtnBorder" Property="Background" Value="#15FFFFFF"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+                <!-- Inline test control -->
+                <ContentControl Content="{Binding CurrentTestControl}"/>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

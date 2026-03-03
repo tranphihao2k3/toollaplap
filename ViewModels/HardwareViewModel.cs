@@ -8,6 +8,7 @@ using System.Management;
 using LapLapAutoTool.Models;
 using LapLapAutoTool.Services;
 using System;
+using System.Diagnostics;
 
 namespace LapLapAutoTool.ViewModels
 {
@@ -24,10 +25,20 @@ namespace LapLapAutoTool.ViewModels
         private double _ramUsedGb;
         private double _ramUtil;
 
+        private string _batteryStatus = "Tính toán...";
+        private string _batteryRate = "0 W";
+
+        // ── Battery rate calculation via delta ──────────────────
+        private long _lastRemainingCapacity = -1;
+        private Stopwatch _lastPollStopwatch = new Stopwatch();
+
         public double CpuLoad   { get => _cpuLoad;   set { _cpuLoad   = value; OnPropertyChanged(); OnPropertyChanged(nameof(CpuLoadText)); } }
         public double CpuTemp   { get => _cpuTemp;   set { _cpuTemp   = value; OnPropertyChanged(); OnPropertyChanged(nameof(CpuTempText)); } }
         public double RamUsedGb { get => _ramUsedGb; set { _ramUsedGb = value; OnPropertyChanged(); OnPropertyChanged(nameof(RamUtilText)); } }
         public double RamUtil   { get => _ramUtil;   set { _ramUtil   = value; OnPropertyChanged(); OnPropertyChanged(nameof(RamUtilText)); } }
+
+        public string BatteryStatus { get => _batteryStatus; set { _batteryStatus = value; OnPropertyChanged(); } }
+        public string BatteryRate   { get => _batteryRate;   set { _batteryRate   = value; OnPropertyChanged(); } }
 
         public string CpuLoadText => $"{CpuLoad:0}%";
         public string CpuTempText => $"{CpuTemp:0}°C";
@@ -120,6 +131,78 @@ namespace LapLapAutoTool.ViewModels
                             double used  = total - free;
                             RamUsedGb = Math.Round(used / 1024.0 / 1024.0, 1);
                             RamUtil   = Math.Round(used / total * 100, 0);
+                        }
+                    }
+                    catch { }
+
+                    // Battery Real-time Rate
+                    try
+                    {
+                        using var s = new ManagementObjectSearcher(@"root\WMI",
+                            "SELECT ChargeRate, DischargeRate, Charging, Discharging, RemainingCapacity FROM BatteryStatus");
+                        foreach (ManagementObject o in s.Get())
+                        {
+                            bool isCharging = Convert.ToBoolean(o["Charging"]);
+                            bool isDischarging = Convert.ToBoolean(o["Discharging"]);
+                            long chargeRate = Convert.ToInt64(o["ChargeRate"] ?? 0);
+                            long dischargeRate = Convert.ToInt64(o["DischargeRate"] ?? 0);
+                            long remainingCapacity = Convert.ToInt64(o["RemainingCapacity"] ?? 0);
+
+                            // Primary: use ChargeRate/DischargeRate from WMI
+                            double rateW = 0;
+                            bool hasDirectRate = false;
+
+                            if (isCharging && chargeRate > 0)
+                            {
+                                rateW = chargeRate / 1000.0;
+                                hasDirectRate = true;
+                            }
+                            else if (isDischarging && dischargeRate > 0)
+                            {
+                                rateW = dischargeRate / 1000.0;
+                                hasDirectRate = true;
+                            }
+
+                            // Fallback: calculate rate from delta RemainingCapacity over time
+                            if (!hasDirectRate && (isCharging || isDischarging) && remainingCapacity > 0)
+                            {
+                                if (_lastRemainingCapacity > 0 && _lastPollStopwatch.IsRunning)
+                                {
+                                    double elapsedHours = _lastPollStopwatch.Elapsed.TotalHours;
+                                    if (elapsedHours > 0.0001) // avoid divide by zero
+                                    {
+                                        long deltaMwh = remainingCapacity - _lastRemainingCapacity;
+                                        // deltaMwh is in mWh, convert to W: mWh / hours = mW, then /1000 = W
+                                        rateW = Math.Abs(deltaMwh) / elapsedHours / 1000.0;
+                                    }
+                                }
+                                _lastRemainingCapacity = remainingCapacity;
+                                _lastPollStopwatch.Restart();
+                            }
+                            else if (hasDirectRate)
+                            {
+                                // Still track for future fallback
+                                _lastRemainingCapacity = remainingCapacity;
+                                _lastPollStopwatch.Restart();
+                            }
+
+                            if (isCharging)
+                            {
+                                BatteryStatus = "Đang sạc";
+                                BatteryRate = rateW > 0.1 ? $"+{rateW:0.0} W" : "Tính toán...";
+                            }
+                            else if (isDischarging)
+                            {
+                                BatteryStatus = "Đang xả pin";
+                                BatteryRate = rateW > 0.1 ? $"-{rateW:0.0} W" : "Tính toán...";
+                            }
+                            else
+                            {
+                                BatteryStatus = "Đã đầy / Không sạc";
+                                BatteryRate = "0 W";
+                                _lastRemainingCapacity = -1;
+                                _lastPollStopwatch.Reset();
+                            }
                         }
                     }
                     catch { }

@@ -118,12 +118,12 @@
                             </Border>
                             
                             <WrapPanel Margin="15,15,5,5">
-                                <Button Content="Thiết bị (Device)" Command="{Binding OpenDeviceManagerCommand}" Style="{StaticResource CyanButton}"/>
-                                <Button Content="Ổ đĩa (Disk)" Command="{Binding OpenDiskMgmtCommand}" Style="{StaticResource CyanButton}"/>
-                                <Button Content="System Config" Command="{Binding OpenMsconfigCommand}" Style="{StaticResource CyanButton}"/>
-                                <Button Content="Event Viewer" Command="{Binding OpenEventViewerCommand}" Style="{StaticResource CyanButton}"/>
-                                <Button Content="Task Manager" Command="{Binding OpenTaskManagerCommand}" Style="{StaticResource CyanButton}"/>
-                                <Button Content="System Props" Command="{Binding OpenSystemPropsCommand}" Style="{StaticResource CyanButton}"/>
+                                <Button Content="🖥  Thiết bị (Device)" Command="{Binding OpenDeviceManagerCommand}" Style="{StaticResource CyanButton}"/>
+                                <Button Content="💿  Ổ đĩa (Disk)" Command="{Binding OpenDiskMgmtCommand}" Style="{StaticResource CyanButton}"/>
+                                <Button Content="⚙  System Config" Command="{Binding OpenMsconfigCommand}" Style="{StaticResource CyanButton}"/>
+                                <Button Content="📋  Event Viewer" Command="{Binding OpenEventViewerCommand}" Style="{StaticResource CyanButton}"/>
+                                <Button Content="📊  Task Manager" Command="{Binding OpenTaskManagerCommand}" Style="{StaticResource CyanButton}"/>
+                                <Button Content="🔧  System Props" Command="{Binding OpenSystemPropsCommand}" Style="{StaticResource CyanButton}"/>
                             </WrapPanel>
                         </StackPanel>
                     </Border>
@@ -139,10 +139,10 @@
                             </Border>
                             
                             <WrapPanel Margin="15,15,5,5">
-                                <Button Content="Bản quyền Windows" Command="{Binding ActivateWindowsCommand}" Style="{StaticResource PurpleButton}"/>
-                                <Button Content="Bản quyền Office" Command="{Binding ActivateOfficeCommand}" Style="{StaticResource PurpleButton}"/>
-                                <Button Content="Giờ UK (Vùng)" Command="{Binding SetupTimeAndRegionCommand}" Style="{StaticResource PurpleButton}"/>
-                                <Button Content="Hiện Icon Desktop" Command="{Binding ShowDesktopIconsCommand}" Style="{StaticResource PurpleButton}"/>
+                                <Button Content="🪟  Bản quyền Windows" Command="{Binding ActivateWindowsCommand}" Style="{StaticResource PurpleButton}"/>
+                                <Button Content="📝  Bản quyền Office" Command="{Binding ActivateOfficeCommand}" Style="{StaticResource PurpleButton}"/>
+                                <Button Content="🌐  Giờ UK (Vùng)" Command="{Binding SetupTimeAndRegionCommand}" Style="{StaticResource PurpleButton}"/>
+                                <Button Content="🖼  Hiện Icon Desktop" Command="{Binding ShowDesktopIconsCommand}" Style="{StaticResource PurpleButton}"/>
                             </WrapPanel>
                         </StackPanel>
                     </Border>
@@ -174,7 +174,7 @@
                                         </Style>
                                     </Button.Style>
                                 </Button>
-                                
+
                                 <Button Content="{Binding DefenderText}" Command="{Binding DisableDefenderCommand}">
                                     <Button.Style>
                                         <Style TargetType="Button" BasedOn="{StaticResource DangerButton}">
@@ -188,9 +188,9 @@
                                         </Style>
                                     </Button.Style>
                                 </Button>
-                                
-                                <Button Content="Tắt Telemetry" Command="{Binding DisableTelemetryCommand}" Style="{StaticResource DangerButton}"/>
-                                <Button Content="Gỡ ép BitLocker" Command="{Binding DisableBitLockerCommand}" Style="{StaticResource DangerButton}"/>
+
+                                <Button Content="📡  Tắt Telemetry" Command="{Binding DisableTelemetryCommand}" Style="{StaticResource DangerButton}"/>
+                                <Button Content="🔓  Gỡ ép BitLocker" Command="{Binding DisableBitLockerCommand}" Style="{StaticResource DangerButton}"/>
                             </WrapPanel>
                         </StackPanel>
                     </Border>
@@ -206,9 +206,9 @@
                             </Border>
                             
                             <WrapPanel Margin="15,15,5,5">
-                                <Button Content="Dọn rác (Temp)" Command="{Binding CleanTempCommand}" Style="{StaticResource OrangeButton}"/>
-                                <Button Content="Xóa Flush DNS" Command="{Binding FlushDnsCommand}" Style="{StaticResource OrangeButton}"/>
-                                <Button Content="Sửa lỗi SFC/DISM" Command="{Binding RunSfcDismCommand}" Style="{StaticResource OrangeButton}"/>
+                                <Button Content="🧹  Dọn rác (Temp)" Command="{Binding CleanTempCommand}" Style="{StaticResource OrangeButton}"/>
+                                <Button Content="🌊  Xóa Flush DNS" Command="{Binding FlushDnsCommand}" Style="{StaticResource OrangeButton}"/>
+                                <Button Content="🛠  Sửa lỗi SFC/DISM" Command="{Binding RunSfcDismCommand}" Style="{StaticResource OrangeButton}"/>
                                 
                                 <Button Content="{Binding FastBootText}" Command="{Binding DisableFastBootCommand}">
                                     <Button.Style>

@@ -1,124 +1,213 @@
 <UserControl x:Class="LapLapAutoTool.Views.BackupView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d">
-    <Grid Margin="18,14,18,14">
+    <Grid Margin="20,16,20,12" Background="#070A10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Compact header -->
-        <Grid Grid.Row="0" Margin="0,0,0,14">
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+            <Path Data="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"
+                  Fill="#00D2FF" Width="24" Height="24" Stretch="Uniform" Margin="0,0,10,0"/>
             <StackPanel>
-                <TextBlock Text="Sao lưu dữ liệu" FontSize="22" FontWeight="Black" Foreground="White"/>
-                <TextBlock Text="Chọn thư mục cần sao lưu trước khi cài lại Windows"
-                           Foreground="{StaticResource MutedTextBrush}" FontSize="13"/>
+                <TextBlock Text="SAO LƯU DỮ LIỆU" FontSize="22" FontWeight="Black" Foreground="White"
+                           FontFamily="Rajdhani, Consolas"/>
+                <TextBlock Text="Chọn thư mục cần backup trước khi cài lại Windows"
+                           Foreground="#64748B" FontSize="12" FontFamily="Rajdhani, Consolas"/>
             </StackPanel>
-        </Grid>
+        </StackPanel>
 
-        <Grid Grid.Row="1">
+        <!-- Folder checklist - horizontal compact -->
+        <Border Grid.Row="1" Background="#0B101A" CornerRadius="8" BorderBrush="#1A00D2FF"
+                BorderThickness="1" Padding="16,12" Margin="0,0,0,14">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="THƯ MỤC CẦN SAO LƯU" FontSize="10" FontWeight="ExtraBold"
+                           Foreground="#00D2FF" Margin="0,0,0,10" FontFamily="Rajdhani, Consolas"/>
+
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding BackupFolders}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="10,7" Margin="0,0,8,8" CornerRadius="6" MinWidth="140">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Background" Value="#0F172A"/>
+                                        <Setter Property="BorderBrush" Value="#1E293B"/>
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#1A2744"/>
+                                                <Setter Property="BorderBrush" Value="#3300D2FF"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <CheckBox IsChecked="{Binding IsSelected}" VerticalContentAlignment="Center">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Name}" Foreground="White"
+                                                   FontSize="12.5" FontWeight="Bold" FontFamily="Rajdhani, Consolas"/>
+                                        <TextBlock Text="{Binding Path}" Foreground="#4A7A8A"
+                                                   FontSize="9.5" TextTrimming="CharacterEllipsis"
+                                                   FontFamily="Consolas" MaxWidth="200"/>
+                                    </StackPanel>
+                                </CheckBox>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </Border>
+
+        <!-- Action panels - 2 columns -->
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="280"/>
+                <ColumnDefinition Width="14"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Left: Folder list (compact) -->
-            <Border Grid.Column="0" Style="{StaticResource ModernCard}" Margin="0,0,10,0" Padding="14,12">
+            <!-- Left: Data Backup -->
+            <Border Grid.Column="0" Background="#0B101A" CornerRadius="10"
+                    BorderBrush="#1A00D2FF" BorderThickness="1" Padding="20,18">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="DANH SÁCH THƯ MỤC" FontSize="10" FontWeight="Bold"
-                               Foreground="{StaticResource AccentBrush}" Margin="0,0,0,12"/>
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding BackupFolders}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Padding="8,5" Margin="0,0,0,4" CornerRadius="6">
-                                        <Border.Style>
-                                            <Style TargetType="Border">
-                                                <Setter Property="Background" Value="Transparent"/>
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="Background" Value="#1E293B"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                        <CheckBox IsChecked="{Binding IsSelected}" VerticalContentAlignment="Center">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="110"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Text="{Binding Name}" Foreground="White"
-                                                           FontSize="13" FontWeight="SemiBold"/>
-                                                <TextBlock Grid.Column="1" Text="{Binding Path}"
-                                                           Foreground="{StaticResource MutedTextBrush}"
-                                                           FontSize="11" VerticalAlignment="Center"
-                                                           TextTrimming="CharacterEllipsis"/>
-                                            </Grid>
-                                        </CheckBox>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-                </Grid>
-            </Border>
 
-            <!-- Right: Action panel (compact) -->
-            <Border Grid.Column="1" Style="{StaticResource ModernCard}" Margin="0,0,0,0" Padding="16,16">
-                <StackPanel>
-                    <TextBlock Text="SẴN SÀNG SAO LƯU" FontSize="10" FontWeight="Bold"
-                               Foreground="{StaticResource AccentBrush}" Margin="0,0,0,10"
-                               HorizontalAlignment="Center"/>
+                    <!-- Title -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,14">
+                        <Border Width="3" Height="16" CornerRadius="2" Background="#00D2FF" Margin="0,0,8,0"/>
+                        <TextBlock Text="SAO LƯU DỮ LIỆU" FontSize="14" FontWeight="ExtraBold"
+                                   Foreground="#00D2FF" FontFamily="Rajdhani, Consolas"/>
+                    </StackPanel>
 
-                    <!-- Info box -->
-                    <Border Background="#0F172A" CornerRadius="8" Padding="12,10" Margin="0,0,0,18">
+                    <!-- Info -->
+                    <Border Grid.Row="1" Background="#0F172A" CornerRadius="6" Padding="14,10" Margin="0,0,0,16">
                         <StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                                <TextBlock Text="📁 " FontSize="12"/>
-                                <TextBlock Text="Nén vào thư mục mới trên Desktop" FontSize="11" Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                <TextBlock Text="📁" FontSize="13" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="Nén vào thư mục mới trên Desktop" FontSize="11.5"
+                                           Foreground="#94A3B8" FontFamily="Rajdhani, Consolas"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="⚠ " FontSize="12"/>
-                                <TextBlock Text="Đảm bảo ổ C còn đủ dung lượng" FontSize="11" Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap"/>
+                                <TextBlock Text="⚠" FontSize="13" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="Đảm bảo ổ đích còn đủ dung lượng" FontSize="11.5"
+                                           Foreground="#94A3B8" FontFamily="Rajdhani, Consolas"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
 
-                    <Button Content="⬆  Bắt đầu sao lưu"
+                    <!-- Spacer -->
+                    <Border Grid.Row="2"/>
+
+                    <!-- Button -->
+                    <Button Grid.Row="3" Content="⬆  Bắt đầu sao lưu"
                             Command="{Binding BackupDataCommand}"
                             Style="{StaticResource ModernButton}"
                             Height="44" FontSize="15" FontWeight="Bold"/>
 
-                    <TextBlock Text="Tự động tạo: Backup_CaiWin_..."
-                               Foreground="{StaticResource MutedTextBrush}"
-                               FontSize="10" HorizontalAlignment="Center" Margin="0,10,0,0"/>
-                </StackPanel>
+                    <TextBlock Grid.Row="4" Text="Tự động tạo: Backup_CaiWin_..."
+                               Foreground="#4A7A8A" FontSize="10" HorizontalAlignment="Center"
+                               Margin="0,8,0,0" FontFamily="Consolas"/>
+                </Grid>
+            </Border>
+
+            <!-- Right: Driver Backup -->
+            <Border Grid.Column="2" Background="#0B101A" CornerRadius="10"
+                    BorderBrush="#1AB25CFF" BorderThickness="1" Padding="20,18">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Title -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,14">
+                        <Border Width="3" Height="16" CornerRadius="2" Background="#B25CFF" Margin="0,0,8,0"/>
+                        <TextBlock Text="DRIVER BACKUP" FontSize="14" FontWeight="ExtraBold"
+                                   Foreground="#B25CFF" FontFamily="Rajdhani, Consolas"/>
+                    </StackPanel>
+
+                    <!-- Info -->
+                    <Border Grid.Row="1" Background="#0F172A" CornerRadius="6" Padding="14,10" Margin="0,0,0,16">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                <TextBlock Text="💾" FontSize="13" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="Xuất driver → Desktop/Backup_Drivers" FontSize="11.5"
+                                           Foreground="#94A3B8" FontFamily="Rajdhani, Consolas"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🔄" FontSize="13" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="Cài lại driver từ thư mục đã backup" FontSize="11.5"
+                                           Foreground="#94A3B8" FontFamily="Rajdhani, Consolas"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Spacer -->
+                    <Border Grid.Row="2"/>
+
+                    <!-- Buttons -->
+                    <Button Grid.Row="3" Content="💾  Backup Driver"
+                            Command="{Binding BackupDriverCommand}"
+                            Style="{StaticResource ModernButton}"
+                            Height="42" FontSize="14" FontWeight="Bold"
+                            Margin="0,0,0,8"/>
+
+                    <Button Grid.Row="4" Content="🔄  Restore Driver"
+                            Command="{Binding RestoreDriverCommand}"
+                            Style="{StaticResource SecondaryButton}"
+                            Height="42" FontSize="14" FontWeight="Bold"/>
+
+                    <TextBlock Grid.Row="5" Text="{Binding DriverStatusText}"
+                               Foreground="#4A7A8A" FontSize="10" HorizontalAlignment="Center"
+                               Margin="0,8,0,0" FontFamily="Consolas"
+                               TextWrapping="Wrap" TextAlignment="Center"/>
+                </Grid>
             </Border>
         </Grid>
 
         <!-- Loading overlay -->
-        <Grid Grid.RowSpan="2" Background="#DD000000"
+        <Grid Grid.RowSpan="3" Background="#DD070A10"
               Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="420">
                 <TextBlock Text="{Binding StatusText}" Foreground="White" Margin="0,0,0,16"
                            FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center"
-                           TextAlignment="Center" TextWrapping="Wrap"/>
+                           TextAlignment="Center" TextWrapping="Wrap"
+                           FontFamily="Rajdhani, Consolas"/>
                 <ProgressBar Value="{Binding BackupProgress}" Height="12" Maximum="100"
                              Style="{StaticResource ModernProgressBar}"
-                             Background="#1E293B" Foreground="{StaticResource AccentBrush}"/>
+                             Background="#1E293B" Foreground="#00D2FF"/>
                 <Grid Margin="0,8,0,0">
                     <TextBlock Text="{Binding BackupProgress, StringFormat={}{0:N0}%}"
-                               Foreground="White" FontSize="13" FontWeight="Bold" HorizontalAlignment="Left"/>
+                               Foreground="White" FontSize="13" FontWeight="Bold" HorizontalAlignment="Left"
+                               FontFamily="Rajdhani, Consolas"/>
                     <TextBlock Text="Vui lòng không tắt ứng dụng..."
-                               Foreground="#94A3B8" FontSize="11" HorizontalAlignment="Right"/>
+                               Foreground="#94A3B8" FontSize="11" HorizontalAlignment="Right"
+                               FontFamily="Rajdhani, Consolas"/>
                 </Grid>
             </StackPanel>
         </Grid>

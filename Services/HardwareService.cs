@@ -546,19 +546,39 @@ namespace LapLapAutoTool.Services
                         info.BatteryWearPercent = $"{Math.Round(wear, 1)}%";
                     }
 
-                    // Tùy chọn: Lấy chu kỳ sạc (nếu có trong BatteryStatus)
-                    using (var searcher = new ManagementObjectSearcher(@"root\WMI", "SELECT CycleCount FROM BatteryStatus"))
+                    // Tùy chọn: Lấy chu kỳ sạc và trạng thái sạc/xả
+                    using (var searcher = new ManagementObjectSearcher(@"root\WMI", "SELECT CycleCount, ChargeRate, DischargeRate, Charging, Discharging FROM BatteryStatus"))
                     {
                         foreach (var obj in searcher.Get())
                         {
                             info.BatteryCycles = obj["CycleCount"]?.ToString() ?? "N/A";
+
+                            bool isCharging = Convert.ToBoolean(obj["Charging"]);
+                            bool isDischarging = Convert.ToBoolean(obj["Discharging"]);
+                            long chargeRate = Convert.ToInt64(obj["ChargeRate"] ?? 0);
+                            long dischargeRate = Convert.ToInt64(obj["DischargeRate"] ?? 0);
+
+                            if (isCharging)
+                            {
+                                info.BatteryStatus = "Đang sạc";
+                                info.BatteryChargeRate = chargeRate > 0 ? $"+{chargeRate / 1000.0:0.0} W" : "Đang tính...";
+                            }
+                            else if (isDischarging)
+                            {
+                                info.BatteryStatus = "Đang xả pin";
+                                info.BatteryChargeRate = dischargeRate > 0 ? $"-{dischargeRate / 1000.0:0.0} W" : "Đang tính...";
+                            }
+                            else
+                            {
+                                info.BatteryStatus = "Đã đầy / Không sạc";
+                                info.BatteryChargeRate = "0 W";
+                            }
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    if (string.IsNullOrEmpty(info.BatteryHealth))
-                        info.BatteryHealth = "Yêu cầu quyền Admin";
+                    _logService.LogWarning("Lỗi khi đọc chi tiết pin WMI: " + ex.Message);
                 }
             }
             catch (Exception ex)

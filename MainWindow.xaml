@@ -10,6 +10,7 @@
         Title="LapLap Auto Setup" 
         Height="780" Width="1100"
         MinHeight="700" MinWidth="900"
+        WindowState="Maximized"
         Icon="/Resources/app_icon.png"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource BackgroundBrush}"
@@ -84,7 +85,7 @@
         <!-- ===== MAIN LAYOUT ===== -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="170"/>
+                <ColumnDefinition Width="230"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
@@ -101,12 +102,12 @@
                     <!-- Logo -->
                     <StackPanel Grid.Row="0" Margin="18,22,18,22">
                         <StackPanel Orientation="Horizontal">
-                            <Border Background="{StaticResource PrimaryBrush}" CornerRadius="4" Width="28" Height="28" Margin="0,0,10,0">
-                                <TextBlock Text="L" FontSize="16" FontWeight="Black" Foreground="#08080D" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border Background="{StaticResource PrimaryBrush}" CornerRadius="6" Width="36" Height="36" Margin="0,0,12,0">
+                                <TextBlock Text="L" FontSize="22" FontWeight="Black" Foreground="#08080D" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="LAPLAP" FontSize="14" FontWeight="Black" Foreground="White" FontFamily="Consolas"/>
-                                <TextBlock Text="AUTO SETUP" FontSize="8" FontFamily="Consolas" Foreground="{StaticResource PrimaryBrush}" Margin="0,-1,0,0"/>
+                                <TextBlock Text="LAPLAP" FontSize="18" FontWeight="Black" Foreground="White" FontFamily="Consolas"/>
+                                <TextBlock Text="AUTO SETUP" FontSize="10" FontFamily="Consolas" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}" Margin="0,-1,0,0"/>
                             </StackPanel>
                         </StackPanel>
                         <!-- Customer Greeting -->
@@ -119,25 +120,25 @@
                     </StackPanel>
 
                     <!-- Section label -->
-                    <TextBlock Grid.Row="1" Text="SYSTEM MODULES" FontSize="9" FontFamily="Consolas" FontWeight="Bold"
+                    <TextBlock Grid.Row="1" Text="CHỨC NĂNG HỆ THỐNG" FontSize="9" FontFamily="Consolas" FontWeight="Bold"
                                Foreground="{StaticResource MutedTextBrush}" Margin="18,0,0,10"/>
 
                     <!-- Nav Items -->
                     <StackPanel Grid.Row="2">
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Hardware Scan" Command="{Binding ShowHardwareCommand}" IsChecked="True"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Auto Install" Command="{Binding ShowQuickSetupCommand}"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Student Apps" Command="{Binding ShowStudentAppsCommand}"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="System Tools" Command="{Binding ShowUtilitiesCommand}"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Backup Data" Command="{Binding ShowBackupCommand}"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Test Functions" Command="{Binding ShowLaptopTestCommand}"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Remove Apps" Command="{Binding ShowUninstallCommand}"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Assessment" Command="{Binding ShowAssessmentCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Quét Phần Cứng" Command="{Binding ShowHardwareCommand}" IsChecked="True"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Phiếu Thẩm Định" Command="{Binding ShowAssessmentCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Cài Đặt Tự Động" Command="{Binding ShowQuickSetupCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Ứng Dụng Học Tập" Command="{Binding ShowStudentAppsCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Công Cụ Hệ Thống" Command="{Binding ShowUtilitiesCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Sao Lưu Dữ Liệu" Command="{Binding ShowBackupCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Test Chức Năng" Command="{Binding ShowLaptopTestCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Gỡ Cài Đặt Khác" Command="{Binding ShowUninstallCommand}"/>
                     </StackPanel>
 
                     <!-- Bottom nav -->
                     <StackPanel Grid.Row="3" Margin="0,0,0,12">
                         <Separator Background="#1500F2FF" Margin="18,8"/>
-                        <RadioButton Style="{StaticResource SidebarButton}" Content="Settings &amp; License" Command="{Binding ShowSettingsCommand}"/>
+                        <RadioButton Style="{StaticResource SidebarButton}" Content="Cài Đặt &amp; Bản Quyền" Command="{Binding ShowSettingsCommand}"/>
                     </StackPanel>
                 </Grid>
             </Border>

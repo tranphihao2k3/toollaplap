@@ -26,11 +26,40 @@
             <Setter Property="BorderBrush" Value="#3500D2FF"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Effect">
                 <Setter.Value>
                     <DropShadowEffect Color="#00D2FF" BlurRadius="10" ShadowDepth="0" Opacity="0.2"/>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Panel.ZIndex" Value="100"/>
+                    <Setter Property="Background" Value="#162232"/>
+                    <Setter Property="BorderBrush" Value="#AA00D2FF"/>
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.015" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.015" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style x:Key="GlowCardPurple" TargetType="Border">
@@ -38,11 +67,40 @@
             <Setter Property="BorderBrush" Value="#35B25CFF"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Effect">
                 <Setter.Value>
                     <DropShadowEffect Color="#B25CFF" BlurRadius="10" ShadowDepth="0" Opacity="0.2"/>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Panel.ZIndex" Value="100"/>
+                    <Setter Property="Background" Value="#1E1430"/>
+                    <Setter Property="BorderBrush" Value="#AAB25CFF"/>
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.015" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.015" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style x:Key="GlowCardPink" TargetType="Border">
@@ -50,11 +108,40 @@
             <Setter Property="BorderBrush" Value="#35F052B6"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Effect">
                 <Setter.Value>
                     <DropShadowEffect Color="#F052B6" BlurRadius="10" ShadowDepth="0" Opacity="0.2"/>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Panel.ZIndex" Value="100"/>
+                    <Setter Property="Background" Value="#2D1425"/>
+                    <Setter Property="BorderBrush" Value="#AAF052B6"/>
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.015" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.015" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style x:Key="GlowCardGreen" TargetType="Border">
@@ -62,11 +149,40 @@
             <Setter Property="BorderBrush" Value="#351ae65d"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Effect">
                 <Setter.Value>
                     <DropShadowEffect Color="#1ae65d" BlurRadius="10" ShadowDepth="0" Opacity="0.2"/>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Panel.ZIndex" Value="100"/>
+                    <Setter Property="Background" Value="#0F2818"/>
+                    <Setter Property="BorderBrush" Value="#AA1ae65d"/>
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.015" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.015" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style x:Key="GlowCardOrange" TargetType="Border">
@@ -74,11 +190,58 @@
             <Setter Property="BorderBrush" Value="#35FFB800"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Effect">
                 <Setter.Value>
                     <DropShadowEffect Color="#FFB800" BlurRadius="10" ShadowDepth="0" Opacity="0.2"/>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Panel.ZIndex" Value="100"/>
+                    <Setter Property="Background" Value="#2A2215"/>
+                    <Setter Property="BorderBrush" Value="#AAFFB800"/>
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.015" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.015" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="MetricLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource MetricLabelBrush}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Border}}" Value="True">
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="MutedLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource MutedText}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Border}}" Value="True">
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
 
         <Style x:Key="FlatBar" TargetType="ProgressBar">
@@ -137,7 +300,7 @@
                             <Border.Effect>
                                 <DropShadowEffect Color="#00D2FF" BlurRadius="6" ShadowDepth="0" Opacity="0.18"/>
                             </Border.Effect>
-                            <TextBlock Text="∿ RESCAN HARDWARE" Foreground="{StaticResource CyanAccent}"
+                            <TextBlock Text="∿ QUÉT LẠI PHẦN CỨNG" Foreground="{StaticResource CyanAccent}"
                                        FontFamily="Rajdhani, Consolas" FontSize="14" FontWeight="ExtraBold"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -152,11 +315,13 @@
         </Grid>
 
         <!-- ===== DASHBOARD GRID ===== -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <Grid>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,10,0">
+            <Grid Margin="10,10,10,20" ClipToBounds="False">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -164,9 +329,64 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
+                
+                <!-- ===== 0. SYSTEM INFO ===== -->
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource GlowCardCyan}" Margin="0,0,0,20">
+                    <StackPanel Margin="18">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                            <Border Width="3" Height="18" CornerRadius="2" Background="{StaticResource CyanAccent}" Margin="0,0,8,0" VerticalAlignment="Center">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#00D2FF" BlurRadius="4" ShadowDepth="0" Opacity="0.3"/>
+                                </Border.Effect>
+                            </Border>
+                            <TextBlock Text="THÔNG TIN HỆ THỐNG" FontSize="15" FontWeight="ExtraBold"
+                                       Foreground="{StaticResource CyanAccent}" FontFamily="Rajdhani, Consolas">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="#00D2FF" BlurRadius="3" ShadowDepth="0" Opacity="0.12"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </StackPanel>
 
+                        <!-- Model Name large -->
+                        <TextBlock Text="{Binding SysInfo.ModelName, FallbackValue='Lenovo IdeaPad Gaming 3 15ARH7'}"
+                                   FontSize="24" Foreground="White" FontWeight="Bold"
+                                   FontFamily="Rajdhani, Consolas" Margin="0,0,0,14"/>
+
+                        <!-- Info Grid -->
+                        <UniformGrid Columns="3" Margin="0,0,0,0">
+                            <StackPanel Margin="0,0,16,0">
+                                <TextBlock Text="MAINBOARD" Style="{StaticResource MetricLabelStyle}"
+                                           FontSize="11" FontWeight="ExtraBold" FontFamily="Consolas"/>
+                                <TextBlock Text="{Binding SysInfo.Mainboard, FallbackValue='Lenovo LNVNB161216'}"
+                                           FontSize="13.5" Foreground="White" FontWeight="SemiBold"
+                                           FontFamily="Rajdhani, Consolas" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,16,0">
+                                <TextBlock Text="SỐ SÊ-RI" Style="{StaticResource MetricLabelStyle}"
+                                           FontSize="11" FontWeight="ExtraBold" FontFamily="Consolas"/>
+                                <Button Command="{Binding CopySerialCommand}" Cursor="Hand" ToolTip="Click để sao chép số Serial">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <TextBlock Text="{Binding SysInfo.SerialNumber, FallbackValue='PF3XXXXX'}"
+                                                   FontSize="13.5" Foreground="White" FontWeight="SemiBold"
+                                                   FontFamily="Rajdhani, Consolas" Margin="0,3,0,0"/>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="BIOS" Style="{StaticResource MetricLabelStyle}"
+                                           FontSize="11" FontWeight="ExtraBold" FontFamily="Consolas"/>
+                                <TextBlock Text="{Binding SysInfo.BiosVersion, FallbackValue='LENOVO - 1'}"
+                                           FontSize="13.5" Foreground="White" FontWeight="SemiBold"
+                                           FontFamily="Rajdhani, Consolas" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </UniformGrid>
+                    </StackPanel>
+                </Border>
+               
                 <!-- ===== 1. CPU ===== -->
-                <Border Grid.Column="0" Grid.Row="0" Style="{StaticResource GlowCardCyan}" Margin="0,0,10,20">
+                <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource GlowCardCyan}" Margin="0,0,0,20">
                     <Grid Margin="20">
                         <StackPanel>
                             <!-- Section title with neon bar -->
@@ -176,7 +396,7 @@
                                         <DropShadowEffect Color="#00D2FF" BlurRadius="4" ShadowDepth="0" Opacity="0.3"/>
                                     </Border.Effect>
                                 </Border>
-                                <TextBlock Text="CENTRAL_PROCESSING_UNIT" FontSize="15" FontWeight="ExtraBold"
+                                <TextBlock Text="BỘ VI XỬ LÝ (CPU)" FontSize="15" FontWeight="ExtraBold"
                                            Foreground="{StaticResource CyanAccent}" FontFamily="Rajdhani, Consolas">
                                     <TextBlock.Effect>
                                         <DropShadowEffect Color="#00D2FF" BlurRadius="3" ShadowDepth="0" Opacity="0.12"/>
@@ -188,11 +408,11 @@
                                        FontSize="22" Foreground="White" FontWeight="Bold"
                                        TextWrapping="Wrap" FontFamily="Rajdhani, Consolas"/>
                             <TextBlock Text="{Binding SysInfo.CPUCoresThreads, StringFormat='{}{0} @ 2.40 GHz', FallbackValue='14 Cores, 20 Threads @ 2.40 GHz'}"
-                                       FontSize="13" Foreground="{StaticResource MutedText}" Margin="0,4,0,0"
-                                       FontFamily="Rajdhani, Consolas" FontWeight="SemiBold"/>
+                                       FontSize="15" Style="{StaticResource MutedLabelStyle}" Margin="0,4,0,0" 
+                                       FontFamily="Rajdhani, Consolas" FontWeight="Bold"/>
 
                             <Grid Margin="0,22,0,0">
-                                <TextBlock Text="Current Load" Foreground="{StaticResource MetricLabelBrush}" FontSize="13.5" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
+                                <TextBlock Text="Mức sử dụng" Style="{StaticResource MetricLabelStyle}" FontSize="13.5" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
                                 <TextBlock Text="{Binding CpuLoadText, FallbackValue='12%'}" Foreground="{StaticResource CyanAccent}"
                                            HorizontalAlignment="Right" FontSize="14" FontWeight="ExtraBold" FontFamily="Rajdhani, Consolas"/>
                             </Grid>
@@ -200,7 +420,7 @@
                                          Maximum="100" Foreground="{StaticResource CyanAccent}" Style="{StaticResource FlatBar}"/>
 
                             <Grid Margin="0,14,0,0">
-                                <TextBlock Text="Temperature" Foreground="{StaticResource MetricLabelBrush}" FontSize="13.5" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
+                                <TextBlock Text="Nhiệt độ" Style="{StaticResource MetricLabelStyle}" FontSize="13.5" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
                                 <TextBlock Text="{Binding CpuTempText, FallbackValue='45°C'}" Foreground="{StaticResource OrangeAccent}"
                                            HorizontalAlignment="Right" FontSize="14" FontWeight="ExtraBold" FontFamily="Rajdhani, Consolas"/>
                             </Grid>
@@ -219,8 +439,9 @@
                     </Grid>
                 </Border>
 
+                
                 <!-- ===== 2. RAM ===== -->
-                <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource GlowCardPurple}" Margin="10,0,10,20">
+                <Border Grid.Row="0" Grid.Column="4" Style="{StaticResource GlowCardPurple}" Margin="0,0,0,20">
                     <Grid Margin="20">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
@@ -229,7 +450,7 @@
                                         <DropShadowEffect Color="#B25CFF" BlurRadius="4" ShadowDepth="0" Opacity="0.3"/>
                                     </Border.Effect>
                                 </Border>
-                                <TextBlock Text="SYSTEM_MEMORY" FontSize="15" FontWeight="ExtraBold"
+                                <TextBlock Text="BỘ NHỚ (RAM)" FontSize="15" FontWeight="ExtraBold"
                                            Foreground="{StaticResource PurpleAccent}" FontFamily="Rajdhani, Consolas">
                                     <TextBlock.Effect>
                                         <DropShadowEffect Color="#B25CFF" BlurRadius="3" ShadowDepth="0" Opacity="0.12"/>
@@ -239,14 +460,16 @@
 
                             <TextBlock Text="{Binding SysInfo.TotalRam, StringFormat='{}{0} DDR5', FallbackValue='16.0 GB DDR5'}"
                                        FontSize="22" Foreground="White" FontWeight="Bold" FontFamily="Rajdhani, Consolas"/>
-                            <TextBlock FontSize="12" Foreground="{StaticResource MutedText}" Margin="0,4,0,0" FontFamily="Rajdhani, Consolas">
+                            <TextBlock FontSize="14" Style="{StaticResource MutedLabelStyle}" Margin="0,4,0,0" FontFamily="Rajdhani, Consolas" FontWeight="Bold">
                                 <Run Text="{Binding SysInfo.RamSticks[0].Manufacturer, FallbackValue='SK Hynix'}" />
                                 <Run Text=" - " />
-                                <Run Text="4800 MHz (2x8GB)" />
+                                <Run Text="{Binding SysInfo.RamSticks[0].Speed, FallbackValue='4800'}" />
+                                <Run Text=" MHz " />
+                                <Run Text="{Binding SysInfo.RamSlotsSummary, FallbackValue='(2/2 slots)'}" />
                             </TextBlock>
 
                             <Grid Margin="0,40,0,0">
-                                <TextBlock Text="Utilization" Foreground="{StaticResource MetricLabelBrush}" FontSize="13.5" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
+                                <TextBlock Text="Mức sử dụng" Style="{StaticResource MetricLabelStyle}" FontSize="13.5" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
                                 <TextBlock Text="{Binding RamUtilText, FallbackValue='8.4 / 32.0 GB (26%)'}"
                                            Foreground="{StaticResource PurpleAccent}"
                                            HorizontalAlignment="Right" FontSize="14" FontWeight="ExtraBold" FontFamily="Rajdhani, Consolas"/>
@@ -266,8 +489,9 @@
                     </Grid>
                 </Border>
 
+               
                 <!-- ===== 3. GPU ===== -->
-                <Border Grid.Column="2" Grid.Row="0" Style="{StaticResource GlowCardPink}" Margin="10,0,0,20">
+                <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource GlowCardPink}" Margin="0,0,0,20">
                     <Grid Margin="20">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
@@ -276,7 +500,7 @@
                                         <DropShadowEffect Color="#F052B6" BlurRadius="4" ShadowDepth="0" Opacity="0.3"/>
                                     </Border.Effect>
                                 </Border>
-                                <TextBlock Text="GRAPHICS_PROCESSING" FontSize="15" FontWeight="ExtraBold"
+                                <TextBlock Text="ĐỒ HỌA (GPU)" FontSize="15" FontWeight="ExtraBold"
                                            Foreground="{StaticResource PinkAccent}" FontFamily="Rajdhani, Consolas">
                                     <TextBlock.Effect>
                                         <DropShadowEffect Color="#F052B6" BlurRadius="3" ShadowDepth="0" Opacity="0.12"/>
@@ -292,23 +516,20 @@
                                                        FontSize="22" Foreground="White" FontWeight="Bold"
                                                        TextWrapping="Wrap" FontFamily="Rajdhani, Consolas"/>
                                             <TextBlock Text="{Binding Vram, StringFormat='{}{0} GDDR6 VRAM', FallbackValue='8 GB GDDR6 VRAM'}"
-                                                       FontSize="12" Foreground="{StaticResource MutedText}"
-                                                       Margin="0,4,0,0" FontFamily="Rajdhani, Consolas"/>
+                                                       FontSize="15" Foreground="{StaticResource MutedText}"
+                                                       Margin="0,4,0,0" FontFamily="Rajdhani, Consolas" FontWeight="Bold"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
 
                             <Grid Margin="0,18,0,0">
-                                <TextBlock Text="GPU Load" Foreground="{StaticResource MetricLabelBrush}" FontSize="13.5" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
+                                <TextBlock Text="Mức sử dụng" Style="{StaticResource MetricLabelStyle}" FontSize="13.5" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
                                 <TextBlock Text="4%" Foreground="{StaticResource PinkAccent}"
                                            HorizontalAlignment="Right" FontSize="14" FontWeight="ExtraBold" FontFamily="Rajdhani, Consolas"/>
                             </Grid>
                             <ProgressBar Margin="0,6,0,14" Height="5" Value="4"
                                          Maximum="100" Foreground="{StaticResource PinkAccent}" Style="{StaticResource FlatBar}"/>
-
-                            <TextBlock Text="+ Intel Iris Xe Graphics (Integrated)" Foreground="{StaticResource MutedText}"
-                                       FontSize="12.5" FontFamily="Rajdhani, Consolas" FontWeight="SemiBold"/>
                         </StackPanel>
 
                         <!-- GPU Icon with glow -->
@@ -323,8 +544,9 @@
                     </Grid>
                 </Border>
 
+              
                 <!-- ===== 4. STORAGE ===== -->
-                <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Style="{StaticResource GlowCardGreen}" Margin="0,0,10,20">
+                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource GlowCardGreen}" Margin="0,0,0,20">
                     <StackPanel Margin="20">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                             <Border Width="3" Height="18" CornerRadius="2" Background="{StaticResource GreenAccent}" Margin="0,0,8,0" VerticalAlignment="Center">
@@ -332,7 +554,7 @@
                                     <DropShadowEffect Color="#1ae65d" BlurRadius="4" ShadowDepth="0" Opacity="0.3"/>
                                 </Border.Effect>
                             </Border>
-                            <TextBlock Text="STORAGE_ARRAY" FontSize="14" FontWeight="Bold"
+                            <TextBlock Text="Ổ CỨNG LƯU TRỮ" FontSize="14" FontWeight="Bold"
                                        Foreground="{StaticResource GreenAccent}" FontFamily="Rajdhani, Consolas">
                                 <TextBlock.Effect>
                                     <DropShadowEffect Color="#1ae65d" BlurRadius="3" ShadowDepth="0" Opacity="0.12"/>
@@ -368,11 +590,11 @@
                                                 <!-- Type + Capacity -->
                                                 <StackPanel Orientation="Horizontal" Margin="32,4,0,0">
                                                     <TextBlock Text="{Binding Type, FallbackValue='NVMe (PCIe M.2) [SSD]'}"
-                                                               FontSize="12.5" Foreground="{StaticResource MutedText}"
+                                                               FontSize="12.5" Style="{StaticResource MutedLabelStyle}"
                                                                FontFamily="Rajdhani, Consolas" FontWeight="SemiBold"/>
-                                                    <TextBlock Text=" · " Foreground="{StaticResource MutedText}" FontSize="11"/>
+                                                    <TextBlock Text=" · " Style="{StaticResource MutedLabelStyle}" FontSize="11"/>
                                                     <TextBlock Text="{Binding Capacity, FallbackValue='512 GB'}"
-                                                               FontSize="12.5" Foreground="{StaticResource MutedText}"
+                                                               FontSize="12.5" Style="{StaticResource MutedLabelStyle}"
                                                                FontFamily="Rajdhani, Consolas" FontWeight="SemiBold"/>
                                                 </StackPanel>
 
@@ -381,7 +603,7 @@
                                                     <Border BorderBrush="#221ae65d" BorderThickness="1" CornerRadius="4"
                                                             Padding="12,7" Margin="0,0,8,0" Background="Transparent" MinWidth="100">
                                                         <StackPanel>
-                                                            <TextBlock Text="TEMP" Foreground="{StaticResource MetricLabelBrush}"
+                                                            <TextBlock Text="NHIỆT ĐỘ" Style="{StaticResource MetricLabelStyle}"
                                                                        FontSize="11" FontWeight="ExtraBold" FontFamily="Consolas"/>
                                                             <TextBlock Text="{Binding Temperature, StringFormat='{}{0}°C', FallbackValue='--'}"
                                                                        FontSize="20" Foreground="{StaticResource OrangeAccent}" FontWeight="Bold"
@@ -391,7 +613,7 @@
                                                     <Border BorderBrush="#221ae65d" BorderThickness="1" CornerRadius="4"
                                                             Padding="12,7" Margin="0,0,8,0" Background="Transparent" MinWidth="100">
                                                         <StackPanel>
-                                                            <TextBlock Text="WRITES" Foreground="{StaticResource MetricLabelBrush}"
+                                                            <TextBlock Text="ĐÃ GHI" Style="{StaticResource MetricLabelStyle}"
                                                                        FontSize="11" FontWeight="ExtraBold" FontFamily="Consolas"/>
                                                             <TextBlock Text="{Binding TotalHostWrites, FallbackValue='N/A'}"
                                                                        FontSize="19" Foreground="White" FontWeight="Bold"
@@ -401,7 +623,7 @@
                                                     <Border BorderBrush="#221ae65d" BorderThickness="1" CornerRadius="4"
                                                             Padding="12,7" Margin="0,0,8,0" Background="Transparent" MinWidth="100">
                                                         <StackPanel>
-                                                            <TextBlock Text="SPARE" Foreground="{StaticResource MetricLabelBrush}"
+                                                            <TextBlock Text="DỰ PHÒNG" Style="{StaticResource MetricLabelStyle}"
                                                                        FontSize="11" FontWeight="ExtraBold" FontFamily="Consolas"/>
                                                             <TextBlock Text="{Binding AvailableSpare, StringFormat='{}{0}%', FallbackValue='--'}"
                                                                        FontSize="20" Foreground="{StaticResource CyanAccent}" FontWeight="Bold"
@@ -411,10 +633,10 @@
                                                     <Border BorderBrush="#221ae65d" BorderThickness="1" CornerRadius="4"
                                                             Padding="12,7" Background="Transparent" MinWidth="100">
                                                         <StackPanel>
-                                                            <TextBlock Text="UPTIME" Foreground="{StaticResource MetricLabelBrush}"
+                                                            <TextBlock Text="GIỜ CHẠY" Style="{StaticResource MetricLabelStyle}"
                                                                        FontSize="11" FontWeight="ExtraBold" FontFamily="Consolas"/>
                                                             <TextBlock Text="{Binding PowerOnDays, StringFormat='{}{0} days', FallbackValue='--'}"
-                                                                       FontSize="20" Foreground="{StaticResource MutedText}" FontWeight="Bold"
+                                                                       FontSize="20" Style="{StaticResource MutedLabelStyle}" FontWeight="Bold"
                                                                        Margin="0,3,0,0" FontFamily="Rajdhani, Consolas"/>
                                                         </StackPanel>
                                                     </Border>
@@ -429,7 +651,7 @@
                                                     <DropShadowEffect Color="#1ae65d" BlurRadius="6" ShadowDepth="0" Opacity="0.15"/>
                                                 </Border.Effect>
                                                 <StackPanel HorizontalAlignment="Center">
-                                                    <TextBlock Text="HEALTH" Foreground="{StaticResource MetricLabelBrush}"
+                                                    <TextBlock Text="SỨC KHỎE" Style="{StaticResource MetricLabelStyle}"
                                                                FontSize="10" FontWeight="Bold" HorizontalAlignment="Center"
                                                                FontFamily="Consolas" Margin="0,0,0,6"/>
                                                     <TextBlock Text="{Binding HealthRemaining, StringFormat='{}{0}%', FallbackValue='--'}"
@@ -461,8 +683,9 @@
                     </StackPanel>
                 </Border>
 
+               
                 <!-- ===== 5. BATTERY ===== -->
-                <Border Grid.Column="2" Grid.Row="1" Style="{StaticResource GlowCardOrange}" Margin="10,0,0,20">
+                <Border Grid.Row="1" Grid.Column="4" Style="{StaticResource GlowCardOrange}" Margin="0,0,0,20">
                     <Grid Margin="20">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
@@ -471,7 +694,7 @@
                                         <DropShadowEffect Color="#FFB800" BlurRadius="4" ShadowDepth="0" Opacity="0.3"/>
                                     </Border.Effect>
                                 </Border>
-                                <TextBlock Text="POWER_SYSTEM" FontSize="15" FontWeight="ExtraBold"
+                                <TextBlock Text="NGUỒN (PIN)" FontSize="15" FontWeight="ExtraBold"
                                            Foreground="{StaticResource OrangeAccent}" FontFamily="Rajdhani, Consolas">
                                     <TextBlock.Effect>
                                         <DropShadowEffect Color="#FFB800" BlurRadius="3" ShadowDepth="0" Opacity="0.12"/>
@@ -482,28 +705,34 @@
                             <TextBlock Text="{Binding SysInfo.BatteryHealth, FallbackValue='85%'}"
                                        FontSize="36" Foreground="White" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,6,0,22">
+                            <StackPanel Orientation="Horizontal" Margin="0,6,0,10">
                                 <Path Data="M11,2 L2,14 H10 L8,22 L18,9 H11 Z" Fill="{StaticResource OrangeAccent}"
                                       Width="8" Height="12" Stretch="Fill" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                                <TextBlock Text="CHARGING (AC ADAPTER)" FontSize="12"
+                                <TextBlock Text="{Binding BatteryStatus, FallbackValue='ĐANG SẠC'}" FontSize="12.5"
                                            Foreground="{StaticResource OrangeAccent}" FontWeight="Bold"
                                            FontFamily="Rajdhani, Consolas"/>
                             </StackPanel>
 
+                            <Grid Margin="0,0,0,22">
+                                <TextBlock Text="Dòng điện:" Style="{StaticResource MetricLabelStyle}" FontSize="13.5" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
+                                <TextBlock Text="{Binding BatteryRate, FallbackValue='0 W'}" Foreground="White"
+                                           HorizontalAlignment="Right" FontSize="14" FontWeight="Bold" FontFamily="Rajdhani, Consolas"/>
+                            </Grid>
+
                             <Grid Margin="0,10,0,8">
-                                <TextBlock Text="Design Capacity" Foreground="{StaticResource MetricLabelBrush}" FontSize="13.5" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
+                                <TextBlock Text="Dung lượng thiết kế" Style="{StaticResource MetricLabelStyle}" FontSize="13.5" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
                                 <TextBlock Text="{Binding SysInfo.BatteryDesignCapacity, FallbackValue='76,000 mWh'}"
                                            Foreground="White" HorizontalAlignment="Right" FontSize="12"
                                            FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
                             </Grid>
                             <Grid Margin="0,0,0,8">
-                                <TextBlock Text="Full Charge Cap." Foreground="{StaticResource MetricLabelBrush}" FontSize="13.5" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
+                                <TextBlock Text="Sạc đầy hiện tại" Style="{StaticResource MetricLabelStyle}" FontSize="13.5" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
                                 <TextBlock Text="{Binding SysInfo.BatteryFullChargeCapacity, FallbackValue='72,450 mWh'}"
                                            Foreground="White" HorizontalAlignment="Right" FontSize="12"
                                            FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
                             </Grid>
                             <Grid>
-                                <TextBlock Text="Wear Level" Foreground="{StaticResource MetricLabelBrush}" FontSize="13.5" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
+                                <TextBlock Text="Độ chai pin:" Style="{StaticResource MetricLabelStyle}" FontSize="13.5" FontWeight="SemiBold" FontFamily="Rajdhani, Consolas"/>
                                 <TextBlock Text="{Binding SysInfo.BatteryWearPercent, FallbackValue='4.6%'}"
                                            Foreground="{StaticResource DangerAccent}" HorizontalAlignment="Right"
                                            FontSize="14" FontWeight="ExtraBold" FontFamily="Rajdhani, Consolas"/>
@@ -521,55 +750,6 @@
                         </Path>
                     </Grid>
                 </Border>
-
-                <!-- ===== 6. SYSTEM INFO ===== -->
-                <Border Grid.Row="2" Grid.ColumnSpan="3" Style="{StaticResource GlowCardCyan}" Margin="0,0,0,10">
-                    <StackPanel Margin="18">
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
-                            <Border Width="3" Height="18" CornerRadius="2" Background="{StaticResource CyanAccent}" Margin="0,0,8,0" VerticalAlignment="Center">
-                                <Border.Effect>
-                                    <DropShadowEffect Color="#00D2FF" BlurRadius="4" ShadowDepth="0" Opacity="0.3"/>
-                                </Border.Effect>
-                            </Border>
-                            <TextBlock Text="SYSTEM_IDENTITY" FontSize="15" FontWeight="ExtraBold"
-                                       Foreground="{StaticResource CyanAccent}" FontFamily="Rajdhani, Consolas">
-                                <TextBlock.Effect>
-                                    <DropShadowEffect Color="#00D2FF" BlurRadius="3" ShadowDepth="0" Opacity="0.12"/>
-                                </TextBlock.Effect>
-                            </TextBlock>
-                        </StackPanel>
-
-                        <!-- Model Name large -->
-                        <TextBlock Text="{Binding SysInfo.ModelName, FallbackValue='Lenovo IdeaPad Gaming 3 15ARH7'}"
-                                   FontSize="24" Foreground="White" FontWeight="Bold"
-                                   FontFamily="Rajdhani, Consolas" Margin="0,0,0,14"/>
-
-                        <!-- Info Grid -->
-                        <UniformGrid Columns="3" Margin="0,0,0,0">
-                            <StackPanel Margin="0,0,16,0">
-                                <TextBlock Text="MAINBOARD" Foreground="{StaticResource MetricLabelBrush}"
-                                           FontSize="11" FontWeight="ExtraBold" FontFamily="Consolas"/>
-                                <TextBlock Text="{Binding SysInfo.Mainboard, FallbackValue='Lenovo LNVNB161216'}"
-                                           FontSize="13.5" Foreground="White" FontWeight="SemiBold"
-                                           FontFamily="Rajdhani, Consolas" Margin="0,3,0,0" TextWrapping="Wrap"/>
-                            </StackPanel>
-                            <StackPanel Margin="0,0,16,0">
-                                <TextBlock Text="SERIAL NUMBER" Foreground="{StaticResource MetricLabelBrush}"
-                                           FontSize="11" FontWeight="ExtraBold" FontFamily="Consolas"/>
-                                <TextBlock Text="{Binding SysInfo.SerialNumber, FallbackValue='PF3XXXXX'}"
-                                           FontSize="13.5" Foreground="White" FontWeight="SemiBold"
-                                           FontFamily="Rajdhani, Consolas" Margin="0,3,0,0"/>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Text="BIOS" Foreground="{StaticResource MetricLabelBrush}"
-                                           FontSize="11" FontWeight="ExtraBold" FontFamily="Consolas"/>
-                                <TextBlock Text="{Binding SysInfo.BiosVersion, FallbackValue='LENOVO - 1'}"
-                                           FontSize="13.5" Foreground="White" FontWeight="SemiBold"
-                                           FontFamily="Rajdhani, Consolas" Margin="0,3,0,0" TextWrapping="Wrap"/>
-                            </StackPanel>
-                        </UniformGrid>
-                    </StackPanel>
-                </Border>
             </Grid>
         </ScrollViewer>
 
@@ -579,7 +759,7 @@
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="5"
                              Foreground="{StaticResource CyanAccent}" Style="{StaticResource FlatBar}"/>
-                <TextBlock Text="RUNNING_DIAGNOSTICS_PROTOCOLS..." Foreground="{StaticResource CyanAccent}"
+                <TextBlock Text="ĐANG CHẠY QUÉT PHẦN CỨNG..." Foreground="{StaticResource CyanAccent}"
                            Margin="0,15,0,0" HorizontalAlignment="Center" FontSize="12"
                            FontFamily="Rajdhani, Consolas" FontWeight="Bold">
                     <TextBlock.Effect>

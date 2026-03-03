@@ -5,7 +5,9 @@
       "Bash(taskkill:*)",
       "Bash(dotnet publish:*)",
       "Bash(dir:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(wmic process:*)",
+      "Bash(rm:*)"
     ]
   }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -18,6 +19,8 @@ namespace LapLapAutoTool.ViewModels
         private double _backupProgress;
         private string _statusText = "Đang chuẩn bị...";
         private List<BackupItem> _backupFolders;
+        private bool _isDriverBusy;
+        private string _driverStatusText = "Sẵn sàng";
 
         public bool IsBusy
         {
@@ -43,13 +46,29 @@ namespace LapLapAutoTool.ViewModels
             set { _backupFolders = value; OnPropertyChanged(); }
         }
 
+        public bool IsDriverBusy
+        {
+            get => _isDriverBusy;
+            set { _isDriverBusy = value; OnPropertyChanged(); }
+        }
+
+        public string DriverStatusText
+        {
+            get => _driverStatusText;
+            set { _driverStatusText = value; OnPropertyChanged(); }
+        }
+
         public RelayCommand BackupDataCommand { get; }
+        public RelayCommand BackupDriverCommand { get; }
+        public RelayCommand RestoreDriverCommand { get; }
 
         public BackupViewModel(IInstallService installService)
         {
             _installService = installService;
             InitializeBackupFolders();
             BackupDataCommand = new RelayCommand(HandleBackup);
+            BackupDriverCommand = new RelayCommand(HandleBackupDriver);
+            RestoreDriverCommand = new RelayCommand(HandleRestoreDriver);
         }
 
         private void InitializeBackupFolders()
@@ -95,6 +114,119 @@ namespace LapLapAutoTool.ViewModels
                 MessageBox.Show("Sao lưu dữ liệu đã hoàn thành thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
             else
                 MessageBox.Show("Sao lưu thất bại hoặc bị gián đoạn.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private async void HandleBackupDriver()
+        {
+            if (IsDriverBusy) return;
+
+            string destPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
+                "Backup_Drivers");
+
+            IsDriverBusy = true;
+            DriverStatusText = "Đang xuất driver...";
+
+            try
+            {
+                Directory.CreateDirectory(destPath);
+
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "dism",
+                    Arguments = $"/online /export-driver /destination:\"{destPath}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    Verb = "runas"
+                };
+
+                var proc = Process.Start(psi)!;
+                await proc.WaitForExitAsync();
+
+                if (proc.ExitCode == 0)
+                {
+                    DriverStatusText = $"Đã xuất driver vào Desktop/Backup_Drivers";
+                    MessageBox.Show($"Backup driver thành công!\nĐường dẫn: {destPath}",
+                        "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    string err = await proc.StandardError.ReadToEndAsync();
+                    DriverStatusText = "Lỗi xuất driver";
+                    MessageBox.Show($"Backup driver thất bại.\n{err}",
+                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                DriverStatusText = $"Lỗi: {ex.Message}";
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsDriverBusy = false;
+            }
+        }
+
+        private async void HandleRestoreDriver()
+        {
+            if (IsDriverBusy) return;
+
+            var dlg = new Microsoft.Win32.OpenFolderDialog
+            {
+                Title = "Chọn thư mục chứa driver đã backup"
+            };
+
+            if (dlg.ShowDialog() != true)
+                return;
+
+            string driverPath = dlg.FolderName;
+            IsDriverBusy = true;
+            DriverStatusText = "Đang cài đặt driver...";
+
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "pnputil",
+                    Arguments = $"/add-driver \"{driverPath}\\*.inf\" /subdirs /install",
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    Verb = "runas"
+                };
+
+                var proc = Process.Start(psi)!;
+                await proc.WaitForExitAsync();
+
+                string output = await proc.StandardOutput.ReadToEndAsync();
+
+                if (proc.ExitCode == 0)
+                {
+                    DriverStatusText = "Đã cài đặt driver thành công";
+                    MessageBox.Show("Restore driver thành công!\nKhởi động lại máy để hoàn tất.",
+                        "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    string err = await proc.StandardError.ReadToEndAsync();
+                    DriverStatusText = "Lỗi cài driver";
+                    MessageBox.Show($"Restore driver thất bại.\n{err}",
+                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                DriverStatusText = $"Lỗi: {ex.Message}";
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsDriverBusy = false;
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
