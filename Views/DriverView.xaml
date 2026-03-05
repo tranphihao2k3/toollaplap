@@ -267,6 +267,165 @@
                 </Grid>
             </Border>
 
+            <!-- ===== BACKUP & UPLOAD GOOGLE DRIVE ===== -->
+            <Border Background="#0A1E293B" BorderBrush="{StaticResource GreenAccent}" BorderThickness="1"
+                    CornerRadius="8" Padding="20,16" Margin="0,20,0,0">
+                <StackPanel>
+
+                    <!-- Section Title -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                        <Border Background="#A855F7" CornerRadius="3" Padding="8,3" Margin="0,0,10,0">
+                            <TextBlock Text="BACKUP" FontFamily="Consolas" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                        </Border>
+                        <TextBlock Text="Backup Driver &amp; Upload Google Drive" FontFamily="Consolas" FontSize="14" FontWeight="Bold"
+                                   Foreground="#A855F7" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Google Drive Config -->
+                    <Border Background="#08FFFFFF" CornerRadius="6" Padding="16,12" Margin="0,0,0,12">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Auth Status -->
+                            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" FontFamily="Consolas" FontSize="12"
+                                       Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,10">
+                                <Run Text="Trang thai: "/>
+                                <Run Text="{Binding DriveAuthStatus}" FontWeight="Bold" Foreground="White"/>
+                            </TextBlock>
+
+                            <!-- Client ID -->
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Client ID:" FontFamily="Consolas" FontSize="12"
+                                       Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center" Margin="0,0,0,8"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ClientId, UpdateSourceTrigger=PropertyChanged}"
+                                     FontFamily="Consolas" FontSize="12" Background="#15FFFFFF" Foreground="White"
+                                     BorderBrush="#30FFFFFF" BorderThickness="1" Padding="8,6" Margin="0,0,0,8"/>
+
+                            <!-- Client Secret -->
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Client Secret:" FontFamily="Consolas" FontSize="12"
+                                       Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center" Margin="0,0,0,8"/>
+                            <PasswordBox Grid.Row="2" Grid.Column="1" x:Name="ClientSecretBox"
+                                         FontFamily="Consolas" FontSize="12" Background="#15FFFFFF" Foreground="White"
+                                         BorderBrush="#30FFFFFF" BorderThickness="1" Padding="8,6" Margin="0,0,0,8"
+                                         PasswordChanged="ClientSecretBox_PasswordChanged"/>
+
+                            <!-- Config Buttons -->
+                            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Margin="0,4,0,0">
+                                <!-- Save Config -->
+                                <Button Command="{Binding SaveDriveConfigCommand}" Cursor="Hand" Margin="0,0,8,0" Padding="14,6">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="#30FFFFFF" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                    <TextBlock Text="Luu" FontFamily="Consolas" FontSize="11" Foreground="White"/>
+                                </Button>
+
+                                <!-- Connect -->
+                                <Button Command="{Binding ConnectDriveCommand}" Cursor="Hand" Margin="0,0,8,0" Padding="14,6">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="#A855F7" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                    <TextBlock Text="Ket noi Drive" FontFamily="Consolas" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                                </Button>
+
+                                <!-- Disconnect -->
+                                <Button Command="{Binding DisconnectDriveCommand}" Cursor="Hand" Padding="14,6">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="Transparent" BorderBrush="#60FFFFFF" BorderThickness="1"
+                                                    CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                    <TextBlock Text="Ngat ket noi" FontFamily="Consolas" FontSize="11" Foreground="{StaticResource MutedTextBrush}"/>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Backup Progress Bar -->
+                    <ProgressBar Height="6" Value="{Binding BackupProgress}" Maximum="100"
+                                 Background="#15FFFFFF" Foreground="#A855F7" Margin="0,0,0,8">
+                        <ProgressBar.Style>
+                            <Style TargetType="ProgressBar">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsBackupBusy}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ProgressBar.Style>
+                    </ProgressBar>
+
+                    <!-- Backup Status Text -->
+                    <TextBlock Text="{Binding BackupStatusText}" FontFamily="Consolas" FontSize="12"
+                               Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,12"
+                               TextWrapping="Wrap"/>
+
+                    <!-- Backup Action Buttons -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <!-- Cancel Backup -->
+                        <Button Command="{Binding CancelBackupCommand}" Cursor="Hand"
+                                Visibility="{Binding IsBackupBusy, Converter={StaticResource BoolToVis}}"
+                                Margin="0,0,12,0" Padding="20,10"
+                                Background="Transparent" BorderBrush="{StaticResource DangerBrush}" BorderThickness="1.5">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                            <TextBlock Text="HUY" FontFamily="Consolas" FontSize="13" FontWeight="Bold" Foreground="{StaticResource DangerBrush}"/>
+                        </Button>
+
+                        <!-- Backup & Upload Button -->
+                        <Button Command="{Binding BackupAndUploadCommand}" Cursor="Hand" Padding="28,10">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="#A855F7"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsBackupBusy}" Value="True">
+                                                        <Setter Property="Background" Value="#555"/>
+                                                    </DataTrigger>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#B96CF9"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                            <TextBlock Text="BACKUP &amp; UPLOAD" FontFamily="Consolas" FontSize="14" FontWeight="Black" Foreground="White"/>
+                        </Button>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

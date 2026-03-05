@@ -30,7 +30,11 @@
     <Resource Include="Resources\software_config.json" />
     <Resource Include="Resources\student_config.json" />
     <Resource Include="Resources\driver_config.json" />
-    
+
+    <Content Include="Resources\google_drive_config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+
     <EmbeddedResource Include="smartctl.exe" />
   </ItemGroup>
 

@@ -82,7 +82,9 @@ namespace LapLapAutoTool.ViewModels
             LaptopTestVM = new LaptopTestViewModel();
             UninstallVM = new UninstallViewModel();
             AssessmentVM = new AssessmentViewModel();
-            DriverVM = new DriverViewModel(_installService, downloadService, _logService, HardwareVM);
+            var driveService = new GoogleDriveService(_logService);
+            var driverBackupService = new DriverBackupService(_logService);
+            DriverVM = new DriverViewModel(_installService, downloadService, _logService, HardwareVM, driveService, driverBackupService);
 
             // Notify UI about status
             OnPropertyChanged(nameof(LicenseStatus));

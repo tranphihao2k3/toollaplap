@@ -76,3 +76,6 @@ yarn-error.log*
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# Secrets
+Resources/google_drive_config.json

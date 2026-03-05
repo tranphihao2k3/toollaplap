@@ -20,6 +20,8 @@ namespace LapLapAutoTool.ViewModels
         private readonly IDownloadService _downloadService;
         private readonly ILogService _logService;
         private readonly HardwareViewModel _hardwareVM;
+        private readonly GoogleDriveService _driveService;
+        private readonly DriverBackupService _backupService;
 
         private string _detectedModel = "Dang phat hien...";
         private string _matchStatus = "";
@@ -29,6 +31,14 @@ namespace LapLapAutoTool.ViewModels
         private bool _isBusy;
         private bool _isAllSelected;
         private CancellationTokenSource? _cts;
+
+        // Backup/Upload state
+        private double _backupProgress;
+        private string _backupStatusText = "";
+        private bool _isBackupBusy;
+        private string _driveAuthStatus = "Chua ket noi";
+        private string _clientId = "";
+        private string _clientSecret = "";
 
         public ObservableCollection<DriverItem> DriverList { get; set; } = new();
 
@@ -83,31 +93,355 @@ namespace LapLapAutoTool.ViewModels
             }
         }
 
+        // === Backup/Upload Properties ===
+
+        public double BackupProgress
+        {
+            get => _backupProgress;
+            set { _backupProgress = value; OnPropertyChanged(); }
+        }
+
+        public string BackupStatusText
+        {
+            get => _backupStatusText;
+            set { _backupStatusText = value; OnPropertyChanged(); }
+        }
+
+        public bool IsBackupBusy
+        {
+            get => _isBackupBusy;
+            set { _isBackupBusy = value; OnPropertyChanged(); }
+        }
+
+        public string DriveAuthStatus
+        {
+            get => _driveAuthStatus;
+            set { _driveAuthStatus = value; OnPropertyChanged(); }
+        }
+
+        public string ClientId
+        {
+            get => _clientId;
+            set { _clientId = value; OnPropertyChanged(); }
+        }
+
+        public string ClientSecret
+        {
+            get => _clientSecret;
+            set { _clientSecret = value; OnPropertyChanged(); }
+        }
+
+        // === Commands ===
+
         public RelayCommand InstallSelectedCommand { get; }
         public RelayCommand SelectAllCommand { get; }
         public RelayCommand SelectNoneCommand { get; }
         public RelayCommand CancelCommand { get; }
         public RelayCommand RefreshCommand { get; }
+        public RelayCommand ConnectDriveCommand { get; }
+        public RelayCommand DisconnectDriveCommand { get; }
+        public RelayCommand BackupAndUploadCommand { get; }
+        public RelayCommand SaveDriveConfigCommand { get; }
+        public RelayCommand CancelBackupCommand { get; }
 
-        public DriverViewModel(IInstallService installService, IDownloadService downloadService, ILogService logService, HardwareViewModel hardwareVM)
+        public DriverViewModel(IInstallService installService, IDownloadService downloadService,
+            ILogService logService, HardwareViewModel hardwareVM,
+            GoogleDriveService driveService, DriverBackupService backupService)
         {
             _installService = installService;
             _downloadService = downloadService;
             _logService = logService;
             _hardwareVM = hardwareVM;
+            _driveService = driveService;
+            _backupService = backupService;
 
+            // Install commands
             InstallSelectedCommand = new RelayCommand(async () => await InstallSelectedDriversAsync(), () => CanInstall);
             SelectAllCommand = new RelayCommand(() => IsAllSelected = true);
             SelectNoneCommand = new RelayCommand(() => IsAllSelected = false);
             CancelCommand = new RelayCommand(() => _cts?.Cancel());
             RefreshCommand = new RelayCommand(() => LoadDriverConfig());
 
-            // Subscribe to HardwareVM changes to detect when model info is ready
-            _hardwareVM.PropertyChanged += OnHardwareVMPropertyChanged;
+            // Backup/Drive commands
+            ConnectDriveCommand = new RelayCommand(async () => await ConnectDriveAsync());
+            DisconnectDriveCommand = new RelayCommand(() => DisconnectDrive());
+            BackupAndUploadCommand = new RelayCommand(async () => await BackupAndUploadAsync());
+            SaveDriveConfigCommand = new RelayCommand(() => SaveDriveConfig());
+            CancelBackupCommand = new RelayCommand(() => _cts?.Cancel());
 
-            // Try to load immediately if SysInfo already has data
+            // Load saved config
+            LoadDriveConfig();
+            UpdateDriveAuthStatus();
+
+            // Subscribe to HardwareVM changes
+            _hardwareVM.PropertyChanged += OnHardwareVMPropertyChanged;
             LoadDriverConfig();
         }
+
+        private void LoadDriveConfig()
+        {
+            try
+            {
+                string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "google_drive_config.json");
+                if (File.Exists(configPath))
+                {
+                    var json = File.ReadAllText(configPath);
+                    using var doc = JsonDocument.Parse(json);
+                    ClientId = doc.RootElement.GetProperty("ClientId").GetString() ?? "";
+                    ClientSecret = doc.RootElement.GetProperty("ClientSecret").GetString() ?? "";
+                }
+            }
+            catch { }
+        }
+
+        private void SaveDriveConfig()
+        {
+            _driveService.SaveConfig(ClientId, ClientSecret);
+            BackupStatusText = "Da luu cau hinh Google Drive";
+        }
+
+        private void UpdateDriveAuthStatus()
+        {
+            if (_driveService.IsAuthenticated)
+                DriveAuthStatus = $"Da ket noi: {_driveService.AuthenticatedEmail ?? "Google Drive"}";
+            else if (!string.IsNullOrEmpty(_driveService.AuthenticatedEmail))
+                DriveAuthStatus = $"Token het han: {_driveService.AuthenticatedEmail}";
+            else
+                DriveAuthStatus = "Chua ket noi";
+        }
+
+        private async Task ConnectDriveAsync()
+        {
+            if (string.IsNullOrWhiteSpace(ClientId) || string.IsNullOrWhiteSpace(ClientSecret))
+            {
+                BackupStatusText = "Vui long nhap Client ID va Client Secret truoc";
+                return;
+            }
+
+            _driveService.SaveConfig(ClientId, ClientSecret);
+            BackupStatusText = "Dang mo trinh duyet de xac thuc...";
+
+            bool success = await _driveService.AuthenticateAsync();
+            if (success)
+            {
+                BackupStatusText = $"Ket noi thanh cong: {_driveService.AuthenticatedEmail}";
+            }
+            else
+            {
+                BackupStatusText = "Xac thuc that bai. Kiem tra Client ID/Secret.";
+            }
+            UpdateDriveAuthStatus();
+        }
+
+        private void DisconnectDrive()
+        {
+            _driveService.Logout();
+            DriveAuthStatus = "Chua ket noi";
+            BackupStatusText = "Da ngat ket noi Google Drive";
+        }
+
+        private async Task BackupAndUploadAsync()
+        {
+            if (!_driveService.IsAuthenticated)
+            {
+                // Try refresh
+                bool refreshed = await _driveService.AuthenticateAsync();
+                if (!refreshed)
+                {
+                    BackupStatusText = "Chua ket noi Google Drive. Vui long ket noi truoc.";
+                    return;
+                }
+            }
+
+            IsBackupBusy = true;
+            _cts = new CancellationTokenSource();
+            BackupProgress = 0;
+            BackupStatusText = "Bat dau backup driver...";
+
+            try
+            {
+                // Step 1: DISM Export (0-40%)
+                var exportProgress = new Progress<(double percent, string status)>(p =>
+                {
+                    BackupProgress = p.percent * 0.4;
+                    BackupStatusText = p.status;
+                });
+
+                string? exportedPath = await _backupService.ExportDriversAsync(exportProgress, _cts.Token);
+                if (string.IsNullOrEmpty(exportedPath))
+                {
+                    BackupStatusText = "Export driver that bai";
+                    return;
+                }
+
+                // Step 2: ZIP (40-60%)
+                var zipProgress = new Progress<(double percent, string status)>(p =>
+                {
+                    BackupProgress = 40 + p.percent * 0.2;
+                    BackupStatusText = p.status;
+                });
+
+                string? zipPath = await _backupService.ZipDriverBackupAsync(exportedPath, zipProgress, _cts.Token);
+                if (string.IsNullOrEmpty(zipPath))
+                {
+                    BackupStatusText = "Nen ZIP that bai";
+                    return;
+                }
+
+                // Step 3: Upload to Drive (60-95%)
+                // Re-authenticate before upload in case token expired during DISM export + ZIP
+                if (!_driveService.IsAuthenticated)
+                {
+                    BackupStatusText = "Dang lam moi token Google Drive...";
+                    bool refreshed = await _driveService.AuthenticateAsync();
+                    if (!refreshed)
+                    {
+                        BackupStatusText = "Token het han va khong the lam moi. Vui long ket noi lai.";
+                        UpdateDriveAuthStatus();
+                        return;
+                    }
+                    UpdateDriveAuthStatus();
+                }
+
+                var uploadProgress = new Progress<(double percent, string status)>(p =>
+                {
+                    BackupProgress = 60 + p.percent * 0.35;
+                    BackupStatusText = p.status;
+                });
+
+                var result = await _driveService.UploadFileAsync(zipPath, uploadProgress, _cts.Token);
+                if (result == null)
+                {
+                    BackupStatusText = "Upload len Drive that bai";
+                    return;
+                }
+
+                // Step 4: Auto-update driver_config.json (95-100%)
+                BackupProgress = 96;
+                BackupStatusText = "Dang cap nhat driver_config.json...";
+
+                string modelName = _hardwareVM.SysInfo?.ModelName ?? DriverBackupService.GetModelName();
+                AutoUpdateDriverConfig(modelName, Path.GetFileName(zipPath), result.Value.webViewLink);
+
+                BackupProgress = 100;
+                BackupStatusText = $"Hoan tat! Link: {result.Value.webViewLink}";
+
+                // Copy link to clipboard
+                try { Clipboard.SetText(result.Value.webViewLink); } catch { }
+
+                _logService.LogInfo($"Driver backup completed: {result.Value.webViewLink}");
+
+                // Reload config to show updated list
+                LoadDriverConfig();
+            }
+            catch (OperationCanceledException)
+            {
+                BackupStatusText = "Da huy backup";
+            }
+            catch (Exception ex)
+            {
+                _logService.LogError("Backup and upload failed", ex);
+                BackupStatusText = $"Loi: {ex.Message}";
+            }
+            finally
+            {
+                IsBackupBusy = false;
+                _cts?.Dispose();
+                _cts = null;
+            }
+        }
+
+        private void AutoUpdateDriverConfig(string modelName, string zipFileName, string driveLink)
+        {
+            try
+            {
+                string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "driver_config.json");
+
+                List<DriverModelConfig> configs;
+                if (File.Exists(configPath))
+                {
+                    var json = File.ReadAllText(configPath);
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    configs = JsonSerializer.Deserialize<List<DriverModelConfig>>(json, options) ?? new();
+                }
+                else
+                {
+                    configs = new();
+                }
+
+                // Find or create config for this model
+                var existing = configs.FirstOrDefault(c =>
+                    c.ModelMatch.Any(m => modelName.Contains(m, StringComparison.OrdinalIgnoreCase)));
+
+                if (existing != null)
+                {
+                    // Update: check if Full Driver Pack already exists, update link
+                    var fullPack = existing.Drivers.FirstOrDefault(d =>
+                        d.Category.Equals("All", StringComparison.OrdinalIgnoreCase) ||
+                        d.Name.Contains("Full Driver", StringComparison.OrdinalIgnoreCase));
+
+                    if (fullPack != null)
+                    {
+                        fullPack.DownloadUrl = driveLink;
+                        fullPack.FileName = zipFileName;
+                    }
+                    else
+                    {
+                        existing.Drivers.Insert(0, new DriverItem
+                        {
+                            Name = "Full Driver Pack (Backup)",
+                            Category = "All",
+                            FileName = zipFileName,
+                            DownloadUrl = driveLink,
+                            Description = $"Backup tu may chuan - {DateTime.Now:dd/MM/yyyy}"
+                        });
+                    }
+                }
+                else
+                {
+                    // Create new model entry
+                    // Generate smart match strings
+                    var matchStrings = new List<string>();
+                    var words = modelName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    if (words.Length >= 2)
+                        matchStrings.Add(string.Join(" ", words.Take(Math.Min(3, words.Length))));
+                    matchStrings.Add(modelName);
+
+                    configs.Add(new DriverModelConfig
+                    {
+                        Model = modelName,
+                        ModelMatch = matchStrings,
+                        Drivers = new List<DriverItem>
+                        {
+                            new DriverItem
+                            {
+                                Name = "Full Driver Pack (Backup)",
+                                Category = "All",
+                                FileName = zipFileName,
+                                DownloadUrl = driveLink,
+                                Description = $"Backup tu may chuan - {DateTime.Now:dd/MM/yyyy}"
+                            }
+                        }
+                    });
+                }
+
+                // Save back
+                var dir = Path.GetDirectoryName(configPath);
+                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                var writeOptions = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
+                File.WriteAllText(configPath, JsonSerializer.Serialize(configs, writeOptions));
+
+                _logService.LogInfo($"Auto-updated driver_config.json for model: {modelName}");
+            }
+            catch (Exception ex)
+            {
+                _logService.LogError("Failed to auto-update driver_config.json", ex);
+            }
+        }
+
+        // === Existing methods ===
 
         private void OnHardwareVMPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
@@ -124,7 +458,6 @@ namespace LapLapAutoTool.ViewModels
                 string modelName = _hardwareVM.SysInfo?.ModelName ?? "N/A";
                 DetectedModel = modelName;
 
-                // Load config JSON
                 string? json = null;
                 string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "driver_config.json");
 
@@ -158,7 +491,6 @@ namespace LapLapAutoTool.ViewModels
                     return;
                 }
 
-                // Match model
                 var matched = configs.FirstOrDefault(c =>
                     c.ModelMatch.Any(m => modelName.Contains(m, StringComparison.OrdinalIgnoreCase)));
 
@@ -217,7 +549,6 @@ namespace LapLapAutoTool.ViewModels
 
                     StatusText = $"[{completed + 1}/{total}] {driver.Name}";
 
-                    // Step 1: Download
                     driver.Status = DriverInstallStatus.Downloading;
                     driver.StatusText = "Dang tai...";
 
@@ -239,7 +570,6 @@ namespace LapLapAutoTool.ViewModels
                         continue;
                     }
 
-                    // Step 2: Extract
                     driver.Status = DriverInstallStatus.Extracting;
                     driver.StatusText = "Giai nen...";
 
@@ -259,7 +589,6 @@ namespace LapLapAutoTool.ViewModels
                         continue;
                     }
 
-                    // Step 3: Install with DISM
                     driver.Status = DriverInstallStatus.Installing;
                     driver.StatusText = "Dang cai driver (DISM)...";
 
